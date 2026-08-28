@@ -1,0 +1,31 @@
+{
+  "name": "oss-tips",
+  "private": true,
+  "version": "0.1.0",
+  "description": "oss.tips — open-source project support and membership platform",
+  "license": "BSD-3-Clause",
+  "packageManager": "pnpm@10.33.3",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "pnpm -r --filter=./packages/* build && pnpm -r --filter=./apps/* build",
+    "dev": "pnpm --filter @oss-tips/web dev",
+    "dev:web": "pnpm --filter @oss-tips/web dev",
+    "dev:worker": "pnpm --filter @oss-tips/worker dev",
+    "dev:finance": "pnpm --filter @oss-tips/finance-worker dev",
+    "dev:discord": "pnpm --filter @oss-tips/discord-bot dev",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "db:migrate": "pnpm --filter @oss-tips/db migrate",
+    "db:seed": "pnpm --filter @oss-tips/db seed",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.9"
+  }
+}

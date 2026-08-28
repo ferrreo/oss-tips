@@ -1,0 +1,81 @@
+/* Paperlight design tokens — light default, dark via [data-theme="dark"] */
+
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --pl-canvas: #fbf7ef;
+  --pl-canvas-subtle: #f5efe4;
+  --pl-surface: #fffdf8;
+  --pl-surface-raised: #f4eedf;
+  --pl-ink: #1e2a22;
+  --pl-ink-muted: #667065;
+  --pl-ink-faint: #8b9289;
+  --pl-forest: #2d5c3a;
+  --pl-forest-hover: #244a30;
+  --pl-moss: #7c8a5b;
+  --pl-fern: #a8b59a;
+  --pl-ochre: #b88747;
+  --pl-border: #ddd5c6;
+  --pl-border-strong: #bdb4a4;
+  --pl-success: #2f6a41;
+  --pl-warning: #9a651f;
+  --pl-danger: #a3463c;
+  --pl-info: #366a76;
+  --pl-focus: #2d5c3a;
+  --pl-overlay: rgba(30, 42, 34, 0.46);
+  --pl-shadow: 0 1px 2px rgba(30, 42, 34, 0.06), 0 12px 32px rgba(30, 42, 34, 0.07);
+  --pl-on-forest: #fbf7ef;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --pl-canvas: #11130f;
+  --pl-canvas-subtle: #151813;
+  --pl-surface: #171a15;
+  --pl-surface-raised: #1d211b;
+  --pl-ink: #ede7d8;
+  --pl-ink-muted: #a8a596;
+  --pl-ink-faint: #77796e;
+  --pl-forest: #91a66e;
+  --pl-forest-hover: #a5ba82;
+  --pl-moss: #71834f;
+  --pl-fern: #4d5e3c;
+  --pl-ochre: #c6a36b;
+  --pl-border: #34382e;
+  --pl-border-strong: #555a4b;
+  --pl-success: #a5c87d;
+  --pl-warning: #d8b06c;
+  --pl-danger: #d47a6e;
+  --pl-info: #82aeb5;
+  --pl-focus: #b5cf8d;
+  --pl-overlay: rgba(0, 0, 0, 0.64);
+  --pl-shadow: 0 1px 2px rgba(0, 0, 0, 0.32), 0 16px 40px rgba(0, 0, 0, 0.22);
+  --pl-on-forest: #11130f;
+}
+
+:root {
+  --pl-font-display: Newsreader, 'EB Garamond', Georgia, serif;
+  --pl-font-ui: 'Source Sans 3', Inter, system-ui, sans-serif;
+  --pl-font-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --pl-radius-sm: 0.375rem;
+  --pl-radius-md: 0.625rem;
+  --pl-radius-lg: 0.875rem;
+  --pl-radius-xl: 1.25rem;
+  --pl-motion-fast: 140ms;
+  --pl-motion-normal: 220ms;
+  --pl-motion-slow: 360ms;
+  --pl-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --pl-content-max: 80rem;
+  --pl-reading-max: 46rem;
+  --pl-dashboard-max: 96rem;
+  --pl-sidebar: 16rem;
+  --pl-touch: 2.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --pl-motion-fast: 0ms;
+    --pl-motion-normal: 0ms;
+    --pl-motion-slow: 0ms;
+  }
+}

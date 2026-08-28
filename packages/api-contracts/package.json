@@ -1,0 +1,30 @@
+{
+  "name": "@oss-tips/api-contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./openapi.json": "./dist/openapi.json"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node dist/generate-openapi.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "lint": "echo ok"
+  },
+  "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.3.0",
+    "@oss-tips/domain": "workspace:*",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "openapi3-ts": "^4.6.1",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.9"
+  }
+}
