@@ -1,8 +1,8 @@
 <script lang="ts">
-  import PublicNav from '../components/PublicNav.svelte';
-  import ThreadView from '../components/ThreadView.svelte';
-  import Badge from '../components/Badge.svelte';
-  import { demoThreads } from '../fixtures/demo.js';
+  import PublicNav from '../../components/PublicNav.svelte';
+  import ThreadView from '../../components/ThreadView.svelte';
+  import Badge from '../../components/Badge.svelte';
+  import { demoThreads } from '../../fixtures/demo.js';
 </script>
 
 <div>

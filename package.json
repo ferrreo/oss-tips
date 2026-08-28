@@ -23,7 +23,9 @@
     "db:migrate": "pnpm --filter @oss-tips/db migrate",
     "db:seed": "pnpm --filter @oss-tips/db seed",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "storybook": "pnpm --filter @oss-tips/ui storybook",
+    "build-storybook": "pnpm --filter @oss-tips/ui build-storybook"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

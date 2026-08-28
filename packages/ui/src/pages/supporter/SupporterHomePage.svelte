@@ -1,8 +1,8 @@
 <script lang="ts">
-  import PublicNav from '../components/PublicNav.svelte';
-  import DataCard from '../components/DataCard.svelte';
-  import Table from '../components/Table.svelte';
-  import { demoMemberships, formatMoney } from '../fixtures/demo.js';
+  import PublicNav from '../../components/PublicNav.svelte';
+  import DataCard from '../../components/DataCard.svelte';
+  import Table from '../../components/Table.svelte';
+  import { demoMemberships, formatMoney } from '../../fixtures/demo.js';
 </script>
 
 <div>

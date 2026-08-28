@@ -12,5 +12,7 @@
     <DataCard label="Churn" value="2.1%" compareDirection="down" />
   </div>
   <ChartPlaceholder label="Revenue — one-off vs recurring" range="Last 30 days · Europe/London" />
-  <ChartPlaceholder label="Supporter growth" range="Last 90 days" style="margin-top: 1rem;" />
+  <div style="margin-top: 1rem;">
+    <ChartPlaceholder label="Supporter growth" range="Last 90 days" />
+  </div>
 </DashboardShell>

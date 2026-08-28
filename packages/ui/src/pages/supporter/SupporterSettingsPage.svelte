@@ -1,8 +1,8 @@
 <script lang="ts">
-  import PublicNav from '../components/PublicNav.svelte';
-  import TextField from '../components/TextField.svelte';
-  import Button from '../components/Button.svelte';
-  import SegmentedControl from '../components/SegmentedControl.svelte';
+  import PublicNav from '../../components/PublicNav.svelte';
+  import TextField from '../../components/TextField.svelte';
+  import Button from '../../components/Button.svelte';
+  import SegmentedControl from '../../components/SegmentedControl.svelte';
 
   let displayName = $state('Ada L.');
   let email = $state('ada@example.com');

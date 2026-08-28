@@ -1,9 +1,9 @@
 <script lang="ts">
-  import PublicNav from '../components/PublicNav.svelte';
-  import Table from '../components/Table.svelte';
-  import Button from '../components/Button.svelte';
-  import Badge from '../components/Badge.svelte';
-  import { demoMemberships, formatMoney } from '../fixtures/demo.js';
+  import PublicNav from '../../components/PublicNav.svelte';
+  import Table from '../../components/Table.svelte';
+  import Button from '../../components/Button.svelte';
+  import Badge from '../../components/Badge.svelte';
+  import { demoMemberships, formatMoney } from '../../fixtures/demo.js';
 </script>
 
 <div>
