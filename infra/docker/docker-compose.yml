@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: oss-tips-postgres
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: oss_tips
+      POSTGRES_PASSWORD: oss_tips_dev
+      POSTGRES_DB: oss_tips
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U oss_tips -d oss_tips']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # S3-compatible object storage (RustFS / MinIO API)
+  rustfs:
+    image: minio/minio:latest
+    container_name: oss-tips-rustfs
+    restart: unless-stopped
+    profiles: ['storage']
+    command: server /data --console-address ":9001"
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      MINIO_ROOT_USER: oss_tips
+      MINIO_ROOT_PASSWORD: oss_tips_dev_secret
+    volumes:
+      - rustfs_data:/data
+
+  # TigerBeetle placeholder — replace image/command when wiring the real replica.
+  tigerbeetle:
+    image: alpine:3.21
+    container_name: oss-tips-tigerbeetle
+    restart: unless-stopped
+    profiles: ['ledger']
+    command: ['sh', '-c', 'echo "TigerBeetle placeholder — configure TIGERBEETLE_ADDRESSES for finance worker" && sleep infinity']
+
+volumes:
+  postgres_data:
+  rustfs_data:
