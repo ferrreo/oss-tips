@@ -1,0 +1,14 @@
+import type { Meta, StoryObj } from '@storybook/svelte';
+import InboxPage from './InboxPage.svelte';
+
+const meta: Meta<InboxPage> = {
+  title: 'Pages/Supporter/Inbox Alias',
+  component: InboxPage,
+  parameters: { layout: 'fullscreen' },
+};
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {};
+export const Dark: Story = { globals: { theme: 'dark' } };

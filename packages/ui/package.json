@@ -8,16 +8,17 @@
     ".": {
       "types": "./dist/index.d.ts",
       "svelte": "./src/index.ts",
-      "default": "./dist/index.js"
+      "default": "./src/index.ts"
     },
-    "./pages/*": {
-      "types": "./dist/pages/*.d.ts",
-      "svelte": "./src/pages/*/index.ts",
-      "default": "./dist/pages/*/index.js"
-    },
-    "./styles.css": "./src/styles.css"
+    "./styles.css": "./src/styles.css",
+    "./pages/*": "./src/pages/*",
+    "./components/*": "./src/components/*",
+    "./fixtures/*": "./src/fixtures/*"
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "vite build && svelte-package -i src -o dist",
     "storybook": "storybook dev -p 6006",

@@ -40,7 +40,8 @@ The web app runs at [http://localhost:3000](http://localhost:3000).
 | Command | Description |
 | --- | --- |
 | `pnpm dev:web` | SvelteKit dev server (`@oss-tips/web`) |
-| `pnpm dev:storybook` | Storybook for `@oss-tips/ui` components |
+| `pnpm storybook` / `pnpm dev:storybook` | Storybook for every UI page + components (:6006) |
+| `pnpm build-storybook` | Static Storybook build (`packages/ui/storybook-static`) |
 | `pnpm dev:worker` | Background job worker |
 | `pnpm dev:finance` | Finance worker (Stripe event inbox loop) |
 | `pnpm dev:discord` | Discord bot process |
@@ -72,13 +73,14 @@ Start workers after Postgres is available and `DATABASE_URL` is set in `.env`.
 
 ## Storybook
 
-Component and page work lives in `packages/ui`:
+Every product UI page has a Storybook entry under `Pages/*` (public, supporter, project dashboard, admin), plus component stories. Theme toolbar switches Paperlight light/dark via `data-theme`.
 
 ```bash
-pnpm dev:storybook
+pnpm storybook          # http://localhost:6006
+pnpm build-storybook    # packages/ui/storybook-static
 ```
 
-Storybook runs on port 6006 when the UI package storybook config is present.
+Coverage includes all route-facing compositions used by `apps/web` (home, explore, project support, dashboards, admin, legal docs, claim/reply, etc.).
 
 ## Local infrastructure
 

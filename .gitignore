@@ -13,3 +13,6 @@ coverage
 tmp
 data
 *.tsbuildinfo
+
+storybook-static
+packages/ui/storybook-static

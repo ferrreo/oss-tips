@@ -1,2 +1,1 @@
-export * from '../components/index.js';
-export * from '../fixtures/demo.js';
+export { demoProject, featuredProjects, demoGoals, demoThreads, projectNavGroups, formatMoney } from './fixtures/demo.js';

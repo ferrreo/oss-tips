@@ -1,5 +1,3 @@
-import type { Component } from 'svelte';
-
 export interface Tier {
   id: string;
   name: string;
