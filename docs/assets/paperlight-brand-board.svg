@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+<rect width="1600" height="1000" fill="#FBF7EF"/>
+<text x="80" y="90" font-family="Inter, sans-serif" font-size="24" fill="#667065" letter-spacing="4">OSS.TIPS / PAPERLIGHT</text>
+<text x="80" y="170" font-family="EB Garamond, Georgia, serif" font-size="72" font-weight="700" fill="#1E2A22">Open source thrives with you.</text>
+<text x="80" y="220" font-family="Inter, sans-serif" font-size="24" fill="#667065">A rooted, human and transparent identity for sustainable open-source support.</text>
+<g transform="translate(80 280)">
+  <rect width="680" height="250" rx="28" fill="#FFFDF8" stroke="#DDD5C6"/>
+  <g transform="translate(30 40) scale(.85)">
+    <path d="M113 45 A54 54 0 1 1 83 26" fill="none" stroke="#2D5C3A" stroke-width="15" stroke-linecap="round"/>
+    <path d="M88 30 C98 8 124 10 128 31 C113 40 99 39 88 30 Z" fill="#7C8A5B"/>
+    <path d="M103 39 C121 31 139 42 135 60 C119 60 108 52 103 39 Z" fill="#B88747"/>
+    <circle cx="79" cy="80" r="7" fill="#1E2A22"/>
+  </g>
+  <text x="185" y="135" font-family="EB Garamond, Georgia, serif" font-size="94" font-weight="700" fill="#1E2A22">oss.<tspan fill="#2D5C3A">tips</tspan></text>
+  <text x="188" y="180" font-family="Inter, sans-serif" font-size="18" fill="#667065">Lowercase. Calm. Built to last.</text>
+</g>
+<g transform="translate(800 280)">
+  <rect width="720" height="250" rx="28" fill="#11130F"/>
+  <g transform="translate(30 40) scale(.85)">
+    <path d="M113 45 A54 54 0 1 1 83 26" fill="none" stroke="#91A66E" stroke-width="15" stroke-linecap="round"/>
+    <path d="M88 30 C98 8 124 10 128 31 C113 40 99 39 88 30 Z" fill="#71834F"/>
+    <path d="M103 39 C121 31 139 42 135 60 C119 60 108 52 103 39 Z" fill="#C6A36B"/>
+    <circle cx="79" cy="80" r="7" fill="#EDE7D8"/>
+  </g>
+  <text x="185" y="135" font-family="EB Garamond, Georgia, serif" font-size="94" font-weight="700" fill="#EDE7D8">oss.<tspan fill="#91A66E">tips</tspan></text>
+  <text x="188" y="180" font-family="Inter, sans-serif" font-size="18" fill="#A8A596">The same identity after dark.</text>
+</g>
+<text x="80" y="610" font-family="EB Garamond, Georgia, serif" font-size="42" font-weight="700" fill="#1E2A22">Core palette</text>
+<g font-family="Inter, sans-serif" font-size="16" fill="#1E2A22">
+  <g transform="translate(80 660)"><rect width="190" height="150" rx="18" fill="#2D5C3A"/><text y="180">Forest / #2D5C3A</text></g>
+  <g transform="translate(300 660)"><rect width="190" height="150" rx="18" fill="#7C8A5B"/><text y="180">Moss / #7C8A5B</text></g>
+  <g transform="translate(520 660)"><rect width="190" height="150" rx="18" fill="#B88747"/><text y="180">Ochre / #B88747</text></g>
+  <g transform="translate(740 660)"><rect width="190" height="150" rx="18" fill="#FBF7EF" stroke="#DDD5C6"/><text y="180">Paper / #FBF7EF</text></g>
+  <g transform="translate(960 660)"><rect width="190" height="150" rx="18" fill="#1E2A22"/><text y="180">Ink / #1E2A22</text></g>
+  <g transform="translate(1180 660)"><rect width="190" height="150" rx="18" fill="#11130F"/><text y="180">Night / #11130F</text></g>
+</g>
+<text x="80" y="930" font-family="Inter, sans-serif" font-size="20" fill="#667065">Editorial warmth × developer precision × financial transparency</text>
+</svg>

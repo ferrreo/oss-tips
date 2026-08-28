@@ -1,0 +1,114 @@
+[
+  {
+    "path": "00-DECISIONS.md",
+    "bytes": 5961
+  },
+  {
+    "path": "01-PRODUCT-SPEC.md",
+    "bytes": 17136
+  },
+  {
+    "path": "02-ARCHITECTURE.md",
+    "bytes": 13358
+  },
+  {
+    "path": "03-DATA-AND-LEDGER.md",
+    "bytes": 11669
+  },
+  {
+    "path": "04-PAYMENTS-AUTH-INTEGRATIONS.md",
+    "bytes": 11477
+  },
+  {
+    "path": "05-API-AND-WEBHOOKS.md",
+    "bytes": 6406
+  },
+  {
+    "path": "06-SECURITY-OPERATIONS.md",
+    "bytes": 12019
+  },
+  {
+    "path": "07-BRAND-IDENTITY.md",
+    "bytes": 9393
+  },
+  {
+    "path": "08-DESIGN-SYSTEM.md",
+    "bytes": 8574
+  },
+  {
+    "path": "09-IMPLEMENTATION-PLAN.md",
+    "bytes": 7118
+  },
+  {
+    "path": "LICENSE.template",
+    "bytes": 1541
+  },
+  {
+    "path": "README.md",
+    "bytes": 2697
+  },
+  {
+    "path": "SOURCES.md",
+    "bytes": 4600
+  },
+  {
+    "path": "assets/design-tokens.json",
+    "bytes": 2830
+  },
+  {
+    "path": "assets/favicon.svg",
+    "bytes": 635
+  },
+  {
+    "path": "assets/oss-tips-app-icon-dark.svg",
+    "bytes": 635
+  },
+  {
+    "path": "assets/oss-tips-app-icon-light.svg",
+    "bytes": 635
+  },
+  {
+    "path": "assets/oss-tips-mark-dark.svg",
+    "bytes": 580
+  },
+  {
+    "path": "assets/oss-tips-mark-light.svg",
+    "bytes": 580
+  },
+  {
+    "path": "assets/oss-tips-wordmark-dark.png",
+    "bytes": 32741
+  },
+  {
+    "path": "assets/oss-tips-wordmark-dark.svg",
+    "bytes": 5608
+  },
+  {
+    "path": "assets/oss-tips-wordmark-light.png",
+    "bytes": 32887
+  },
+  {
+    "path": "assets/oss-tips-wordmark-light.svg",
+    "bytes": 5608
+  },
+  {
+    "path": "assets/paperlight-brand-board.png",
+    "bytes": 139455
+  },
+  {
+    "path": "assets/paperlight-brand-board.svg",
+    "bytes": 3276
+  },
+  {
+    "path": "assets/paperlight-dark-reference.png",
+    "bytes": 2104381
+  },
+  {
+    "path": "assets/paperlight-light-reference.png",
+    "bytes": 2032051
+  },
+  {
+    "path": "assets/stylex-tokens.ts",
+    "bytes": 2560
+  }
+]
