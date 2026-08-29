@@ -6,7 +6,8 @@
   import TextField from '../../components/TextField.svelte';
   import SegmentedControl from '../../components/SegmentedControl.svelte';
   import AdminOperatorBar from './AdminOperatorBar.svelte';
-  import { adminNav, humanizeStatus, requireItem, reviewQueue } from './admin-demo.js';
+  import { labelRisk } from '../../lib/labels.js';
+  import { adminNav, requireItem, reviewQueue } from './admin-demo.js';
 
   let filter = $state('all');
   let selectedId = $state(requireItem(reviewQueue, 'reviewQueue').id);
@@ -40,9 +41,9 @@
     value={filter}
     options={[
       { value: 'all', label: 'All' },
-      { value: 'high', label: 'High' },
-      { value: 'medium', label: 'Medium' },
-      { value: 'low', label: 'Low' },
+      { value: 'high', label: labelRisk('high') },
+      { value: 'medium', label: labelRisk('medium') },
+      { value: 'low', label: labelRisk('low') },
     ]}
     onchange={(v) => (filter = v)}
   />
@@ -62,7 +63,7 @@
         id: item.id,
         project: item.name,
         reason: item.reason,
-        risk: humanizeStatus(item.risk),
+        risk: labelRisk(item.risk),
         submitted: item.submitted,
         wait: item.queueDays,
       }))}

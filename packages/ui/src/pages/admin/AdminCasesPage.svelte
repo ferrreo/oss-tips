@@ -6,7 +6,8 @@
   import TextField from '../../components/TextField.svelte';
   import SegmentedControl from '../../components/SegmentedControl.svelte';
   import AdminOperatorBar from './AdminOperatorBar.svelte';
-  import { adminCases, adminNav, displayPerson, displayProject, humanizeStatus, requireItem } from './admin-demo.js';
+  import { labelCaseStatus } from '../../lib/labels.js';
+  import { adminCases, adminNav, displayPerson, displayProject, requireItem } from './admin-demo.js';
 
   let filter = $state('openish');
   let selectedId = $state(requireItem(adminCases, 'adminCases').id);
@@ -32,8 +33,8 @@
   <div class="pl-row pl-row--between" style="margin-bottom: 1rem; flex-wrap: wrap;">
     <p class="pl-muted" style="margin: 0;">Abuse, copyright, recovery, ownership, and payment restrictions.</p>
     <div class="pl-row">
-      <Badge variant="danger">{adminCases.filter((c) => c.status === 'open').length} open</Badge>
-      <Badge variant="ochre">{adminCases.filter((c) => c.status === 'investigating').length} investigating</Badge>
+      <Badge variant="danger">{adminCases.filter((c) => c.status === 'open').length} {labelCaseStatus('open')}</Badge>
+      <Badge variant="ochre">{adminCases.filter((c) => c.status === 'investigating').length} {labelCaseStatus('investigating')}</Badge>
     </div>
   </div>
 
@@ -42,9 +43,9 @@
     value={filter}
     options={[
       { value: 'openish', label: 'Needs work' },
-      { value: 'open', label: 'Open' },
-      { value: 'investigating', label: 'Investigating' },
-      { value: 'waiting', label: 'Waiting' },
+      { value: 'open', label: labelCaseStatus('open') },
+      { value: 'investigating', label: labelCaseStatus('investigating') },
+      { value: 'waiting', label: labelCaseStatus('waiting') },
       { value: 'all', label: 'All' },
     ]}
     onchange={(v) => (filter = v)}
@@ -65,7 +66,7 @@
         id: c.id,
         type: c.type,
         project: displayProject(c.project),
-        status: humanizeStatus(c.status),
+        status: labelCaseStatus(c.status),
         assignee: displayPerson(c.assignee),
         opened: c.opened,
       }))}

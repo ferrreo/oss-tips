@@ -4,6 +4,7 @@
   import Table from '../../components/Table.svelte';
   import SegmentedControl from '../../components/SegmentedControl.svelte';
   import AdminOperatorBar from './AdminOperatorBar.svelte';
+  import { labelFeeMode } from '../../lib/labels.js';
   import { adminNav, directoryProjects, directoryPeople } from './admin-demo.js';
 
   let search = $state('');
@@ -27,7 +28,7 @@
         verified: p.verified,
         payments: p.payments,
         supporters: p.supporters,
-        fee: p.feeMode,
+        fee: labelFeeMode(p.feeMode),
       })),
   );
 

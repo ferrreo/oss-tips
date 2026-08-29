@@ -4,7 +4,8 @@
   import StatusBanner from '../../components/StatusBanner.svelte';
   import DataCard from '../../components/DataCard.svelte';
   import AdminOperatorBar from './AdminOperatorBar.svelte';
-  import { adminNav, displayProject, formatMoney, humanizeStatus, reconciliationRows } from './admin-demo.js';
+  import { labelReconciliationStatus } from '../../lib/labels.js';
+  import { adminNav, displayProject, formatMoney, reconciliationRows } from './admin-demo.js';
 
   const mismatches = reconciliationRows.filter((r) => r.status === 'mismatch');
   const pending = reconciliationRows.filter((r) => r.status === 'pending');
@@ -58,8 +59,8 @@
       project: displayProject(r.project),
       stripe: formatMoney(r.stripeNetMinor),
       ledger: r.status === 'pending' ? 'Not posted' : formatMoney(r.ledgerNetMinor),
-      delta: r.status === 'pending' ? humanizeStatus('pending') : deltaLabel(r.stripeNetMinor, r.ledgerNetMinor),
-      status: humanizeStatus(r.status),
+      delta: r.status === 'pending' ? labelReconciliationStatus('pending') : deltaLabel(r.stripeNetMinor, r.ledgerNetMinor),
+      status: labelReconciliationStatus(r.status),
     }))}
   />
 

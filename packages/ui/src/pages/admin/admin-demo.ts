@@ -28,21 +28,6 @@ const PERSON_NAMES: Record<string, string> = {
   'auditor@oss.tips': 'Ellis Ward',
 };
 
-const STATUS_LABELS: Record<string, string> = {
-  aligned: 'Aligned',
-  mismatch: 'Mismatch',
-  pending: 'Pending',
-  open: 'Open',
-  investigating: 'Investigating',
-  waiting: 'Waiting',
-  resolved: 'Resolved',
-  high: 'High',
-  medium: 'Medium',
-  low: 'Low',
-  standard: 'Standard',
-  project_5pct: 'Project pays 5%',
-};
-
 export function displayProject(slug: string): string {
   return PROJECT_NAMES[slug] ?? slug;
 }
@@ -53,16 +38,6 @@ export function displayPerson(emailOrName: string): string {
 
 export function displayTarget(target: string): string {
   return PROJECT_NAMES[target] ?? target;
-}
-
-export function humanizeStatus(status: string): string {
-  const known = STATUS_LABELS[status];
-  if (known) return known;
-  return status
-    .split(/[_-]+/)
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
 }
 
 export function adminNav(activeHref: string): NavGroup[] {
@@ -177,7 +152,7 @@ export const directoryProjects: DirectoryProject[] = [
     verified: 'Verified',
     payments: 'Ready',
     supporters: 284,
-    feeMode: humanizeStatus('standard'),
+    feeMode: 'standard',
   },
   {
     name: 'vitest-run',
@@ -186,7 +161,7 @@ export const directoryProjects: DirectoryProject[] = [
     verified: 'Verified',
     payments: 'Ready',
     supporters: 412,
-    feeMode: humanizeStatus('project_5pct'),
+    feeMode: 'project_5pct',
   },
   {
     name: 'ledger-kit',
@@ -195,7 +170,7 @@ export const directoryProjects: DirectoryProject[] = [
     verified: 'Pending',
     payments: 'Restricted',
     supporters: 98,
-    feeMode: humanizeStatus('standard'),
+    feeMode: 'standard',
   },
   {
     name: 'tiny-sqlite',
@@ -204,7 +179,7 @@ export const directoryProjects: DirectoryProject[] = [
     verified: 'Verified',
     payments: 'Review',
     supporters: 41,
-    feeMode: humanizeStatus('standard'),
+    feeMode: 'standard',
   },
   {
     name: 'otel-lite',
@@ -213,7 +188,7 @@ export const directoryProjects: DirectoryProject[] = [
     verified: 'Verified',
     payments: 'Ready',
     supporters: 76,
-    feeMode: humanizeStatus('standard'),
+    feeMode: 'standard',
   },
   {
     name: 'fake-react',
@@ -222,7 +197,7 @@ export const directoryProjects: DirectoryProject[] = [
     verified: 'Blocked',
     payments: 'Restricted',
     supporters: 3,
-    feeMode: humanizeStatus('standard'),
+    feeMode: 'standard',
   },
 ];
 

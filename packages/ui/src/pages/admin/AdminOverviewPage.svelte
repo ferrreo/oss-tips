@@ -5,6 +5,7 @@
   import Table from '../../components/Table.svelte';
   import ChartPlaceholder from '../../components/ChartPlaceholder.svelte';
   import AdminOperatorBar from './AdminOperatorBar.svelte';
+  import { labelCaseStatus, labelRisk } from '../../lib/labels.js';
   import {
     adminNav,
     reviewQueue,
@@ -15,7 +16,6 @@
     requireItem,
     displayProject,
     displayTarget,
-    humanizeStatus,
   } from './admin-demo.js';
 
   const openCases = adminCases.filter((c) => c.status !== 'resolved');
@@ -66,7 +66,7 @@
     rows={reviewQueue.map((item) => ({
       project: item.name,
       reason: item.reason,
-      risk: humanizeStatus(item.risk),
+      risk: labelRisk(item.risk),
       submitted: item.submitted,
       wait: item.queueDays,
     }))}
@@ -86,7 +86,7 @@
           id: c.id,
           type: c.type,
           project: displayProject(c.project),
-          status: humanizeStatus(c.status),
+          status: labelCaseStatus(c.status),
         }))}
       />
     </section>

@@ -3,6 +3,7 @@
   import Table from '../../components/Table.svelte';
   import TextField from '../../components/TextField.svelte';
   import AdminOperatorBar from './AdminOperatorBar.svelte';
+  import { labelAuditAction } from '../../lib/labels.js';
   import { adminNav, auditEvents, displayPerson, displayTarget } from './admin-demo.js';
 
   let filter = $state('');
@@ -16,6 +17,7 @@
           e.actor.toLowerCase().includes(q) ||
           displayPerson(e.actor).toLowerCase().includes(q) ||
           e.action.toLowerCase().includes(q) ||
+          labelAuditAction(e.action).toLowerCase().includes(q) ||
           e.target.toLowerCase().includes(q) ||
           displayTarget(e.target).toLowerCase().includes(q) ||
           e.reason.toLowerCase().includes(q) ||
@@ -25,7 +27,7 @@
       .map((e) => ({
         time: e.time,
         actor: displayPerson(e.actor),
-        action: e.action,
+        action: labelAuditAction(e.action),
         target: displayTarget(e.target),
         reason: e.reason,
         correlation: e.correlation,
@@ -44,7 +46,7 @@
     name="audit-filter"
     bind:value={filter}
     type="search"
-    placeholder="refund.exceptional or fake-react"
+    placeholder="exceptional refund or fake-react"
   />
 
   <div style="margin-top: 1rem;">
