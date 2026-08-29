@@ -4,6 +4,7 @@
   import Table from '../../components/Table.svelte';
   import Badge from '../../components/Badge.svelte';
   import SupporterAccountNav from './SupporterAccountNav.svelte';
+  import { labelCadence, labelEntitlementStatus, labelMembershipStatus } from '../../lib/labels.js';
   import {
     formatMoney,
     lifetimeSupport,
@@ -61,8 +62,8 @@
         rows={supporterMemberships.map((m) => ({
           project: m.projectName,
           tier: m.tierName,
-          amount: `${formatMoney(m.amountMinor, m.currency)}/${m.cadence}`,
-          status: m.status,
+          amount: `${formatMoney(m.amountMinor, m.currency)}/${labelCadence(m.cadence)}`,
+          status: labelMembershipStatus(m.status),
           renews: m.renewsAt ?? '—',
         }))}
       />
@@ -82,7 +83,7 @@
             project: e.projectName,
             tier: e.tierName,
             expires: e.permanent ? 'Permanent' : (e.expiresAt ?? '—'),
-            status: e.permanent ? 'permanent' : expired ? 'expired' : 'active',
+            status: labelEntitlementStatus(e.permanent ? 'permanent' : expired ? 'expired' : 'active'),
           };
         })}
       />
@@ -105,7 +106,7 @@
       />
 
       <p class="pl-muted" style="font-size: 0.875rem; margin-top: 1rem;">
-        <Badge>Past-due</Badge>
+        <Badge>{labelMembershipStatus('past_due')}</Badge>
         ledger-kit is in the seven-day grace period. Entitlements stay until the grace ends.
       </p>
     </div>

@@ -13,6 +13,9 @@
     reconciliationRows,
     formatMoney,
     requireItem,
+    displayProject,
+    displayTarget,
+    humanizeStatus,
   } from './admin-demo.js';
 
   const openCases = adminCases.filter((c) => c.status !== 'resolved');
@@ -20,10 +23,10 @@
   const oldestReview = requireItem(reviewQueue.slice().reverse(), 'reviewQueue');
 </script>
 
-<AdminShell navGroups={adminNav('/admin')} title="Platform overview">
+<AdminShell navGroups={adminNav('/admin')} title="Overview">
   <AdminOperatorBar
-    context="Operations workspace — not a project dashboard"
-    detail="Privileged actions need a project in context and a written reason. Every change is appended to the audit log."
+    context="Ops workspace, not a project dashboard"
+    detail="Refunds and restrictions need a project picked and a written reason. Every change lands on the audit log."
   />
 
   <StatusBanner
@@ -39,7 +42,7 @@
   </div>
   <div class="pl-grid-3" style="margin-bottom: 1.5rem;">
     <DataCard label="Settlement volume (30d)" value="£2.4M" compare="+4% vs prior 30d" compareDirection="up" />
-    <DataCard label="Platform fees + tips (30d)" value="£48,210" compare="Tips £6,140" />
+    <DataCard label="oss.tips fees + tips (30d)" value="£48,210" compare="Tips £6,140" />
     <DataCard
       label="Reconciliation mismatches"
       value={String(mismatches.length)}
@@ -52,7 +55,7 @@
 
   <h2 style="font-size: 1.125rem; margin: 2rem 0 0.75rem;">Review queue snapshot</h2>
   <Table
-    caption="Oldest items first. Full queue is under Review."
+    caption="Oldest items first. The full queue is under Review."
     columns={[
       { key: 'project', label: 'Project' },
       { key: 'reason', label: 'Reason' },
@@ -61,9 +64,9 @@
       { key: 'wait', label: 'Days waiting' },
     ]}
     rows={reviewQueue.map((item) => ({
-      project: item.project,
+      project: item.name,
       reason: item.reason,
-      risk: item.risk,
+      risk: humanizeStatus(item.risk),
       submitted: item.submitted,
       wait: item.queueDays,
     }))}
@@ -82,8 +85,8 @@
         rows={openCases.map((c) => ({
           id: c.id,
           type: c.type,
-          project: c.project,
-          status: c.status,
+          project: displayProject(c.project),
+          status: humanizeStatus(c.status),
         }))}
       />
     </section>
@@ -98,7 +101,7 @@
         ]}
         rows={failedJobs.map((job) => ({
           kind: job.kind,
-          target: job.target,
+          target: displayTarget(job.target),
           retries: job.retries,
           error: job.lastError,
         }))}
@@ -107,6 +110,7 @@
   </div>
 
   <p class="pl-muted" style="font-size: 0.8125rem; margin-top: 1.5rem;">
-    Settlement figure is settled Stripe net after processing fees. Platform revenue is oss.tips project fees plus supporter tips, shown separately as {formatMoney(4207000)} fees and {formatMoney(614000)} tips this month.
+    Settlement is Stripe net after processing fees. oss.tips revenue this month is {formatMoney(4207000)} in project
+    fees and {formatMoney(614000)} in supporter tips.
   </p>
 </AdminShell>

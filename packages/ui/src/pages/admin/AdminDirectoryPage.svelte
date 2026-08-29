@@ -52,8 +52,8 @@
 
 <AdminShell navGroups={adminNav('/admin/directory')} title="Directory">
   <AdminOperatorBar
-    context="Searchable project, user, and supporter directory"
-    detail="Opening a project from here does not impersonate a team session. Use read-only view-as from Cases when you need a simulated permission context."
+    context="Projects, people, and supporters"
+    detail="Opening a project here does not sign you in as that team. Start read-only view-as from a case if you need their dashboard."
   />
 
   <TextField
@@ -61,7 +61,7 @@
     name="directory-search"
     bind:value={search}
     type="search"
-    placeholder="Name, slug, repository, or email…"
+    placeholder="Name, slug, repository, or email"
   />
 
   <div style="margin: 1rem 0;">

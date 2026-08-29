@@ -8,6 +8,63 @@ export function requireItem<T>(items: readonly T[], label: string): T {
   return item;
 }
 
+const PROJECT_NAMES: Record<string, string> = {
+  grove: 'Grove',
+  'vitest-run': 'vitest-run',
+  'ledger-kit': 'ledger-kit',
+  'tiny-sqlite': 'tiny-sqlite',
+  'otel-lite': 'otel-lite',
+  'fake-react': 'fake-react',
+  'paper-ink': 'paper-ink',
+  'new-cli-tool': 'new-cli-tool',
+  'forge-mirror': 'forge-mirror',
+};
+
+const PERSON_NAMES: Record<string, string> = {
+  'ops@oss.tips': 'Nia Okonkwo',
+  'finance@oss.tips': 'Priya Shah',
+  'support@oss.tips': 'Sam Ortiz',
+  'owner@oss.tips': 'Camila Rocha',
+  'auditor@oss.tips': 'Ellis Ward',
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  aligned: 'Aligned',
+  mismatch: 'Mismatch',
+  pending: 'Pending',
+  open: 'Open',
+  investigating: 'Investigating',
+  waiting: 'Waiting',
+  resolved: 'Resolved',
+  high: 'High',
+  medium: 'Medium',
+  low: 'Low',
+  standard: 'Standard',
+  project_5pct: 'Project pays 5%',
+};
+
+export function displayProject(slug: string): string {
+  return PROJECT_NAMES[slug] ?? slug;
+}
+
+export function displayPerson(emailOrName: string): string {
+  return PERSON_NAMES[emailOrName] ?? emailOrName;
+}
+
+export function displayTarget(target: string): string {
+  return PROJECT_NAMES[target] ?? target;
+}
+
+export function humanizeStatus(status: string): string {
+  const known = STATUS_LABELS[status];
+  if (known) return known;
+  return status
+    .split(/[_-]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
 export function adminNav(activeHref: string): NavGroup[] {
   return adminNavGroups.map((group) => ({
     ...group,
@@ -20,7 +77,8 @@ export function adminNav(activeHref: string): NavGroup[] {
 
 export interface ReviewItem {
   id: string;
-  project: string;
+  slug: string;
+  name: string;
   repository: string;
   reason: string;
   risk: 'high' | 'medium' | 'low';
@@ -31,7 +89,8 @@ export interface ReviewItem {
 export const reviewQueue: ReviewItem[] = [
   {
     id: 'rev_1047',
-    project: 'ledger-kit',
+    slug: 'ledger-kit',
+    name: displayProject('ledger-kit'),
     repository: 'github.com/acme/ledger-kit',
     reason: 'Duplicate repository claim',
     risk: 'high',
@@ -40,7 +99,8 @@ export const reviewQueue: ReviewItem[] = [
   },
   {
     id: 'rev_1046',
-    project: 'fake-react',
+    slug: 'fake-react',
+    name: displayProject('fake-react'),
     repository: 'github.com/not-meta/fake-react',
     reason: 'Impersonation indicator',
     risk: 'high',
@@ -49,7 +109,8 @@ export const reviewQueue: ReviewItem[] = [
   },
   {
     id: 'rev_1045',
-    project: 'new-cli-tool',
+    slug: 'new-cli-tool',
+    name: displayProject('new-cli-tool'),
     repository: 'github.com/devon/new-cli-tool',
     reason: 'First payment activation',
     risk: 'low',
@@ -58,7 +119,8 @@ export const reviewQueue: ReviewItem[] = [
   },
   {
     id: 'rev_1044',
-    project: 'tiny-sqlite',
+    slug: 'tiny-sqlite',
+    name: displayProject('tiny-sqlite'),
     repository: 'github.com/yuki/tiny-sqlite',
     reason: 'First payment activation',
     risk: 'low',
@@ -67,7 +129,8 @@ export const reviewQueue: ReviewItem[] = [
   },
   {
     id: 'rev_1043',
-    project: 'forge-mirror',
+    slug: 'forge-mirror',
+    name: displayProject('forge-mirror'),
     repository: 'github.com/ops/forge-mirror',
     reason: 'Unverified forge issuer',
     risk: 'medium',
@@ -76,7 +139,8 @@ export const reviewQueue: ReviewItem[] = [
   },
   {
     id: 'rev_1042',
-    project: 'paper-ink',
+    slug: 'paper-ink',
+    name: displayProject('paper-ink'),
     repository: 'github.com/helena/paper-ink',
     reason: 'Duplicate website claim',
     risk: 'medium',
@@ -85,9 +149,10 @@ export const reviewQueue: ReviewItem[] = [
   },
   {
     id: 'rev_1041',
-    project: 'otel-lite',
+    slug: 'otel-lite',
+    name: displayProject('otel-lite'),
     repository: 'github.com/marcus/otel-lite',
-    reason: 'Risk flag: new owner + first charge',
+    reason: 'New owner plus first charge',
     risk: 'medium',
     submitted: '2026-08-21',
     queueDays: 8,
@@ -112,7 +177,7 @@ export const directoryProjects: DirectoryProject[] = [
     verified: 'Verified',
     payments: 'Ready',
     supporters: 284,
-    feeMode: 'standard',
+    feeMode: humanizeStatus('standard'),
   },
   {
     name: 'vitest-run',
@@ -121,7 +186,7 @@ export const directoryProjects: DirectoryProject[] = [
     verified: 'Verified',
     payments: 'Ready',
     supporters: 412,
-    feeMode: 'project_5pct',
+    feeMode: humanizeStatus('project_5pct'),
   },
   {
     name: 'ledger-kit',
@@ -130,7 +195,7 @@ export const directoryProjects: DirectoryProject[] = [
     verified: 'Pending',
     payments: 'Restricted',
     supporters: 98,
-    feeMode: 'standard',
+    feeMode: humanizeStatus('standard'),
   },
   {
     name: 'tiny-sqlite',
@@ -139,7 +204,7 @@ export const directoryProjects: DirectoryProject[] = [
     verified: 'Verified',
     payments: 'Review',
     supporters: 41,
-    feeMode: 'standard',
+    feeMode: humanizeStatus('standard'),
   },
   {
     name: 'otel-lite',
@@ -148,7 +213,7 @@ export const directoryProjects: DirectoryProject[] = [
     verified: 'Verified',
     payments: 'Ready',
     supporters: 76,
-    feeMode: 'standard',
+    feeMode: humanizeStatus('standard'),
   },
   {
     name: 'fake-react',
@@ -157,7 +222,7 @@ export const directoryProjects: DirectoryProject[] = [
     verified: 'Blocked',
     payments: 'Restricted',
     supporters: 3,
-    feeMode: 'standard',
+    feeMode: humanizeStatus('standard'),
   },
 ];
 
@@ -171,46 +236,46 @@ export interface DirectoryPerson {
 
 export const directoryPeople: DirectoryPerson[] = [
   {
-    name: 'Ada L.',
+    name: 'Ada Lovelace',
     email: 'ada@example.com',
     role: 'Supporter',
-    projects: 'grove, vitest-run',
+    projects: `${displayProject('grove')}, ${displayProject('vitest-run')}`,
     signedIn: '2026-08-28',
   },
   {
-    name: 'Marcus T.',
+    name: 'Marcus Chen',
     email: 'marcus@example.com',
     role: 'Project owner',
-    projects: 'otel-lite',
+    projects: displayProject('otel-lite'),
     signedIn: '2026-08-27',
   },
   {
-    name: 'Yuki S.',
+    name: 'Yuki Sato',
     email: 'yuki@example.com',
     role: 'Project owner',
-    projects: 'tiny-sqlite',
+    projects: displayProject('tiny-sqlite'),
     signedIn: '2026-08-26',
   },
   {
-    name: 'Helena R.',
+    name: 'Helena Ruiz',
     email: 'helena@example.com',
     role: 'Supporter',
-    projects: 'grove',
+    projects: displayProject('grove'),
     signedIn: '2026-08-25',
   },
   {
-    name: 'Devon K.',
+    name: 'Devon Kane',
     email: 'devon@example.com',
     role: 'Project owner',
-    projects: 'new-cli-tool',
+    projects: displayProject('new-cli-tool'),
     signedIn: '2026-08-24',
   },
   {
     name: 'Guest 8f2c',
     email: 'claimed after payment',
     role: 'Guest supporter',
-    projects: 'vitest-run',
-    signedIn: '—',
+    projects: displayProject('vitest-run'),
+    signedIn: 'Not signed in',
   },
 ];
 

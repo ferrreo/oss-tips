@@ -5,6 +5,7 @@
   import Badge from '../../components/Badge.svelte';
   import DataCard from '../../components/DataCard.svelte';
   import SupporterAccountNav from './SupporterAccountNav.svelte';
+  import { labelCadence, labelMembershipStatus } from '../../lib/labels.js';
   import {
     formatMoney,
     monthlyActiveMinor,
@@ -51,9 +52,9 @@
         rows={supporterMemberships.map((m) => ({
           project: m.projectName,
           tier: m.tierName,
-          cadence: m.cadence,
+          cadence: labelCadence(m.cadence),
           amount: formatMoney(m.amountMinor, m.currency),
-          status: m.status,
+          status: labelMembershipStatus(m.status),
           renews: m.renewsAt ?? 'Ended 2026-08-01',
         }))}
       />

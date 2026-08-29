@@ -1,31 +1,35 @@
-import { adminNavGroups } from '../fixtures/demo.js';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import AdminShell from './AdminShell.svelte';
+import AdminShellPreview from './AdminShellPreview.svelte';
 
-const meta: Meta<AdminShell> = {
+const sharedArgs = {
+  title: 'Overview',
+  lede: 'Review queue, settlement volume, and failed jobs.',
+  projectContext: 'Acting on Grove. Refunds and restrictions stay on this project.',
+};
+
+const meta: Meta<AdminShellPreview> = {
   title: 'Components/AdminShell',
-  component: AdminShell,
+  component: AdminShellPreview,
   parameters: { layout: 'fullscreen' },
+  args: sharedArgs,
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    navGroups: adminNavGroups,
-    title: 'Platform overview',
-    lede: 'Review queue, settlement volume, and failed jobs.',
-    projectContext: 'Acting on Grove. Refunds and restrictions stay scoped to this project.',
-  },
+  args: sharedArgs,
 };
 
 export const Dark: Story = {
-  args: {
-    navGroups: adminNavGroups,
-    title: 'Platform overview',
-    lede: 'Review queue, settlement volume, and failed jobs.',
-    projectContext: 'Acting on Grove. Refunds and restrictions stay scoped to this project.',
-  },
+  args: sharedArgs,
   globals: { theme: 'dark' },
+};
+
+export const NoProject: Story = {
+  args: {
+    ...sharedArgs,
+    projectContext: 'No project selected. Refunds and restrictions need one picked first.',
+    lede: 'Nothing here changes money until a project is in context.',
+  },
 };

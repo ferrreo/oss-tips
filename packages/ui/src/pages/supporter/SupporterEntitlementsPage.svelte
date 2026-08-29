@@ -4,6 +4,7 @@
   import Badge from '../../components/Badge.svelte';
   import DataCard from '../../components/DataCard.svelte';
   import SupporterAccountNav from './SupporterAccountNav.svelte';
+  import { labelEntitlementStatus } from '../../lib/labels.js';
   import { supporterEntitlements } from './supporter-demo.js';
 
   const today = '2026-08-29';
@@ -46,15 +47,15 @@
           project: e.projectName,
           tier: e.tierName,
           expires: e.permanent ? 'Permanent' : (e.expiresAt ?? '—'),
-          status: statusOf(e),
+          status: labelEntitlementStatus(statusOf(e)),
           source: e.permanent ? 'One-off' : 'Membership',
         }))}
       />
 
       <div class="pl-row" style="margin-top: 1rem; flex-wrap: wrap;">
-        <Badge variant="forest">{active.length} active</Badge>
-        <Badge>{permanent.length} permanent</Badge>
-        <Badge variant="ochre">{expired.length} expired</Badge>
+        <Badge variant="forest">{active.length} {labelEntitlementStatus('active')}</Badge>
+        <Badge>{permanent.length} {labelEntitlementStatus('permanent')}</Badge>
+        <Badge variant="ochre">{expired.length} {labelEntitlementStatus('expired')}</Badge>
       </div>
     </div>
   </main>

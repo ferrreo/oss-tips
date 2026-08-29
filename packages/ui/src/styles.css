@@ -147,9 +147,13 @@ a:hover {
   }
 }
 
-.pl-page-title {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+.pl-admin h1,
+.pl-admin h2,
+.pl-admin h3,
+.pl-dashboard h1,
+.pl-dashboard h2,
+.pl-dashboard h3 {
+  font-family: var(--pl-font-ui);
 }
 
 .pl-page-lead {
@@ -443,9 +447,10 @@ a:hover {
 
 .pl-table th {
   text-align: left;
+  font-family: var(--pl-font-ui);
   font-weight: 600;
   font-size: 0.8125rem;
-  color: var(--pl-ink-muted);
+  color: var(--pl-ink);
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--pl-border);
   background: var(--pl-canvas-subtle);
@@ -819,18 +824,19 @@ a:hover {
 
 .pl-dashboard__overline {
   margin: 0 0 0.25rem;
+  font-family: var(--pl-font-ui);
   font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--pl-ink-faint);
+  color: var(--pl-ink-muted);
 }
 
 .pl-dashboard__project {
   display: block;
-  font-family: var(--pl-font-display);
+  font-family: var(--pl-font-ui);
   font-size: 1.125rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .pl-dashboard__main {
@@ -844,13 +850,17 @@ a:hover {
 }
 
 .pl-dashboard__title {
+  font-family: var(--pl-font-ui);
   font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .pl-dashboard__lede {
   margin: 0.4rem 0 0;
   color: var(--pl-ink-muted);
   max-width: 36rem;
+  font-family: var(--pl-font-ui);
 }
 
 /* AdminShell */
@@ -864,7 +874,7 @@ a:hover {
   width: var(--pl-sidebar);
   flex-shrink: 0;
   border-right: 1px solid var(--pl-border);
-  background: color-mix(in srgb, var(--pl-info) 10%, var(--pl-surface));
+  background: var(--pl-surface);
   padding: 1.5rem 0;
   position: sticky;
   top: 0;
@@ -876,28 +886,29 @@ a:hover {
 .pl-admin__brand {
   padding: 0 1rem 1.25rem;
   margin: 0 0 0.5rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--pl-info) 25%, var(--pl-border));
+  border-bottom: 1px solid var(--pl-border);
 }
 
 .pl-admin__accent {
   margin: 0;
   color: var(--pl-info);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-family: var(--pl-font-ui);
+  font-size: 0.8125rem;
+  font-weight: 600;
 }
 
 .pl-admin__sub {
   margin: 0.25rem 0 0;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--pl-ink-muted);
 }
 
 .pl-admin__context {
   margin: 0 0 0.5rem;
-  font-size: 0.8125rem;
-  color: var(--pl-info);
+  font-family: var(--pl-font-ui);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--pl-ink-muted);
 }
 
 .pl-admin .pl-sidebar-nav__link--active {
@@ -915,11 +926,12 @@ a:hover {
 
 .pl-sidebar-nav__group {
   padding: 0.5rem 1rem;
+  font-family: var(--pl-font-ui);
   font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--pl-ink-faint);
+  color: var(--pl-ink-muted);
 }
 
 .pl-sidebar-nav__link {
@@ -927,9 +939,10 @@ a:hover {
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1rem;
+  font-family: var(--pl-font-ui);
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--pl-ink-muted);
+  color: var(--pl-ink);
   text-decoration: none;
   border-left: 3px solid transparent;
 }
@@ -951,22 +964,27 @@ a:hover {
   padding: 0.875rem 1rem;
   border-radius: var(--pl-radius-md);
   border: 1px solid var(--pl-border);
+  border-left-width: 4px;
+  font-family: var(--pl-font-ui);
   font-size: 0.9375rem;
 }
 
 .pl-status-banner--info {
   background: color-mix(in srgb, var(--pl-info) 10%, var(--pl-surface));
   border-color: color-mix(in srgb, var(--pl-info) 30%, var(--pl-border));
+  border-left-color: var(--pl-info);
 }
 
 .pl-status-banner--warning {
   background: color-mix(in srgb, var(--pl-warning) 10%, var(--pl-surface));
   border-color: color-mix(in srgb, var(--pl-warning) 30%, var(--pl-border));
+  border-left-color: var(--pl-warning);
 }
 
 .pl-status-banner--danger {
   background: color-mix(in srgb, var(--pl-danger) 10%, var(--pl-surface));
   border-color: color-mix(in srgb, var(--pl-danger) 30%, var(--pl-border));
+  border-left-color: var(--pl-danger);
 }
 
 /* ThreadView */

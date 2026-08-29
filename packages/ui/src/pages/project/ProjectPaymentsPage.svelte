@@ -4,6 +4,7 @@
   import Button from '../../components/Button.svelte';
   import DataCard from '../../components/DataCard.svelte';
   import { demoProject, demoPayments, projectNavGroups, formatMoney } from '../../fixtures/demo.js';
+  import { labelCadence, labelPaymentStatus } from '../../lib/labels.js';
   import { extraPayments } from './project-demo.js';
 
   const payments = [...demoPayments, ...extraPayments];
@@ -32,8 +33,8 @@
       date: payment.date,
       supporter: payment.supporter,
       amount: formatMoney(payment.amountMinor, payment.currency),
-      cadence: payment.cadence,
-      status: payment.status,
+      cadence: labelCadence(payment.cadence),
+      status: labelPaymentStatus(payment.status),
     }))}
   />
 </DashboardShell>

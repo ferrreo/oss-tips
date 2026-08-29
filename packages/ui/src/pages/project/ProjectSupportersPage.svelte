@@ -4,6 +4,7 @@
   import SupporterWall from '../../components/SupporterWall.svelte';
   import TextField from '../../components/TextField.svelte';
   import { demoProject, demoSupporters, projectNavGroups, formatMoney } from '../../fixtures/demo.js';
+  import { labelCadence } from '../../lib/labels.js';
   import { rankedSupporters } from './project-demo.js';
 </script>
 
@@ -24,7 +25,7 @@
     rows={rankedSupporters.map((supporter) => ({
       rank: String(supporter.rank),
       name: supporter.name,
-      cadence: supporter.cadence,
+      cadence: labelCadence(supporter.cadence),
       amount: supporter.amount,
     }))}
   />
@@ -39,7 +40,7 @@
     ]}
     rows={demoSupporters.map((supporter) => ({
       name: supporter.displayName,
-      cadence: supporter.cadence ?? '—',
+      cadence: supporter.cadence ? labelCadence(supporter.cadence) : '—',
       amount: supporter.amountMinor ? formatMoney(supporter.amountMinor, demoProject.currency) : '—',
       public: supporter.public ? 'Yes' : 'Private',
     }))}

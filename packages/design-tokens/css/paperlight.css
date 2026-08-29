@@ -9,7 +9,7 @@
   --pl-surface-raised: #f4eedf;
   --pl-ink: #1e2a22;
   --pl-ink-muted: #667065;
-  --pl-ink-faint: #8b9289;
+  --pl-ink-faint: #6f766e;
   --pl-forest: #2d5c3a;
   --pl-forest-hover: #244a30;
   --pl-moss: #7c8a5b;
@@ -34,8 +34,8 @@
   --pl-surface: #171a15;
   --pl-surface-raised: #1d211b;
   --pl-ink: #ede7d8;
-  --pl-ink-muted: #a8a596;
-  --pl-ink-faint: #77796e;
+  --pl-ink-muted: #b7b4a6;
+  --pl-ink-faint: #96988c;
   --pl-forest: #91a66e;
   --pl-forest-hover: #a5ba82;
   --pl-moss: #71834f;
@@ -55,7 +55,7 @@
 
 :root {
   --pl-font-display: Newsreader, 'EB Garamond', Georgia, serif;
-  --pl-font-ui: 'Source Sans 3', Inter, system-ui, sans-serif;
+  --pl-font-ui: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
   --pl-font-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
   --pl-radius-sm: 0.375rem;
   --pl-radius-md: 0.625rem;

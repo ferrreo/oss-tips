@@ -6,7 +6,7 @@
   import TextField from '../../components/TextField.svelte';
   import SegmentedControl from '../../components/SegmentedControl.svelte';
   import AdminOperatorBar from './AdminOperatorBar.svelte';
-  import { adminCases, adminNav, requireItem } from './admin-demo.js';
+  import { adminCases, adminNav, displayPerson, displayProject, humanizeStatus, requireItem } from './admin-demo.js';
 
   let filter = $state('openish');
   let selectedId = $state(requireItem(adminCases, 'adminCases').id);
@@ -25,8 +25,8 @@
 
 <AdminShell navGroups={adminNav('/admin/cases')} title="Cases">
   <AdminOperatorBar
-    context="Working {selected.id} · {selected.project}"
-    detail="{selected.type}. Restrictions, refunds, and ownership changes stay on this case and the audit log."
+    context="{selected.id} on {displayProject(selected.project)}"
+    detail="{selected.type}. Restrictions, refunds, and ownership changes stay on this case."
   />
 
   <div class="pl-row pl-row--between" style="margin-bottom: 1rem; flex-wrap: wrap;">
@@ -64,21 +64,21 @@
       rows={visible.map((c) => ({
         id: c.id,
         type: c.type,
-        project: c.project,
-        status: c.status,
-        assignee: c.assignee,
+        project: displayProject(c.project),
+        status: humanizeStatus(c.status),
+        assignee: displayPerson(c.assignee),
         opened: c.opened,
       }))}
     />
   </div>
 
   <section class="pl-surface" style="margin-top: 1.5rem; padding: 1.25rem;">
-    <h2 style="font-size: 1.125rem; margin-bottom: 0.5rem;">{selected.id} · {selected.project}</h2>
+    <h2 style="font-size: 1.125rem; margin-bottom: 0.5rem;">{selected.id}, {displayProject(selected.project)}</h2>
     <p style="margin: 0 0 1rem;">{selected.summary}</p>
     <label class="pl-field__label" for="case-select">Case</label>
     <select id="case-select" class="pl-input pl-focus-ring" bind:value={selectedId} style="margin-bottom: 1rem;">
       {#each adminCases as c (c.id)}
-        <option value={c.id}>{c.id} — {c.project}</option>
+        <option value={c.id}>{c.id}, {displayProject(c.project)}</option>
       {/each}
     </select>
     <TextField
