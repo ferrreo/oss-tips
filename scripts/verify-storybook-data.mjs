@@ -58,4 +58,35 @@ if (missingReexport.length > 0) {
   process.exit(1);
 }
 
+const importRoots = ['packages/ui/src', 'packages/ui/.storybook', 'apps/web/src'];
+const legacyStorybook = /['"](@storybook\/svelte(?:\/[^'"]*)?)['"]/g;
+const legacyHits = [];
+
+for (const rel of importRoots) {
+  const dir = join(root, rel);
+  try {
+    readdirSync(dir);
+  } catch {
+    continue;
+  }
+  for (const file of walk(dir)) {
+    const text = readFileSync(file, 'utf8');
+    let match;
+    legacyStorybook.lastIndex = 0;
+    while ((match = legacyStorybook.exec(text))) {
+      if (!match[1].startsWith('@storybook/svelte-vite')) {
+        legacyHits.push(`${relative(root, file)} → ${match[1]}`);
+      }
+    }
+  }
+}
+
+if (legacyHits.length > 0) {
+  console.error("Use '@storybook/svelte-vite', not '@storybook/svelte':");
+  for (const hit of legacyHits) {
+    console.error(`  ${hit}`);
+  }
+  process.exit(1);
+}
+
 console.log('verify-storybook-data: ok');

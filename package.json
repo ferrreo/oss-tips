@@ -25,7 +25,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "storybook": "pnpm --filter @oss-tips/ui storybook",
-    "build-storybook": "pnpm --filter @oss-tips/ui build-storybook"
+    "build-storybook": "pnpm --filter @oss-tips/ui build-storybook",
+    "verify:storybook": "node scripts/verify-storybook-data.mjs"
   },
   "devDependencies": {
     "prettier": "^3.9.6",
