@@ -21,7 +21,9 @@ const CASE_STATUS = {
 
 const PAYMENT_STATUS = {
   succeeded: 'Succeeded',
+  paid: 'Paid',
   pending: 'Pending',
+  processing: 'Processing',
   failed: 'Failed',
   refunded: 'Refunded',
 } satisfies Record<string, string>;
@@ -59,6 +61,7 @@ const INBOX_STATUS = {
 const CADENCE = {
   'one-off': 'One-off',
   one_off: 'One-off',
+  oneoff: 'One-off',
   monthly: 'Monthly',
   annual: 'Annual',
   yearly: 'Yearly',
