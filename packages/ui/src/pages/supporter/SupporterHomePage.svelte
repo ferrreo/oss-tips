@@ -1,6 +1,5 @@
 <script lang="ts">
   import PublicNav from '../../components/PublicNav.svelte';
-  import PublicFooter from '../../components/PublicFooter.svelte';
   import DataCard from '../../components/DataCard.svelte';
   import Table from '../../components/Table.svelte';
   import Badge from '../../components/Badge.svelte';
@@ -111,5 +110,4 @@
       </p>
     </div>
   </main>
-  <PublicFooter />
 </div>

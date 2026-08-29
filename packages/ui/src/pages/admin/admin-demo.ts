@@ -2,6 +2,12 @@ import { adminNavGroups, formatMoney, type NavGroup } from '../../fixtures/demo.
 
 export { formatMoney };
 
+export function requireItem<T>(items: readonly T[], label: string): T {
+  const item = items[0];
+  if (!item) throw new Error(`${label} is empty`);
+  return item;
+}
+
 export function adminNav(activeHref: string): NavGroup[] {
   return adminNavGroups.map((group) => ({
     ...group,

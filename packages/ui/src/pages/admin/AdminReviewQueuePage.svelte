@@ -6,13 +6,13 @@
   import TextField from '../../components/TextField.svelte';
   import SegmentedControl from '../../components/SegmentedControl.svelte';
   import AdminOperatorBar from './AdminOperatorBar.svelte';
-  import { adminNav, reviewQueue } from './admin-demo.js';
+  import { adminNav, requireItem, reviewQueue } from './admin-demo.js';
 
   let filter = $state('all');
-  let selectedId = $state(reviewQueue[0].id);
+  let selectedId = $state(requireItem(reviewQueue, 'reviewQueue').id);
   let reason = $state('');
 
-  const selected = $derived(reviewQueue.find((item) => item.id === selectedId) ?? reviewQueue[0]);
+  const selected = $derived(reviewQueue.find((item) => item.id === selectedId) ?? requireItem(reviewQueue, 'reviewQueue'));
 
   const visible = $derived(
     reviewQueue.filter((item) => (filter === 'all' ? true : item.risk === filter)),

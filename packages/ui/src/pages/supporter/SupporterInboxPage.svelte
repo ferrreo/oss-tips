@@ -1,14 +1,13 @@
 <script lang="ts">
   import PublicNav from '../../components/PublicNav.svelte';
-  import PublicFooter from '../../components/PublicFooter.svelte';
   import ThreadView from '../../components/ThreadView.svelte';
   import Badge from '../../components/Badge.svelte';
   import { formatMoney } from '../../fixtures/demo.js';
   import SupporterAccountNav from './SupporterAccountNav.svelte';
-  import { supporterThreads } from './supporter-demo.js';
+  import { requireThread, supporterThreads } from './supporter-demo.js';
 
-  let selectedId = $state(supporterThreads[0].id);
-  const selected = $derived(supporterThreads.find((t) => t.id === selectedId) ?? supporterThreads[0]);
+  let selectedId = $state(requireThread().id);
+  const selected = $derived(supporterThreads.find((t) => t.id === selectedId) ?? requireThread());
 </script>
 
 <div>
@@ -46,7 +45,6 @@
       </div>
     </div>
   </main>
-  <PublicFooter />
 </div>
 
 <style>

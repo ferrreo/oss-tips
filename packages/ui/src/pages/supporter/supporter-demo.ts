@@ -59,7 +59,6 @@ export const supporterMemberships: Membership[] = [
     amountMinor: 8000,
     currency: 'GBP',
     status: 'cancelled',
-    renewsAt: undefined,
   },
   {
     id: 'mem6',
@@ -201,5 +200,11 @@ export const supporterThreads: Thread[] = [
 ];
 
 export const unreadThreadCount = supporterThreads.filter((t) => t.unread).length;
+
+export function requireThread() {
+  const thread = supporterThreads[0];
+  if (!thread) throw new Error('supporterThreads is empty');
+  return thread;
+}
 
 export const platformTipMinor = 100;

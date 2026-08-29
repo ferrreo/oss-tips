@@ -6,13 +6,13 @@
   import TextField from '../../components/TextField.svelte';
   import SegmentedControl from '../../components/SegmentedControl.svelte';
   import AdminOperatorBar from './AdminOperatorBar.svelte';
-  import { adminCases, adminNav } from './admin-demo.js';
+  import { adminCases, adminNav, requireItem } from './admin-demo.js';
 
   let filter = $state('openish');
-  let selectedId = $state(adminCases[0].id);
+  let selectedId = $state(requireItem(adminCases, 'adminCases').id);
   let note = $state('');
 
-  const selected = $derived(adminCases.find((c) => c.id === selectedId) ?? adminCases[0]);
+  const selected = $derived(adminCases.find((c) => c.id === selectedId) ?? requireItem(adminCases, 'adminCases'));
 
   const visible = $derived(
     adminCases.filter((c) => {
