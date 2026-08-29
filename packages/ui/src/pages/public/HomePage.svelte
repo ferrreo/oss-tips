@@ -5,10 +5,6 @@
   import Badge from '../../components/Badge.svelte';
   import DataCard from '../../components/DataCard.svelte';
   import { featuredProjects, formatMoney, type Project } from '../../fixtures/demo.js';
-  import wordmarkLight from '../../assets/oss-tips-wordmark-light.svg';
-  import wordmarkDark from '../../assets/oss-tips-wordmark-dark.svg';
-  import markLight from '../../assets/oss-tips-mark-light.svg';
-  import markDark from '../../assets/oss-tips-mark-dark.svg';
 
   const pageDemo = {
     overline: 'oss.tips · Paperlight',
@@ -39,7 +35,7 @@
         repository: 'github.com/oss-tips/river-md',
         verified: true,
         currency: 'USD',
-        feeMode: 'standard',
+        feeMode: 'standard' as const,
         logoLetter: 'R',
         tags: ['markdown', 'editor'],
         stats: {
@@ -53,7 +49,7 @@
     counters: [
       { label: 'Projects published', value: '1,248', compare: 'Settled directory', sparkline: [980, 1040, 1112, 1180, 1220, 1248] },
       { label: 'Support processed (30d)', value: '$2.4M', compare: 'After Stripe settlement', sparkline: [18, 19, 21, 20, 23, 24] },
-      { label: 'Median project fee', value: '5.0%', compare: 'Standard mode' },
+      { label: 'Median project fee', value: '5.0%', compare: 'Standard mode', sparkline: [5, 5, 5, 5, 5, 5] },
     ],
   };
 </script>
@@ -65,10 +61,13 @@
       <div class="pl-container">
         <p class="home-overline">{pageDemo.overline}</p>
         <div class="home-brand">
-          <img class="home-mark home-mark--light" src={markLight} alt="" />
-          <img class="home-mark home-mark--dark" src={markDark} alt="" />
-          <img class="home-wordmark home-wordmark--light" src={wordmarkLight} alt="oss.tips" />
-          <img class="home-wordmark home-wordmark--dark" src={wordmarkDark} alt="" />
+          <svg class="home-mark" viewBox="0 0 72 72" aria-hidden="true">
+            <path d="M49 22 A22 22 0 1 1 37 14" fill="none" stroke="var(--pl-forest)" stroke-width="6" stroke-linecap="round" />
+            <path d="M36 16 C40 7 51 8 53 17 C47 21 41 20 36 16 Z" fill="var(--pl-moss)" />
+            <path d="M42 20 C50 16 57 21 55 29 C48 29 44 25 42 20 Z" fill="var(--pl-ochre)" />
+            <circle cx="32" cy="33" r="3" fill="var(--pl-ink)" />
+          </svg>
+          <p class="home-wordmark" aria-label="oss.tips">oss.<span>tips</span></p>
         </div>
         <h1 class="pl-display home-strapline">{pageDemo.strapline}</h1>
         <p class="pl-page-lead" style="margin-bottom: 2rem;">{pageDemo.support}</p>
@@ -166,16 +165,20 @@
   .home-mark {
     width: 4.5rem;
     height: 4.5rem;
+    flex-shrink: 0;
   }
 
   .home-wordmark {
-    height: 3.25rem;
-    width: auto;
+    margin: 0;
+    font-family: var(--pl-font-display);
+    font-size: clamp(2.75rem, 7vw, 5rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--pl-ink);
   }
 
-  .home-mark--dark,
-  .home-wordmark--dark {
-    display: none;
+  .home-wordmark span {
+    color: var(--pl-forest);
   }
 
   .home-strapline {
@@ -227,15 +230,5 @@
     .home-counters {
       grid-template-columns: repeat(3, 1fr);
     }
-  }
-
-  :global([data-theme='dark']) .home-mark--light,
-  :global([data-theme='dark']) .home-wordmark--light {
-    display: none;
-  }
-
-  :global([data-theme='dark']) .home-mark--dark,
-  :global([data-theme='dark']) .home-wordmark--dark {
-    display: block;
   }
 </style>

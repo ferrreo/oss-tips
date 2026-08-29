@@ -7,11 +7,11 @@
   const pageDemo = {
     cards: [
       { label: 'Projects published', value: '1,248', compare: '+12 this month', compareDirection: 'up' as const, sparkline: [980, 1040, 1112, 1180, 1220, 1248] },
-      { label: 'Support processed (30d)', value: '$2.4M', compare: 'Settled volume', sparkline: [18, 19, 21, 20, 23, 24] },
-      { label: 'Median project fee', value: '5.0%', compare: 'Standard mode' },
-      { label: 'Guest one-off share', value: '38%', compare: 'Of settled one-offs' },
-      { label: 'Refunded (30d)', value: '0.4%', compare: 'Of settled volume' },
-      { label: 'Active memberships', value: '6,412', compare: 'Renewing next 30d: 811', sparkline: [5200, 5480, 5710, 5980, 6210, 6412] },
+      { label: 'Support processed (30d)', value: '$2.4M', compare: 'Settled volume', compareDirection: 'neutral' as const, sparkline: [18, 19, 21, 20, 23, 24] },
+      { label: 'Median project fee', value: '5.0%', compare: 'Standard mode', compareDirection: 'neutral' as const, sparkline: [5, 5, 5, 5, 5, 5] },
+      { label: 'Guest one-off share', value: '38%', compare: 'Of settled one-offs', compareDirection: 'neutral' as const, sparkline: [34, 35, 36, 37, 37, 38] },
+      { label: 'Refunded (30d)', value: '0.4%', compare: 'Of settled volume', compareDirection: 'neutral' as const, sparkline: [6, 5, 5, 4, 4, 4] },
+      { label: 'Active memberships', value: '6,412', compare: 'Renewing next 30d: 811', compareDirection: 'neutral' as const, sparkline: [5200, 5480, 5710, 5980, 6210, 6412] },
     ],
     columns: [
       { key: 'rule', label: 'Rule' },

@@ -45,9 +45,10 @@
     ],
     thanks: demoSupporters.filter((supporter) => supporter.public && supporter.message),
     embed: '<script async src="https://oss.tips/widgets/paperlight/thanks.js"><\/script>',
+    goal: demoGoals.find((goal) => goal.slug === 'infrastructure-upgrade'),
   };
 
-  let selectedTier = $state(demoTiers[1].id);
+  let selectedTier = $state('supporter');
 </script>
 
 <div>
@@ -75,7 +76,9 @@
 
       <div class="pp-compose">
         <SupportComposer tiers={demoTiers} currency={demoProject.currency} />
-        <GoalProgress goal={demoGoals[0]} />
+        {#if pageDemo.goal}
+          <GoalProgress goal={pageDemo.goal} />
+        {/if}
       </div>
 
       <h2 class="pl-display" style="font-size: 1.25rem; margin-bottom: 1rem;">Membership tiers</h2>

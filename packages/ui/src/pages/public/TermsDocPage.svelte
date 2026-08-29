@@ -83,17 +83,17 @@
     },
   };
 
-  const fallback = {
-    title: doc.replace(/-/g, ' '),
-    sections: [
-      {
-        heading: 'Document',
-        body: 'This legal document is under review for the public beta. Contact legal@oss.tips for the current draft.',
-      },
-    ],
-  };
-
-  const content = $derived(pageDemo[doc] ?? fallback);
+  const content = $derived(
+    pageDemo[doc] ?? {
+      title: doc.replace(/-/g, ' '),
+      sections: [
+        {
+          heading: 'Document',
+          body: 'This legal document is under review for the public beta. Contact legal@oss.tips for the current draft.',
+        },
+      ],
+    },
+  );
 </script>
 
 <div>

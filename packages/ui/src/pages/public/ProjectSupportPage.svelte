@@ -11,7 +11,7 @@
     tiers: demoTiers,
   };
 
-  let selectedTier = $state(pageDemo.tiers[1].id);
+  let selectedTier = $state('supporter');
 </script>
 
 <div>
