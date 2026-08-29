@@ -42,7 +42,11 @@
       <Button variant="primary" onclick={() => (step = 3)}>Verify ownership</Button>
     </div>
   {:else if step === 3}
-    <StatusBanner variant="warning" title="Connect Stripe" message="Required before Grove can accept payments." />
+    <StatusBanner
+      variant="warning"
+      title="Stripe is not connected yet"
+      message="Grove cannot accept payments until a Connect account is linked."
+    />
     <div class="pl-stack" style="margin-top: 1.5rem; max-width: 36rem;">
       <TextField label="Stripe account" value="acct_1Grove" />
       <TextField label="Country" value="United Kingdom" />

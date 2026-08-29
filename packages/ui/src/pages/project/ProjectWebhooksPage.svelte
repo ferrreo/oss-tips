@@ -10,8 +10,8 @@
 <ProjectDashShell title="Webhooks" lede="Grove sends signed payment and membership events to your servers.">
   <StatusBanner
     variant="warning"
-    title="1 failed delivery"
-    message="The ledger.posted event to hooks.grove.dev failed. A retry is scheduled."
+    title="hooks.grove.dev returned an error"
+    message="ledger.posted failed once. The next retry is queued; deliveries pause after another failure."
   />
   <div class="pl-row pl-row--between" style="margin: 1rem 0;">
     <p style="margin: 0; color: var(--pl-ink);">{webhookRows.length} endpoints registered.</p>
