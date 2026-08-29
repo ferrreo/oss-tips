@@ -106,9 +106,9 @@ export interface DirectoryProject {
 
 export const directoryProjects: DirectoryProject[] = [
   {
-    name: 'Paperlight',
-    slug: 'paperlight',
-    repository: 'github.com/oss-tips/paperlight',
+    name: 'Grove',
+    slug: 'grove',
+    repository: 'github.com/oss-tips/grove',
     verified: 'Verified',
     payments: 'Ready',
     supporters: 284,
@@ -174,7 +174,7 @@ export const directoryPeople: DirectoryPerson[] = [
     name: 'Ada L.',
     email: 'ada@example.com',
     role: 'Supporter',
-    projects: 'paperlight, vitest-run',
+    projects: 'grove, vitest-run',
     signedIn: '2026-08-28',
   },
   {
@@ -195,7 +195,7 @@ export const directoryPeople: DirectoryPerson[] = [
     name: 'Helena R.',
     email: 'helena@example.com',
     role: 'Supporter',
-    projects: 'paperlight',
+    projects: 'grove',
     signedIn: '2026-08-25',
   },
   {
@@ -223,12 +223,12 @@ export interface ReconRow {
 }
 
 export const reconciliationRows: ReconRow[] = [
-  { date: '2026-08-27', project: 'paperlight', stripeNetMinor: 124500, ledgerNetMinor: 124500, status: 'aligned' },
+  { date: '2026-08-27', project: 'grove', stripeNetMinor: 124500, ledgerNetMinor: 124500, status: 'aligned' },
   { date: '2026-08-26', project: 'vitest-run', stripeNetMinor: 89000, ledgerNetMinor: 88500, status: 'mismatch' },
   { date: '2026-08-26', project: 'otel-lite', stripeNetMinor: 21400, ledgerNetMinor: 21400, status: 'aligned' },
   { date: '2026-08-25', project: 'tiny-sqlite', stripeNetMinor: 6700, ledgerNetMinor: 7200, status: 'mismatch' },
   { date: '2026-08-25', project: 'ledger-kit', stripeNetMinor: 15400, ledgerNetMinor: 0, status: 'pending' },
-  { date: '2026-08-24', project: 'paperlight', stripeNetMinor: 33200, ledgerNetMinor: 33100, status: 'mismatch' },
+  { date: '2026-08-24', project: 'grove', stripeNetMinor: 33200, ledgerNetMinor: 33100, status: 'mismatch' },
   { date: '2026-08-23', project: 'vitest-run', stripeNetMinor: 44100, ledgerNetMinor: 44100, status: 'aligned' },
 ];
 
@@ -385,14 +385,14 @@ export const auditEvents: AuditEvent[] = [
     time: '2026-08-22T08:55Z',
     actor: 'auditor@oss.tips',
     action: 'view_as.start',
-    target: 'paperlight',
+    target: 'grove',
     reason: 'Read-only investigation of webhook retries',
     correlation: 'corr_2201',
   },
 ];
 
 export const failedJobs = [
-  { id: 'job_441', kind: 'webhook.deliver', target: 'paperlight', retries: 3, lastError: '410 Gone' },
+  { id: 'job_441', kind: 'webhook.deliver', target: 'grove', retries: 3, lastError: '410 Gone' },
   { id: 'job_438', kind: 'discord.role_sync', target: 'vitest-run', retries: 2, lastError: 'Missing Manage Roles' },
   { id: 'job_430', kind: 'domain.challenge', target: 'vitest-run', retries: 1, lastError: 'TXT not found' },
   { id: 'job_419', kind: 'stripe.capability', target: 'ledger-kit', retries: 4, lastError: 'charges_enabled=false' },

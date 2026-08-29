@@ -378,17 +378,16 @@ function buildDemoChartSeries(): ChartSeries {
 }
 
 export const demoProject: Project = {
-  slug: 'paperlight',
-  name: 'Paperlight',
-  description:
-    'A warm design system and UI toolkit for open-source project support. Built for clarity, accessibility, and financial transparency.',
-  website: 'https://paperlight.dev',
-  repository: 'github.com/oss-tips/paperlight',
+  slug: 'grove',
+  name: 'Grove',
+  description: 'Dependency health checks and release notes for open-source maintainers.',
+  website: 'https://grove.dev',
+  repository: 'github.com/oss-tips/grove',
   verified: true,
   currency: 'USD',
   feeMode: 'standard',
-  logoLetter: 'P',
-  tags: ['design-system', 'svelte', 'typescript'],
+  logoLetter: 'G',
+  tags: ['tooling', 'typescript', 'ci'],
   stats: {
     supporters: 284,
     monthlyRecurringMinor: 642100,
@@ -473,7 +472,7 @@ export const demoSupporters: Supporter[] = [
     amountMinor: 10000,
     cadence: 'monthly',
     public: true,
-    message: 'Paperlight made our docs feel like a product. Happy to keep this going.',
+    message: 'Grove made our docs feel like a product. Happy to keep this going.',
     relativeTime: '2 hours ago',
     supportedAt: '2026-05-29T16:12:00Z',
     currency: 'USD',
@@ -621,7 +620,7 @@ export const demoPayments: Payment[] = [
     method: 'Visa ••4242',
     feeMinor: 590,
     netMinor: 9410,
-    reference: 'pi_3PaperlightAlex',
+    reference: 'pi_3GroveAlex',
   },
   {
     id: 'pay_2',
@@ -635,7 +634,7 @@ export const demoPayments: Payment[] = [
     method: 'Mastercard ••4444',
     feeMinor: 203,
     netMinor: 2297,
-    reference: 'pi_3PaperlightLara',
+    reference: 'pi_3GroveLara',
   },
   {
     id: 'pay_3',
@@ -649,7 +648,7 @@ export const demoPayments: Payment[] = [
     method: 'Link',
     feeMinor: 275,
     netMinor: 4725,
-    reference: 'pi_3PaperlightFan',
+    reference: 'pi_3GroveFan',
   },
   {
     id: 'pay_4',
@@ -663,7 +662,7 @@ export const demoPayments: Payment[] = [
     method: 'Visa ••1881',
     feeMinor: 159,
     netMinor: 841,
-    reference: 'pi_3PaperlightJane',
+    reference: 'pi_3GroveJane',
   },
   {
     id: 'pay_5',
@@ -677,7 +676,7 @@ export const demoPayments: Payment[] = [
     method: 'Apple Pay',
     feeMinor: 159,
     netMinor: 841,
-    reference: 'pi_3PaperlightPriya',
+    reference: 'pi_3GrovePriya',
   },
   {
     id: 'pay_6',
@@ -691,7 +690,7 @@ export const demoPayments: Payment[] = [
     method: 'SEPA Debit',
     feeMinor: 80,
     netMinor: 1920,
-    reference: 'pi_3PaperlightGuest',
+    reference: 'pi_3GroveGuest',
   },
   {
     id: 'pay_7',
@@ -705,7 +704,7 @@ export const demoPayments: Payment[] = [
     method: 'Visa ••0018',
     feeMinor: 203,
     netMinor: 2297,
-    reference: 'pi_3PaperlightMarina',
+    reference: 'pi_3GroveMarina',
   },
   {
     id: 'pay_8',
@@ -719,7 +718,7 @@ export const demoPayments: Payment[] = [
     method: 'ACH',
     feeMinor: 80,
     netMinor: 9920,
-    reference: 'pi_3PaperlightKohei',
+    reference: 'pi_3GroveKohei',
   },
   {
     id: 'pay_9',
@@ -733,7 +732,7 @@ export const demoPayments: Payment[] = [
     method: 'Visa ••9101',
     feeMinor: 0,
     netMinor: 0,
-    reference: 'pi_3PaperlightDylan',
+    reference: 'pi_3GroveDylan',
   },
   {
     id: 'pay_10',
@@ -747,7 +746,7 @@ export const demoPayments: Payment[] = [
     method: 'Google Pay',
     feeMinor: 159,
     netMinor: 841,
-    reference: 'pi_3PaperlightNia',
+    reference: 'pi_3GroveNia',
   },
   {
     id: 'pay_11',
@@ -761,7 +760,7 @@ export const demoPayments: Payment[] = [
     method: 'Link',
     feeMinor: 0,
     netMinor: 0,
-    reference: 'pi_3PaperlightFanRefund',
+    reference: 'pi_3GroveFanRefund',
   },
 ];
 
@@ -779,8 +778,8 @@ export const demoPosts: Post[] = [
   },
   {
     id: 'p2',
-    slug: 'paperlight-1-0',
-    title: 'Paperlight 1.0 design tokens shipped',
+    slug: 'grove-1-0',
+    title: 'Grove 1.0 tokens and docs',
     excerpt: 'Semantic colour tokens, typography stacks, and motion defaults are now stable.',
     body: 'Semantic colour tokens, typography stacks, and motion defaults are now stable across light, dark, and contrast themes. Components read `--pl-*` custom properties so Storybook and production stay aligned.',
     publishedAt: '2026-05-20',
@@ -827,7 +826,7 @@ export const demoThreads: Thread[] = [
   {
     id: 't1',
     subject: 'Question about annual billing',
-    project: 'Paperlight',
+    project: 'Grove',
     supporter: 'marina_ux',
     amountMinor: 2500,
     amountLabel: '$25.00',
@@ -846,7 +845,7 @@ export const demoThreads: Thread[] = [
       },
       {
         id: 'm2',
-        author: 'Paperlight team',
+        author: 'Grove team',
         body: 'Annual Backer includes every Coffee and Supporter reward, plus priority replies and the docs credit.',
         timestamp: '2026-05-29T16:15:00Z',
         relativeTime: '2 hours ago',
@@ -856,7 +855,7 @@ export const demoThreads: Thread[] = [
   {
     id: 't2',
     subject: 'Receipt for one-off support',
-    project: 'Paperlight',
+    project: 'Grove',
     supporter: 'opensourcefan',
     amountMinor: 5000,
     amountLabel: '$50.00',
@@ -878,7 +877,7 @@ export const demoThreads: Thread[] = [
   {
     id: 't3',
     subject: 'Champion working session dates',
-    project: 'Paperlight',
+    project: 'Grove',
     supporter: 'alex_dev',
     amountMinor: 10000,
     amountLabel: '$100.00',
@@ -897,7 +896,7 @@ export const demoThreads: Thread[] = [
       },
       {
         id: 'm5',
-        author: 'Paperlight team',
+        author: 'Grove team',
         body: 'Internal: prefer the 19th so replicas are live first.',
         timestamp: '2026-05-27T18:02:00Z',
         relativeTime: '2 days ago',
@@ -908,7 +907,7 @@ export const demoThreads: Thread[] = [
   {
     id: 't4',
     subject: 'Failed renewal on Coffee',
-    project: 'Paperlight',
+    project: 'Grove',
     supporter: 'dylan_builds',
     amountMinor: 500,
     amountLabel: '$5.00',
@@ -926,7 +925,7 @@ export const demoThreads: Thread[] = [
       },
       {
         id: 'm7',
-        author: 'Paperlight team',
+        author: 'Grove team',
         body: 'You have a 7-day grace window. Update the card and the retry will restore Coffee rewards automatically.',
         timestamp: '2026-05-26T10:05:00Z',
         relativeTime: '3 days ago',
@@ -936,7 +935,7 @@ export const demoThreads: Thread[] = [
   {
     id: 't5',
     subject: 'Named credit spelling',
-    project: 'Paperlight',
+    project: 'Grove',
     supporter: 'lara_code',
     amountMinor: 2500,
     amountLabel: '$25.00',
@@ -954,7 +953,7 @@ export const demoThreads: Thread[] = [
       },
       {
         id: 'm9',
-        author: 'Paperlight team',
+        author: 'Grove team',
         body: 'Updated. The next docs deploy will show Lara Code under Backer credits.',
         timestamp: '2026-05-24T13:41:00Z',
         relativeTime: '5 days ago',
@@ -964,7 +963,7 @@ export const demoThreads: Thread[] = [
   {
     id: 't6',
     subject: 'Webhook retry after launch',
-    project: 'Paperlight',
+    project: 'Grove',
     supporter: 'kohei_rust',
     amountMinor: 10000,
     amountLabel: '$100.00',
@@ -982,7 +981,7 @@ export const demoThreads: Thread[] = [
       },
       {
         id: 'm11',
-        author: 'Paperlight team',
+        author: 'Grove team',
         body: 'Glad the retries held. Receipt and Champion entitlements are on your wall.',
         timestamp: '2026-05-22T20:10:00Z',
         relativeTime: '1 week ago',
@@ -994,8 +993,8 @@ export const demoThreads: Thread[] = [
 export const demoMemberships: Membership[] = [
   {
     id: 'mem1',
-    projectSlug: 'paperlight',
-    projectName: 'Paperlight',
+    projectSlug: 'grove',
+    projectName: 'Grove',
     tierName: 'Supporter',
     cadence: 'monthly',
     amountMinor: 1000,
@@ -1021,7 +1020,7 @@ export const demoMemberships: Membership[] = [
 export const demoEntitlements: Entitlement[] = [
   {
     id: 'e1',
-    projectName: 'Paperlight',
+    projectName: 'Grove',
     tierName: 'Supporter',
     reward: 'Early releases and supporter-only posts',
     status: 'active',
@@ -1039,7 +1038,7 @@ export const demoEntitlements: Entitlement[] = [
   },
   {
     id: 'e3',
-    projectName: 'Paperlight',
+    projectName: 'Grove',
     tierName: 'Coffee',
     reward: 'Public thank-you on the wall',
     status: 'permanent',
@@ -1092,46 +1091,46 @@ export const featuredProjects: Project[] = [
 export const projectNavGroups: NavGroup[] = [
   {
     label: 'Overview',
-    items: [{ label: 'Overview', href: '/paperlight', active: true }],
+    items: [{ label: 'Overview', href: '/grove', active: true }],
   },
   {
     label: 'Support',
     items: [
-      { label: 'Inbox', href: '/paperlight/inbox', badge: 3 },
-      { label: 'Supporters', href: '/paperlight/supporters' },
-      { label: 'Payments', href: '/paperlight/payments' },
-      { label: 'Memberships', href: '/paperlight/memberships' },
+      { label: 'Inbox', href: '/grove/inbox', badge: 3 },
+      { label: 'Supporters', href: '/grove/supporters' },
+      { label: 'Payments', href: '/grove/payments' },
+      { label: 'Memberships', href: '/grove/memberships' },
     ],
   },
   {
     label: 'Engage',
     items: [
-      { label: 'Posts', href: '/paperlight/posts' },
-      { label: 'Supporter wall', href: '/paperlight/wall' },
-      { label: 'Discord', href: '/paperlight/discord' },
+      { label: 'Posts', href: '/grove/posts' },
+      { label: 'Supporter wall', href: '/grove/wall' },
+      { label: 'Discord', href: '/grove/discord' },
     ],
   },
   {
     label: 'Grow',
     items: [
-      { label: 'Goals', href: '/paperlight/goals' },
-      { label: 'Analytics', href: '/paperlight/analytics' },
+      { label: 'Goals', href: '/grove/goals' },
+      { label: 'Analytics', href: '/grove/analytics' },
     ],
   },
   {
     label: 'Develop',
     items: [
-      { label: 'Webhooks', href: '/paperlight/webhooks' },
-      { label: 'API keys', href: '/paperlight/api-keys' },
-      { label: 'Domains', href: '/paperlight/domains' },
+      { label: 'Webhooks', href: '/grove/webhooks' },
+      { label: 'API keys', href: '/grove/api-keys' },
+      { label: 'Domains', href: '/grove/domains' },
     ],
   },
   {
     label: 'Manage',
     items: [
-      { label: 'Team', href: '/paperlight/team' },
-      { label: 'Stripe', href: '/paperlight/stripe' },
-      { label: 'Settings', href: '/paperlight/settings' },
+      { label: 'Team', href: '/grove/team' },
+      { label: 'Stripe', href: '/grove/stripe' },
+      { label: 'Settings', href: '/grove/settings' },
     ],
   },
 ];
@@ -1249,7 +1248,7 @@ export const demoActivity: ActivityEntry[] = [
     relativeTime: '2 hours ago',
     timestamp: '2026-05-29T16:12:00Z',
     amountLabel: '$100.00',
-    href: '/paperlight/payments',
+    href: '/grove/payments',
   },
   {
     id: 'act2',
@@ -1260,7 +1259,7 @@ export const demoActivity: ActivityEntry[] = [
     relativeTime: '4 hours ago',
     timestamp: '2026-05-29T14:30:00Z',
     amountLabel: '$25.00',
-    href: '/paperlight/inbox',
+    href: '/grove/inbox',
   },
   {
     id: 'act3',
@@ -1271,7 +1270,7 @@ export const demoActivity: ActivityEntry[] = [
     relativeTime: 'yesterday',
     timestamp: '2026-05-28T18:05:00Z',
     amountLabel: '$50.00',
-    href: '/paperlight/goals',
+    href: '/grove/goals',
   },
   {
     id: 'act4',
@@ -1282,7 +1281,7 @@ export const demoActivity: ActivityEntry[] = [
     relativeTime: 'yesterday',
     timestamp: '2026-05-28T11:00:00Z',
     amountLabel: 'Public',
-    href: '/paperlight/posts',
+    href: '/grove/posts',
   },
   {
     id: 'act5',
@@ -1293,7 +1292,7 @@ export const demoActivity: ActivityEntry[] = [
     relativeTime: 'yesterday',
     timestamp: '2026-05-28T09:18:00Z',
     amountLabel: '$10.00',
-    href: '/paperlight/supporters',
+    href: '/grove/supporters',
   },
   {
     id: 'act6',
@@ -1304,7 +1303,7 @@ export const demoActivity: ActivityEntry[] = [
     relativeTime: '6 days ago',
     timestamp: '2026-05-23T08:12:00Z',
     amountLabel: '$5.00',
-    href: '/paperlight/payments',
+    href: '/grove/payments',
   },
 ];
 
@@ -1392,7 +1391,7 @@ export const demoReconciliationDiffs: ReconciliationDiff[] = [
   {
     id: 'rec1',
     date: '2026-05-29',
-    project: 'paperlight',
+    project: 'grove',
     stripeNetMinor: 124500,
     ledgerNetMinor: 124500,
     deltaMinor: 0,
@@ -1420,7 +1419,7 @@ export const demoReconciliationDiffs: ReconciliationDiff[] = [
   {
     id: 'rec3',
     date: '2026-05-27',
-    project: 'paperlight',
+    project: 'grove',
     stripeNetMinor: 4725,
     ledgerNetMinor: 4725,
     deltaMinor: 0,
@@ -1448,7 +1447,7 @@ export const demoReconciliationDiffs: ReconciliationDiff[] = [
   {
     id: 'rec5',
     date: '2026-05-23',
-    project: 'paperlight',
+    project: 'grove',
     stripeNetMinor: 0,
     ledgerNetMinor: -500,
     deltaMinor: 500,
@@ -1496,9 +1495,9 @@ export const demoAuditEvents: AuditEvent[] = [
     id: 'aud4',
     time: '2026-05-28T16:44:00Z',
     relativeTime: 'yesterday',
-    actor: 'ada@paperlight.dev',
+    actor: 'ada@grove.dev',
     action: 'project.settings.update',
-    target: 'paperlight',
+    target: 'grove',
     detail: 'Updated public description and fee-mode disclosure copy.',
     ip: '203.0.113.8',
   },
@@ -1549,7 +1548,7 @@ export const demoCases: AdminCase[] = [
 
 export const demoReferrers: ReferrerRow[] = [
   { source: 'github.com', sessions: 1842, supporters: 96, conversionLabel: '5.2%', sharePercent: 41 },
-  { source: 'paperlight.dev', sessions: 980, supporters: 71, conversionLabel: '7.2%', sharePercent: 22 },
+  { source: 'grove.dev', sessions: 980, supporters: 71, conversionLabel: '7.2%', sharePercent: 22 },
   { source: 'Direct', sessions: 640, supporters: 48, conversionLabel: '7.5%', sharePercent: 14 },
   { source: 'news.ycombinator.com', sessions: 510, supporters: 32, conversionLabel: '6.3%', sharePercent: 11 },
   { source: 'discord.com', sessions: 288, supporters: 19, conversionLabel: '6.6%', sharePercent: 7 },
@@ -1586,22 +1585,22 @@ export const demoAnalytics: Analytics = {
 };
 
 export const demoTeam: TeamMember[] = [
-  { id: 'tm1', name: 'Ada Lovelace', email: 'ada@paperlight.dev', role: 'Owner' },
-  { id: 'tm2', name: 'Marcus Chen', email: 'marcus@paperlight.dev', role: 'Finance' },
-  { id: 'tm3', name: 'Yuki Sato', email: 'yuki@paperlight.dev', role: 'Editor' },
+  { id: 'tm1', name: 'Ada Lovelace', email: 'ada@grove.dev', role: 'Owner' },
+  { id: 'tm2', name: 'Marcus Chen', email: 'marcus@grove.dev', role: 'Finance' },
+  { id: 'tm3', name: 'Yuki Sato', email: 'yuki@grove.dev', role: 'Editor' },
 ];
 
 export const demoWebhooks: WebhookEndpoint[] = [
   {
     id: 'wh1',
-    url: 'https://api.paperlight.dev/hooks',
+    url: 'https://api.grove.dev/hooks',
     events: 'payment.*, membership.*',
     status: 'active',
     lastDelivery: '2026-05-29 16:12 UTC',
   },
   {
     id: 'wh2',
-    url: 'https://api.paperlight.dev/hooks/staging',
+    url: 'https://api.grove.dev/hooks/staging',
     events: 'payment.succeeded',
     status: 'failing',
     lastDelivery: '2026-05-29 09:04 UTC',

@@ -12,11 +12,11 @@
   <StatusBanner
     variant="info"
     title="Custom domain active"
-    message="paperlight.dev serves public pages. Checkout stays on oss.tips."
+    message="grove.dev serves public pages. Checkout stays on oss.tips."
   />
   <div class="pl-stack" style="margin-top: 1.5rem; max-width: 36rem;">
-    <TextField label="Custom domain" value="paperlight.dev" help="Public pages and posts only." />
-    <TextField label="DNS verification" value="_oss-tips.paperlight.dev" help="CNAME or TXT record required." />
+    <TextField label="Custom domain" value="grove.dev" help="Public pages and posts only." />
+    <TextField label="DNS verification" value="_oss-tips.grove.dev" help="CNAME or TXT record required." />
     <Button variant="primary">Verify domain</Button>
   </div>
   <h2 style="font-size: 1rem; margin: 2rem 0 0.75rem;">DNS records</h2>

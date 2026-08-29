@@ -12,7 +12,7 @@
   <div class="pl-surface" style="padding: 1.25rem; margin-bottom: 1.5rem; max-width: 36rem;">
     <div class="pl-stack">
       <TextField label="Date range" value="2026-08-01 to 2026-08-29" />
-      <TextField label="Destination email" value="finance@paperlight.dev" />
+      <TextField label="Destination email" value="finance@grove.dev" />
       <Button variant="secondary">Request custom export</Button>
     </div>
   </div>

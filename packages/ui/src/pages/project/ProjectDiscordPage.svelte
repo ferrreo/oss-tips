@@ -14,7 +14,7 @@
     <TextField label="Discord server ID" value="123456789012345678" />
     <TextField
       label="Bot invite URL"
-      value="https://discord.com/oauth2/authorize?client_id=paperlight-bot&scope=bot"
+      value="https://discord.com/oauth2/authorize?client_id=grove-bot&scope=bot"
       help="Re-invite if permissions change."
     />
     <TextField label="Default role" value="supporters" />

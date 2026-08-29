@@ -93,7 +93,7 @@
       },
       {
         date: '2026-08-24',
-        project: 'paperlight',
+        project: 'grove',
         difference: `Stripe ${formatMoney(33200)} vs ledger ${formatMoney(33100)} (${deltaLabel(33200, 33100)})`,
         next: 'FX presentment rounding — confirm Adaptive Pricing window',
       },

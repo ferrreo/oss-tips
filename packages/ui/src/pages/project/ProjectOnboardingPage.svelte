@@ -41,7 +41,7 @@
   {:else if step === 3}
     <StatusBanner variant="warning" title="Connect Stripe" message="Required before accepting payments." />
     <div class="pl-stack" style="margin-top: 1.5rem; max-width: 36rem;">
-      <TextField label="Stripe account" value="acct_1Paperlight" />
+      <TextField label="Stripe account" value="acct_1Grove" />
       <TextField label="Country" value="United Kingdom" />
       <Button variant="primary" onclick={() => (step = 4)}>Start Stripe onboarding</Button>
     </div>

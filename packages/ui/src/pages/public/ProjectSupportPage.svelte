@@ -7,7 +7,7 @@
   import { demoProject, demoTiers } from '../../fixtures/demo.js';
 
   const pageDemo = {
-    lead: 'Choose a cadence and amount, then continue to Stripe Checkout. Entitlements unlock only after the payment event is verified.',
+    lead: 'Pick a cadence and amount, then continue to Stripe. Access is granted only after Stripe confirms the payment.',
     tiers: demoTiers,
   };
 

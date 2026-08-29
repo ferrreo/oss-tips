@@ -1,5 +1,4 @@
 <script lang="ts">
-  import HeroLandscape from './HeroLandscape.svelte';
   import wordmarkLight from '../assets/oss-tips-wordmark-light.svg';
   import wordmarkDark from '../assets/oss-tips-wordmark-dark.svg';
 
@@ -29,7 +28,6 @@
 </script>
 
 <footer class="pl-public-footer">
-  <HeroLandscape theme={resolved} compact class="pl-public-footer__landscape" />
   <div class="pl-container">
     <div class="pl-public-footer__grid">
       <div>
@@ -58,7 +56,7 @@
       </div>
     </div>
     <p class="pl-public-footer__legal">
-      Secure payments via Stripe. Projects are the merchant of record.
+      Payments run through Stripe. Each project is the merchant of record.
     </p>
   </div>
 </footer>

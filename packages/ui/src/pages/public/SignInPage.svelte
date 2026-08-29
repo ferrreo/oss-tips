@@ -7,7 +7,7 @@
 
   const pageDemo = {
     title: 'Sign in',
-    lead: 'Email one-time passcode. No passwords. OAuth is available for GitHub and Google when you prefer it.',
+    lead: 'We email a six-digit code. No passwords. You can also use GitHub or Google.',
     oauth: [
       { id: 'github', label: 'Continue with GitHub' },
       { id: 'google', label: 'Continue with Google' },

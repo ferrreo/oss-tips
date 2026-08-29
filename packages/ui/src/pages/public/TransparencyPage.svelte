@@ -31,7 +31,7 @@
   <main id="main-content" class="pl-section">
     <div class="pl-container">
       <h1 class="pl-page-title">Transparency</h1>
-      <p class="pl-page-lead">Platform counters derived from settled data only.</p>
+      <p class="pl-page-lead">These figures use settled Stripe data only. Demo numbers until production totals exist.</p>
       <div class="tr-grid">
         {#each pageDemo.cards as card (card.label)}
           <DataCard
@@ -45,7 +45,7 @@
       </div>
       <div class="pl-prose" style="margin-top: 2rem;">
         <h2>How we report</h2>
-        <p>Figures update after Stripe settlement. We do not show vanity metrics or payment-volume leaderboards.</p>
+        <p>Totals update after Stripe settles. We do not publish leaderboards by payment volume.</p>
       </div>
       <Table columns={pageDemo.columns} rows={pageDemo.rows} caption="Reporting rules" />
     </div>

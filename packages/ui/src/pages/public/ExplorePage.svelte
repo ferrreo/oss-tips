@@ -16,7 +16,7 @@
       {
         slug: 'river-md',
         name: 'river-md',
-        description: 'Deterministic Markdown round-trip for gated posts and RSS.',
+        description: 'Markdown editor with gated posts and RSS.',
         website: 'https://river-md.dev',
         repository: 'github.com/oss-tips/river-md',
         verified: true,
@@ -34,7 +34,7 @@
       {
         slug: 'seed-bot',
         name: 'seed-bot',
-        description: 'Discord role sync for membership entitlements.',
+        description: 'Discord roles that follow membership status.',
         website: 'https://seed-bot.dev',
         repository: 'github.com/oss-tips/seed-bot',
         verified: false,
@@ -64,7 +64,7 @@
         project.repository.toLowerCase().includes(q) ||
         project.tags.some((tag) => tag.toLowerCase().includes(q));
       if (!matchesQuery) return false;
-      if (activeFilter === 'goals') return project.slug === 'paperlight' || project.slug === 'vitest-run';
+      if (activeFilter === 'goals') return project.slug === 'grove' || project.slug === 'vitest-run';
       if (activeFilter === 'recurring') return project.stats.monthlyRecurringMinor > 0;
       if (activeFilter === 'updated') return project.verified;
       return true;

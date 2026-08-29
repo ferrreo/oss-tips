@@ -9,7 +9,7 @@ const preview: Preview = {
   },
   globalTypes: {
     theme: {
-      description: 'Paperlight theme',
+      description: 'Colour theme',
       toolbar: {
         title: 'Theme',
         icon: 'circlehollow',

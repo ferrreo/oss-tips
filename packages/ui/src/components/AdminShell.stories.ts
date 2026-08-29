@@ -16,7 +16,7 @@ export const Default: Story = {
     navGroups: adminNavGroups,
     title: 'Platform overview',
     lede: 'Review queue, settlement volume, and failed jobs.',
-    projectContext: 'Acting on Paperlight. Refunds and restrictions stay scoped to this project.',
+    projectContext: 'Acting on Grove. Refunds and restrictions stay scoped to this project.',
   },
 };
 
@@ -25,7 +25,7 @@ export const Dark: Story = {
     navGroups: adminNavGroups,
     title: 'Platform overview',
     lede: 'Review queue, settlement volume, and failed jobs.',
-    projectContext: 'Acting on Paperlight. Refunds and restrictions stay scoped to this project.',
+    projectContext: 'Acting on Grove. Refunds and restrictions stay scoped to this project.',
   },
   globals: { theme: 'dark' },
 };

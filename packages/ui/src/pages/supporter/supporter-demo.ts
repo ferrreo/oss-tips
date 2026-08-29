@@ -8,8 +8,8 @@ export const supporterEmail = 'ada@example.com';
 export const supporterMemberships: Membership[] = [
   {
     id: 'mem1',
-    projectSlug: 'paperlight',
-    projectName: 'Paperlight',
+    projectSlug: 'grove',
+    projectName: 'Grove',
     tierName: 'Sapling',
     cadence: 'monthly',
     amountMinor: 1000,
@@ -74,9 +74,9 @@ export const supporterMemberships: Membership[] = [
 ];
 
 export const supporterEntitlements: Entitlement[] = [
-  { id: 'e1', projectName: 'Paperlight', tierName: 'Sapling', expiresAt: '2026-09-15' },
+  { id: 'e1', projectName: 'Grove', tierName: 'Sapling', expiresAt: '2026-09-15' },
   { id: 'e2', projectName: 'vitest-run', tierName: 'Maintainer', expiresAt: '2027-03-01' },
-  { id: 'e3', projectName: 'Paperlight', tierName: 'Seed', permanent: true },
+  { id: 'e3', projectName: 'Grove', tierName: 'Seed', permanent: true },
   { id: 'e4', projectName: 'otel-lite', tierName: 'Canopy', expiresAt: '2026-09-04' },
   { id: 'e5', projectName: 'tiny-sqlite', tierName: 'Sapling', expiresAt: '2026-08-01' },
   { id: 'e6', projectName: 'ledger-kit', tierName: 'Seed', expiresAt: '2026-09-03' },
@@ -90,7 +90,7 @@ export interface LifetimeSupport {
 }
 
 export const lifetimeSupport: LifetimeSupport[] = [
-  { projectName: 'Paperlight', oneOffMinor: 5000, recurringMinor: 24000, currency: 'GBP' },
+  { projectName: 'Grove', oneOffMinor: 5000, recurringMinor: 24000, currency: 'GBP' },
   { projectName: 'vitest-run', oneOffMinor: 0, recurringMinor: 12000, currency: 'GBP' },
   { projectName: 'otel-lite', oneOffMinor: 2500, recurringMinor: 7500, currency: 'GBP' },
   { projectName: 'ledger-kit', oneOffMinor: 1000, recurringMinor: 1500, currency: 'GBP' },
@@ -111,7 +111,7 @@ export const supporterThreads: Thread[] = [
   {
     id: 't1',
     subject: 'Question about annual billing',
-    project: 'Paperlight',
+    project: 'Grove',
     amountMinor: 10000,
     cadence: 'annual',
     unread: true,
@@ -124,7 +124,7 @@ export const supporterThreads: Thread[] = [
       },
       {
         id: 'm2',
-        author: 'Paperlight team',
+        author: 'Grove team',
         body: 'Yes — annual Sapling includes every Seed reward plus early releases.',
         timestamp: '2026-08-27T14:15:00Z',
       },
@@ -133,7 +133,7 @@ export const supporterThreads: Thread[] = [
   {
     id: 't2',
     subject: 'Receipt for one-off support',
-    project: 'Paperlight',
+    project: 'Grove',
     amountMinor: 5000,
     cadence: 'one-off',
     messages: [

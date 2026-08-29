@@ -141,28 +141,28 @@ export const rankedSupporters: RankedSupporter[] = [
 export const toolCards: ToolCard[] = [
   {
     title: 'Discord',
-    blurb: 'Map membership tiers to Discord roles and sync entitlements on each payment.',
-    href: '/paperlight/discord',
+    blurb: 'Give Discord roles when someone is an active member.',
+    href: '/grove/discord',
   },
   {
     title: 'Posts',
-    blurb: 'Publish updates for supporters and the public, with tier-gated visibility.',
-    href: '/paperlight/posts',
+    blurb: 'Write updates. Gate some of them by tier.',
+    href: '/grove/posts',
   },
   {
     title: 'Webhooks',
-    blurb: 'Signed payment and membership events for your own backend.',
-    href: '/paperlight/webhooks',
+    blurb: 'Get signed payment and membership events in your own app.',
+    href: '/grove/webhooks',
   },
   {
     title: 'API',
-    blurb: 'Scoped server-side keys for reading payments, members, and project data.',
-    href: '/paperlight/api-keys',
+    blurb: 'Server keys to read payments, members, and project data.',
+    href: '/grove/api-keys',
   },
   {
     title: 'Custom domain',
-    blurb: 'Serve public pages and posts from your domain. Checkout stays on oss.tips.',
-    href: '/paperlight/domains',
+    blurb: 'Host public pages on your domain. Checkout stays on oss.tips.',
+    href: '/grove/domains',
   },
 ];
 
@@ -271,7 +271,7 @@ export const extraThreads: Thread[] = [
   {
     id: 't3',
     subject: 'Thanks for early-release access',
-    project: 'Paperlight',
+    project: 'Grove',
     amountMinor: 2500,
     cadence: 'monthly',
     unread: true,
@@ -287,7 +287,7 @@ export const extraThreads: Thread[] = [
   {
     id: 't4',
     subject: 'Duplicate August receipt',
-    project: 'Paperlight',
+    project: 'Grove',
     amountMinor: 1000,
     cadence: 'monthly',
     messages: [
@@ -299,7 +299,7 @@ export const extraThreads: Thread[] = [
       },
       {
         id: 'm6',
-        author: 'Paperlight team',
+        author: 'Grove team',
         body: 'The second mail was a Stripe retry. Only one charge settled.',
         timestamp: '2026-08-25T13:05:00Z',
       },
@@ -308,7 +308,7 @@ export const extraThreads: Thread[] = [
   {
     id: 't5',
     subject: 'Switching to annual Sapling',
-    project: 'Paperlight',
+    project: 'Grove',
     amountMinor: 500,
     cadence: 'monthly',
     unread: true,
@@ -324,7 +324,7 @@ export const extraThreads: Thread[] = [
   {
     id: 't6',
     subject: 'Thank-you on the wall',
-    project: 'Paperlight',
+    project: 'Grove',
     amountMinor: 1500,
     cadence: 'monthly',
     messages: [
@@ -386,11 +386,11 @@ export const discordRoleRows = [
 ];
 
 export const domainRows = [
-  { host: 'paperlight.dev', type: 'Apex', status: 'Active', target: 'cname.oss.tips' },
-  { host: 'www.paperlight.dev', type: 'WWW', status: 'Active', target: 'cname.oss.tips' },
-  { host: '_oss-tips.paperlight.dev', type: 'TXT', status: 'Verified', target: 'oss-tips-verify=pl-9f2c' },
-  { host: 'support.paperlight.dev', type: 'CNAME', status: 'Pending', target: 'pages.oss.tips' },
-  { host: 'docs.paperlight.dev', type: 'CNAME', status: 'Active', target: 'pages.oss.tips' },
+  { host: 'grove.dev', type: 'Apex', status: 'Active', target: 'cname.oss.tips' },
+  { host: 'www.grove.dev', type: 'WWW', status: 'Active', target: 'cname.oss.tips' },
+  { host: '_oss-tips.grove.dev', type: 'TXT', status: 'Verified', target: 'oss-tips-verify=pl-9f2c' },
+  { host: 'support.grove.dev', type: 'CNAME', status: 'Pending', target: 'pages.oss.tips' },
+  { host: 'docs.grove.dev', type: 'CNAME', status: 'Active', target: 'pages.oss.tips' },
 ];
 
 export const exportRows = [
@@ -412,36 +412,36 @@ export const membershipRows = [
 ];
 
 export const onboardingSteps = [
-  { step: '1', label: 'Identity', detail: 'Paperlight · paperlight.dev', status: 'Complete' },
-  { step: '2', label: 'Ownership', detail: 'github.com/oss-tips/paperlight', status: 'In progress' },
-  { step: '3', label: 'Stripe', detail: 'acct_1Paperlight · charges enabled', status: 'Waiting' },
+  { step: '1', label: 'Identity', detail: 'Grove · grove.dev', status: 'Complete' },
+  { step: '2', label: 'Ownership', detail: 'github.com/oss-tips/grove', status: 'In progress' },
+  { step: '3', label: 'Stripe', detail: 'acct_1Grove · charges enabled', status: 'Waiting' },
   { step: '4', label: 'Page & tiers', detail: 'Seed, Sapling, Canopy drafted', status: 'Waiting' },
   { step: '5', label: 'Publish', detail: 'Directory listing after first payment', status: 'Waiting' },
 ];
 
 export const teamRows = [
-  { name: 'Ada Lovelace', email: 'ada@paperlight.dev', role: 'Owner', lastActive: 'Just now' },
-  { name: 'Marcus Chen', email: 'marcus@paperlight.dev', role: 'Finance', lastActive: '2h ago' },
-  { name: 'Yuki Sato', email: 'yuki@paperlight.dev', role: 'Editor', lastActive: 'Yesterday' },
-  { name: 'Noor Aziz', email: 'noor@paperlight.dev', role: 'Community', lastActive: '2d ago' },
-  { name: 'Devon Kole', email: 'devon@paperlight.dev', role: 'Analyst', lastActive: '5d ago' },
-  { name: 'Helena Ruiz', email: 'helena@paperlight.dev', role: 'Editor', lastActive: '1w ago' },
+  { name: 'Ada Lovelace', email: 'ada@grove.dev', role: 'Owner', lastActive: 'Just now' },
+  { name: 'Marcus Chen', email: 'marcus@grove.dev', role: 'Finance', lastActive: '2h ago' },
+  { name: 'Yuki Sato', email: 'yuki@grove.dev', role: 'Editor', lastActive: 'Yesterday' },
+  { name: 'Noor Aziz', email: 'noor@grove.dev', role: 'Community', lastActive: '2d ago' },
+  { name: 'Devon Kole', email: 'devon@grove.dev', role: 'Analyst', lastActive: '5d ago' },
+  { name: 'Helena Ruiz', email: 'helena@grove.dev', role: 'Editor', lastActive: '1w ago' },
 ];
 
 export const webhookRows = [
-  { url: 'https://api.paperlight.dev/hooks', events: 'payment.*, membership.*', status: 'Active', last: '2m ago' },
-  { url: 'https://api.paperlight.dev/discord', events: 'entitlement.*', status: 'Active', last: '14m ago' },
-  { url: 'https://hooks.paperlight.dev/ledger', events: 'ledger.posted', status: 'Failing', last: '1h ago' },
-  { url: 'https://ci.paperlight.dev/oss-tips', events: 'payment.succeeded', status: 'Active', last: '3h ago' },
-  { url: 'https://ops.paperlight.dev/alerts', events: 'domain.*, webhook.failed', status: 'Paused', last: '2d ago' },
+  { url: 'https://api.grove.dev/hooks', events: 'payment.*, membership.*', status: 'Active', last: '2m ago' },
+  { url: 'https://api.grove.dev/discord', events: 'entitlement.*', status: 'Active', last: '14m ago' },
+  { url: 'https://hooks.grove.dev/ledger', events: 'ledger.posted', status: 'Failing', last: '1h ago' },
+  { url: 'https://ci.grove.dev/oss-tips', events: 'payment.succeeded', status: 'Active', last: '3h ago' },
+  { url: 'https://ops.grove.dev/alerts', events: 'domain.*, webhook.failed', status: 'Paused', last: '2d ago' },
 ];
 
 export const webhookDeliveries = [
-  { id: 'del_91', event: 'payment.succeeded', target: 'api.paperlight.dev/hooks', code: '200', time: '2m ago' },
-  { id: 'del_90', event: 'membership.renewed', target: 'api.paperlight.dev/hooks', code: '200', time: '14m ago' },
-  { id: 'del_89', event: 'ledger.posted', target: 'hooks.paperlight.dev/ledger', code: '502', time: '1h ago' },
-  { id: 'del_88', event: 'entitlement.granted', target: 'api.paperlight.dev/discord', code: '200', time: '3h ago' },
-  { id: 'del_87', event: 'payment.refunded', target: 'api.paperlight.dev/hooks', code: '200', time: '1d ago' },
+  { id: 'del_91', event: 'payment.succeeded', target: 'api.grove.dev/hooks', code: '200', time: '2m ago' },
+  { id: 'del_90', event: 'membership.renewed', target: 'api.grove.dev/hooks', code: '200', time: '14m ago' },
+  { id: 'del_89', event: 'ledger.posted', target: 'hooks.grove.dev/ledger', code: '502', time: '1h ago' },
+  { id: 'del_88', event: 'entitlement.granted', target: 'api.grove.dev/discord', code: '200', time: '3h ago' },
+  { id: 'del_87', event: 'payment.refunded', target: 'api.grove.dev/hooks', code: '200', time: '1d ago' },
 ];
 
 export const stripeCapabilityRows = [
@@ -453,9 +453,9 @@ export const stripeCapabilityRows = [
 ];
 
 export const settingsLinks = [
-  { label: 'Public page', value: 'https://oss.tips/paperlight' },
-  { label: 'Website', value: 'https://paperlight.dev' },
-  { label: 'Repository', value: 'github.com/oss-tips/paperlight' },
-  { label: 'Support email', value: 'hello@paperlight.dev' },
+  { label: 'Public page', value: 'https://oss.tips/grove' },
+  { label: 'Website', value: 'https://grove.dev' },
+  { label: 'Repository', value: 'github.com/oss-tips/grove' },
+  { label: 'Support email', value: 'hello@grove.dev' },
   { label: 'Currency', value: 'GBP' },
 ];

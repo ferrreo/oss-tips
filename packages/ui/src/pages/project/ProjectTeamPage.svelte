@@ -14,7 +14,7 @@
   </div>
   <div class="pl-surface" style="padding: 1.25rem; margin-bottom: 1.5rem; max-width: 36rem;">
     <div class="pl-stack">
-      <TextField label="Email" value="grove@paperlight.dev" />
+      <TextField label="Email" value="grove@grove.dev" />
       <TextField label="Role" value="Editor" help="Owner, Admin, Finance, Editor, Community, or Analyst." />
     </div>
   </div>

@@ -1,6 +1,6 @@
 # @oss-tips/ui Storybook
 
-Paperlight design system components and **every** product page composition.
+oss.tips UI components and page compositions. Tokens use the Paperlight design system.
 
 ## Run
 

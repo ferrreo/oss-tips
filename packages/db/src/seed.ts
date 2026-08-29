@@ -30,8 +30,8 @@ async function main(): Promise<void> {
       .insertInto('user')
       .values({
         id: userId,
-        name: 'Paperlight Demo',
-        email: 'demo@paperlight.dev',
+        name: 'Grove Demo',
+        email: 'demo@grove.dev',
         email_verified: true,
         image: null,
       })
@@ -41,8 +41,8 @@ async function main(): Promise<void> {
       .insertInto('organisation')
       .values({
         id: orgId,
-        name: 'Paperlight',
-        slug: 'paperlight',
+        name: 'Grove',
+        slug: 'grove',
       })
       .execute();
 
@@ -61,8 +61,8 @@ async function main(): Promise<void> {
       .values({
         id: projectId,
         organisation_id: orgId,
-        name: 'Paperlight',
-        slug: 'demo',
+        name: 'Grove',
+        slug: 'grove',
         status: 'published',
         description: 'Demo open-source project for local development.',
         default_currency: 'gbp',
@@ -144,7 +144,7 @@ async function main(): Promise<void> {
       .values({
         id: uuidv7(),
         project_id: projectId,
-        stripe_account_id: 'acct_demo_paperlight',
+        stripe_account_id: 'acct_demo_grove',
         charges_enabled: true,
         payouts_enabled: true,
         capabilities: {
@@ -175,7 +175,7 @@ async function main(): Promise<void> {
           id: welcomePostId,
           project_id: projectId,
           author_id: userId,
-          title: 'Welcome to Paperlight',
+          title: 'Welcome to Grove',
           slug: 'welcome',
           status: 'published',
           published_at: now,
@@ -200,7 +200,7 @@ async function main(): Promise<void> {
           post_id: welcomePostId,
           revision_number: 1,
           body_markdown:
-            '# Welcome\n\nThanks for exploring the **Paperlight** demo project on oss.tips.',
+            '# Welcome\n\nThanks for exploring the **Grove** demo project on oss.tips.',
           editor_json: null,
           created_by: userId,
         },
@@ -237,7 +237,7 @@ async function main(): Promise<void> {
       .execute();
   });
 
-  console.log('Seeded demo project "paperlight" at slug "demo"');
+  console.log('Seeded demo project "grove" at slug "grove"');
   await destroyDb(db);
 }
 

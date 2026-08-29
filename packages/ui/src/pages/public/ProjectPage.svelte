@@ -19,9 +19,9 @@
 
   const pageDemo = {
     community: [
-      { label: 'Discord', href: 'https://discord.gg/paperlight' },
-      { label: 'Docs', href: 'https://paperlight.dev/docs' },
-      { label: 'Mastodon', href: 'https://fosstodon.org/@paperlight' },
+      { label: 'Discord', href: 'https://discord.gg/grove' },
+      { label: 'Docs', href: 'https://grove.dev/docs' },
+      { label: 'Mastodon', href: 'https://fosstodon.org/@grove' },
     ],
     stats: [
       {
@@ -44,7 +44,7 @@
       },
     ],
     thanks: demoSupporters.filter((supporter) => supporter.public && supporter.message),
-    embed: '<script async src="https://oss.tips/widgets/paperlight/thanks.js"><\/script>',
+    embed: '<script async src="https://oss.tips/widgets/grove/thanks.js"><\/script>',
     goal: demoGoals.find((goal) => goal.slug === 'infrastructure-upgrade'),
   };
 

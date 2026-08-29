@@ -12,7 +12,7 @@
   <StatusBanner
     variant="warning"
     title="1 failed delivery"
-    message="ledger.posted to https://hooks.paperlight.dev/ledger — retry scheduled."
+    message="ledger.posted to https://hooks.grove.dev/ledger — retry scheduled."
   />
   <div class="pl-row pl-row--between" style="margin: 1rem 0;">
     <p class="pl-muted">Signed webhook endpoints for your backend.</p>
@@ -20,7 +20,7 @@
   </div>
   <div class="pl-surface" style="padding: 1.25rem; margin-bottom: 1.5rem; max-width: 36rem;">
     <div class="pl-stack">
-      <TextField label="Endpoint URL" value="https://api.paperlight.dev/hooks" />
+      <TextField label="Endpoint URL" value="https://api.grove.dev/hooks" />
       <TextField label="Events" value="payment.*, membership.*, entitlement.*" />
     </div>
   </div>

@@ -12,7 +12,7 @@
     tier: 'Sapling',
     entitlement: 'Sapling rewards for 30 days',
     expires: '2026-09-27',
-    reference: 'cs_test_a1PaperlightSapling',
+    reference: 'cs_test_a1GroveSapling',
     receiptEmail: 'ada@example.com',
   };
 </script>

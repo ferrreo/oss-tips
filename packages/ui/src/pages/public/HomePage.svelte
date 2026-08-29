@@ -3,34 +3,22 @@
   import PublicFooter from '../../components/PublicFooter.svelte';
   import Button from '../../components/Button.svelte';
   import Badge from '../../components/Badge.svelte';
-  import DataCard from '../../components/DataCard.svelte';
   import { featuredProjects, formatMoney, type Project } from '../../fixtures/demo.js';
 
   const pageDemo = {
-    overline: 'oss.tips · Paperlight',
     strapline: 'Open source thrives with you.',
-    support:
-      'Direct support for the tools you rely on. One-off gifts and memberships with clear fees. No hidden platform balance.',
+    support: 'Direct support for the tools you rely on. Clear fees. No hidden platform balance.',
     cadences: [
-      {
-        name: 'One-off',
-        body: 'Gift any amount from $2. Optional entitlements last 30 days, 90 days, a year, or permanently when the project says so.',
-      },
-      {
-        name: 'Monthly',
-        body: 'Recurring memberships with cumulative tier rewards. Cancel any time. Access continues to the paid period end.',
-      },
-      {
-        name: 'Annual',
-        body: 'A year of support at the project explicit annual price. The same rewards as monthly, without a silent discount.',
-      },
+      { name: 'One-off', body: 'Send any amount from $2. Some projects grant temporary access with that gift.' },
+      { name: 'Monthly', body: 'A membership that renews each month. Cancel any time; access lasts through the paid period.' },
+      { name: 'Annual', body: 'A year of support at the project’s annual price, with the same rewards as monthly.' },
     ],
     projects: [
       ...featuredProjects,
       {
         slug: 'river-md',
         name: 'river-md',
-        description: 'Deterministic Markdown round-trip for gated posts and RSS.',
+        description: 'Markdown editor with gated posts and RSS.',
         website: 'https://river-md.dev',
         repository: 'github.com/oss-tips/river-md',
         verified: true,
@@ -46,11 +34,6 @@
         },
       },
     ] satisfies Project[],
-    counters: [
-      { label: 'Projects published', value: '1,248', compare: 'Settled directory', sparkline: [980, 1040, 1112, 1180, 1220, 1248] },
-      { label: 'Support processed (30d)', value: '$2.4M', compare: 'After Stripe settlement', sparkline: [18, 19, 21, 20, 23, 24] },
-      { label: 'Median project fee', value: '5.0%', compare: 'Standard mode', sparkline: [5, 5, 5, 5, 5, 5] },
-    ],
   };
 </script>
 
@@ -59,7 +42,6 @@
   <main id="main-content">
     <section class="home-hero">
       <div class="pl-container">
-        <p class="home-overline">{pageDemo.overline}</p>
         <div class="home-brand">
           <svg class="home-mark" viewBox="0 0 72 72" aria-hidden="true">
             <path d="M49 22 A22 22 0 1 1 37 14" fill="none" stroke="var(--pl-forest)" stroke-width="6" stroke-linecap="round" />
@@ -90,7 +72,7 @@
       <div class="pl-container">
         <h2 class="pl-display" style="font-size: 1.5rem; margin-bottom: 1rem;">Featured projects</h2>
         <p class="pl-muted" style="margin-bottom: 1.5rem; max-width: 40rem;">
-          Manually curated. Payment volume is not a ranking signal.
+          Hand-picked by the team. We do not rank projects by how much money they raise.
         </p>
         <div class="home-projects">
           {#each pageDemo.projects as project (project.slug)}
@@ -126,13 +108,6 @@
             {/each}
           </div>
         </section>
-
-        <h2 class="pl-display" style="font-size: 1.25rem; margin: 2.5rem 0 1rem;">Settled platform counters</h2>
-        <div class="home-counters">
-          {#each pageDemo.counters as card (card.label)}
-            <DataCard label={card.label} value={card.value} compare={card.compare} sparkline={card.sparkline} />
-          {/each}
-        </div>
       </div>
     </section>
   </main>
@@ -143,15 +118,6 @@
   .home-hero {
     padding: 4.5rem 0 3rem;
     background: var(--pl-canvas);
-  }
-
-  .home-overline {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--pl-ink-muted);
-    margin: 0 0 1.25rem;
   }
 
   .home-brand {
@@ -182,53 +148,40 @@
   }
 
   .home-strapline {
-    font-size: clamp(2.25rem, 5vw, 3.5rem);
-    line-height: 1.05;
-    max-width: 22ch;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    max-width: 36rem;
     margin-bottom: 1rem;
-  }
-
-  .home-projects,
-  .home-cadences,
-  .home-counters {
-    display: grid;
-    gap: 1rem;
-  }
-
-  .home-panel {
-    margin-top: 3rem;
-    padding: 2rem;
-    background: var(--pl-canvas-subtle);
-    border-radius: var(--pl-radius-lg);
   }
 
   .home-landscape {
     margin: 0;
+    line-height: 0;
+    border-block: 1px solid var(--pl-border);
   }
 
   .home-landscape svg {
     display: block;
     width: 100%;
     height: auto;
-    max-height: 12rem;
   }
 
-  @media (min-width: 44rem) {
-    .home-projects,
-    .home-cadences,
-    .home-counters {
-      grid-template-columns: repeat(2, 1fr);
-    }
+  .home-projects {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
   }
 
-  @media (min-width: 72rem) {
-    .home-projects {
-      grid-template-columns: repeat(4, 1fr);
-    }
+  .home-panel {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    background: var(--pl-surface);
+    border: 1px solid var(--pl-border);
+    border-radius: var(--pl-radius-lg);
+  }
 
-    .home-cadences,
-    .home-counters {
-      grid-template-columns: repeat(3, 1fr);
-    }
+  .home-cadences {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   }
 </style>

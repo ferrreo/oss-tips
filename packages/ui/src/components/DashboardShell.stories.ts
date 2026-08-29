@@ -13,7 +13,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    projectName: 'Paperlight',
+    projectName: 'Grove',
     navGroups: projectNavGroups,
     title: 'Overview',
     lede: 'Revenue, unanswered inbox, and the current goal.',
@@ -22,7 +22,7 @@ export const Default: Story = {
 
 export const Dark: Story = {
   args: {
-    projectName: 'Paperlight',
+    projectName: 'Grove',
     navGroups: projectNavGroups,
     title: 'Overview',
     lede: 'Revenue, unanswered inbox, and the current goal.',

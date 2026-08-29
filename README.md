@@ -54,7 +54,7 @@ The web app runs at [http://localhost:3000](http://localhost:3000).
 
 ### Web (`apps/web`)
 
-SvelteKit application with `adapter-node`. Routes wire thin `+page.svelte` files to page compositions from `@oss-tips/ui`. Paperlight CSS is loaded from `@oss-tips/design-tokens/css`.
+Routes wire thin `+page.svelte` files to page compositions from `@oss-tips/ui`. Design-system CSS (Paperlight tokens) loads from `@oss-tips/design-tokens/css`.
 
 API routes:
 
@@ -74,7 +74,7 @@ Start workers after Postgres is available and `DATABASE_URL` is set in `.env`.
 
 ## Storybook
 
-Every product UI page has a Storybook entry under `Pages/*` (public, supporter, project dashboard, admin), plus component stories. Theme toolbar switches Paperlight light/dark via `data-theme`.
+Theme toolbar switches light and dark via `data-theme`.
 
 ```bash
 pnpm storybook          # http://localhost:6006

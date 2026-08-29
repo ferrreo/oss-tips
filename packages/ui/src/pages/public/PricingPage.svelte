@@ -34,7 +34,7 @@
   <main id="main-content" class="pl-section">
     <div class="pl-container pl-container--reading">
       <h1 class="pl-page-title">How fees work</h1>
-      <p class="pl-page-lead">Transparent pricing before you confirm any payment. No surprises at checkout.</p>
+      <p class="pl-page-lead">You see the project amount, the oss.tips fee, and any tip before Checkout opens.</p>
       <div class="pl-prose">
         {#each pageDemo.modes as mode (mode.heading)}
           <h2>{mode.heading}</h2>
@@ -48,7 +48,7 @@
       <h2 class="pl-display" style="font-size: 1.25rem; margin-bottom: 0.75rem;">Example disclosure</h2>
       <FeeDisclosure projectAmountMinor={2500} projectFeePercent={5} tipMinor={100} cadence="monthly" currency="USD" />
       <p class="pl-muted" style="font-size: 0.875rem; margin-top: 1.5rem;">
-        Stripe Adaptive Pricing may localise the presentment currency. The project default currency remains the source of presets.
+        Stripe may show a local currency at Checkout. Presets still start from the project’s default currency.
       </p>
     </div>
   </main>

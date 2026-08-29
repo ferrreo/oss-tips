@@ -9,8 +9,8 @@
 
   const draft = demoPosts[0] ?? {
     id: 'p1',
-    slug: 'paperlight-1-0',
-    title: 'Paperlight 1.0 design tokens shipped',
+    slug: 'grove-1-0',
+    title: 'Grove 1.0 tokens and docs',
     excerpt: 'Semantic colour tokens, typography stacks, and motion defaults are now stable.',
     publishedAt: '2026-08-15',
     tierVisibility: 'Public',
@@ -18,7 +18,7 @@
   let title = $state(draft.title);
   let visibility = $state('public');
   let body = $state(
-    'Semantic colour tokens, typography stacks, and motion defaults are now stable. This post is visible to everyone and is the reference for the Paperlight 1.0 release.',
+    'Shared colour tokens, type stacks, and motion defaults are stable. This post is public and marks the Grove 1.0 docs release.',
   );
   const recent = [...demoPosts, ...extraPosts];
 </script>
@@ -27,7 +27,7 @@
   <div class="pl-grid-2">
     <div class="pl-stack">
       <TextField label="Title" bind:value={title} placeholder="Post title" />
-      <TextField label="Slug" value={draft.slug} help="https://oss.tips/paperlight/posts/{draft.slug}" />
+      <TextField label="Slug" value={draft.slug} help="https://oss.tips/grove/posts/{draft.slug}" />
       <div>
         <span class="pl-field__label">Visibility</span>
         <SegmentedControl

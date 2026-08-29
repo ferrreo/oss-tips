@@ -9,7 +9,7 @@
   const pageDemo = {
     amountMinor: 5000,
     cadence: 'one-off',
-    reference: 'pi_3PaperlightGift',
+    reference: 'pi_3GroveGift',
     expires: '2026-09-05',
   };
 

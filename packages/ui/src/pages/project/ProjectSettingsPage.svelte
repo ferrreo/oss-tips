@@ -21,7 +21,7 @@
       <TextField label="Description" bind:value={description} />
       <TextField label="Website" value={demoProject.website} />
       <TextField label="Repository" value={demoProject.repository} />
-      <TextField label="Support email" value="hello@paperlight.dev" />
+      <TextField label="Support email" value="hello@grove.dev" />
       <div>
         <span class="pl-field__label">Fee mode</span>
         <SegmentedControl

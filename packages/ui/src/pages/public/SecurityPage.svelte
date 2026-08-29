@@ -3,35 +3,35 @@
   import PublicFooter from '../../components/PublicFooter.svelte';
 
   const pageDemo = {
-    lead: 'oss.tips is built for money-adjacent workloads with defence in depth. Card data never touches our servers. Privileged admin actions write an immutable audit row.',
+    lead: 'Card numbers never hit oss.tips. Stripe takes payments. Admin actions are logged and cannot be edited quietly.',
     groups: [
       {
         heading: 'Payments',
         items: [
-          'Stripe handles card data; oss.tips never stores PANs',
-          'Projects are merchants of record via Stripe Connect',
-          'Webhook signatures verified on every event',
-          'Client redirects never grant entitlements',
+          'Stripe stores card details. We do not.',
+          'Each project is the merchant on Stripe Connect.',
+          'Every Stripe webhook is signature-checked.',
+          'A browser redirect alone never grants access.',
         ],
       },
       {
-        heading: 'Authentication',
+        heading: 'Sign-in',
         items: [
-          'Email OTP and OAuth. No passwords stored',
-          'Session rotation and device-bound tokens',
-          'Guest claim and reply links expire and cannot be reused after claim',
+          'Email codes or OAuth. No passwords on oss.tips.',
+          'Sessions can be listed and revoked.',
+          'Guest claim and reply links expire after use.',
         ],
       },
       {
         heading: 'Operations',
         items: [
-          'Immutable audit log for privileged admin actions',
-          'Encrypted secrets and least-privilege API keys',
-          'Manual review for first payment activation and impersonation flags',
+          'Privileged admin steps write an audit entry.',
+          'API keys are scoped and hashed at rest.',
+          'First payouts and odd ownership claims go through review.',
         ],
       },
     ],
-    report: 'Report abuse or impersonation from any project page. Platform staff see the report in the review queue with the project context attached.',
+    report: 'Use Report on any project page. Staff see the report next to that project in the review queue.',
   };
 </script>
 
