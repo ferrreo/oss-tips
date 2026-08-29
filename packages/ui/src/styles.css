@@ -224,6 +224,15 @@ a:hover {
   cursor: not-allowed;
 }
 
+.pl-btn--loading:disabled {
+  opacity: 1;
+  cursor: wait;
+}
+
+.pl-btn__loading {
+  color: inherit;
+}
+
 .pl-btn:not(:disabled):active {
   transform: translateY(1px) scale(0.99);
 }
