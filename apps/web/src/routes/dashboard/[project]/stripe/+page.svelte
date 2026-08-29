@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import StripePage from '@oss-tips/ui/pages/dashboard/StripePage.svelte';
+
+  let { data } = $props();
 </script>
 
-<StripePage project={page.params.project} />
+<StripePage {...data} />

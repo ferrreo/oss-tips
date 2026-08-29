@@ -9,5 +9,5 @@ const meta: Meta<PublicNav> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = { args: {} };
-export const Dark: Story = { args: {}, globals: { theme: 'dark' } };
+export const Default: Story = { args: { theme: 'light' } };
+export const Dark: Story = { args: { theme: 'dark' }, globals: { theme: 'dark' } };

@@ -3,10 +3,73 @@
   import PublicFooter from '../../components/PublicFooter.svelte';
   import TextField from '../../components/TextField.svelte';
   import Badge from '../../components/Badge.svelte';
-  import { featuredProjects } from '../../fixtures/demo.js';
-  import { formatMoney } from '../../fixtures/demo.js';
+  import { featuredProjects, formatMoney, type Project } from '../../fixtures/demo.js';
+
+  const pageDemo = {
+    filters: [
+      { id: 'goals', label: 'Active goals' },
+      { id: 'recurring', label: 'Recurring support' },
+      { id: 'updated', label: 'Recently updated' },
+    ],
+    projects: [
+      ...featuredProjects,
+      {
+        slug: 'river-md',
+        name: 'river-md',
+        description: 'Deterministic Markdown round-trip for gated posts and RSS.',
+        website: 'https://river-md.dev',
+        repository: 'github.com/oss-tips/river-md',
+        verified: true,
+        currency: 'USD',
+        feeMode: 'standard',
+        logoLetter: 'R',
+        tags: ['markdown', 'editor'],
+        stats: {
+          supporters: 156,
+          monthlyRecurringMinor: 410000,
+          oneOffThisMonthMinor: 78000,
+          totalSupportMinor: 488000,
+        },
+      },
+      {
+        slug: 'seed-bot',
+        name: 'seed-bot',
+        description: 'Discord role sync for membership entitlements.',
+        website: 'https://seed-bot.dev',
+        repository: 'github.com/oss-tips/seed-bot',
+        verified: false,
+        currency: 'USD',
+        feeMode: 'project_5pct',
+        logoLetter: 'S',
+        tags: ['discord', 'bot'],
+        stats: {
+          supporters: 67,
+          monthlyRecurringMinor: 180000,
+          oneOffThisMonthMinor: 24000,
+          totalSupportMinor: 204000,
+        },
+      },
+    ] satisfies Project[],
+  };
 
   let search = $state('');
+  let activeFilter = $state<string | null>(null);
+
+  const visible = $derived(
+    pageDemo.projects.filter((project) => {
+      const q = search.trim().toLowerCase();
+      const matchesQuery =
+        !q ||
+        project.name.toLowerCase().includes(q) ||
+        project.repository.toLowerCase().includes(q) ||
+        project.tags.some((tag) => tag.toLowerCase().includes(q));
+      if (!matchesQuery) return false;
+      if (activeFilter === 'goals') return project.slug === 'paperlight' || project.slug === 'vitest-run';
+      if (activeFilter === 'recurring') return project.stats.monthlyRecurringMinor > 0;
+      if (activeFilter === 'updated') return project.verified;
+      return true;
+    }),
+  );
 </script>
 
 <div>
@@ -14,27 +77,47 @@
   <main id="main-content" class="pl-section">
     <div class="pl-container">
       <h1 class="pl-page-title">Explore projects</h1>
-      <p class="pl-page-lead">Search by name, repository, ecosystem, or tag.</p>
-      <div class="pl-grid-2" style="margin: 1.5rem 0;">
-        <TextField label="Search" value={search} placeholder="Project name or repository…" type="search" />
+      <p class="pl-page-lead">
+        Search by name, repository, ecosystem, or tag. Ranking prefers exact name matches and recent project activity, not payment volume.
+      </p>
+      <div class="ex-search">
+        <TextField
+          label="Search"
+          bind:value={search}
+          placeholder="Project name or repository…"
+          type="search"
+        />
         <div class="pl-row" style="flex-wrap: wrap; padding-top: 1.75rem;">
-          <Badge>Active goals</Badge>
-          <Badge>Recurring support</Badge>
-          <Badge>Recently updated</Badge>
+          {#each pageDemo.filters as filter (filter.id)}
+            <button
+              type="button"
+              class="ex-chip pl-focus-ring"
+              aria-pressed={activeFilter === filter.id}
+              onclick={() => (activeFilter = activeFilter === filter.id ? null : filter.id)}
+            >
+              {filter.label}
+            </button>
+          {/each}
         </div>
       </div>
+      <p class="pl-muted" style="font-size: 0.8125rem; margin-bottom: 1rem;">{visible.length} projects</p>
       <div class="pl-stack">
-        {#each featuredProjects.filter((p) => !search || p.name.toLowerCase().includes(search.toLowerCase())) as project (project.slug)}
+        {#each visible as project (project.slug)}
           <article class="pl-surface" style="padding: 1.25rem;">
-            <div class="pl-row pl-row--between">
+            <div class="ex-row">
               <div>
-                <h2 style="font-size: 1.125rem; margin-bottom: 0.25rem;">{project.name}</h2>
+                <div class="pl-row" style="margin-bottom: 0.25rem;">
+                  <h2 style="font-size: 1.125rem;">{project.name}</h2>
+                  {#if project.verified}
+                    <Badge variant="forest">Verified</Badge>
+                  {/if}
+                </div>
                 <p class="pl-muted" style="font-size: 0.875rem;">{project.description}</p>
               </div>
-              <div style="text-align: right;">
+              <div class="ex-meta">
                 <p class="pl-mono" style="font-size: 0.8125rem;">{project.repository}</p>
                 <p class="pl-muted" style="font-size: 0.8125rem;">
-                  {formatMoney(project.stats.monthlyRecurringMinor, project.currency)}/mo
+                  {project.stats.supporters} supporters · {formatMoney(project.stats.monthlyRecurringMinor, project.currency)}/mo
                 </p>
               </div>
             </div>
@@ -50,3 +133,51 @@
   </main>
   <PublicFooter />
 </div>
+
+<style>
+  .ex-search {
+    display: grid;
+    gap: 1rem;
+    margin: 1.5rem 0 1rem;
+  }
+
+  .ex-chip {
+    min-height: var(--pl-touch);
+    padding: 0 0.875rem;
+    border-radius: 999px;
+    border: 1px solid var(--pl-border);
+    background: var(--pl-surface);
+    color: var(--pl-ink-muted);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .ex-chip[aria-pressed='true'] {
+    border-color: var(--pl-forest);
+    color: var(--pl-forest);
+    background: color-mix(in srgb, var(--pl-forest) 8%, var(--pl-surface));
+  }
+
+  .ex-row {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .ex-meta {
+    text-align: left;
+  }
+
+  @media (min-width: 44rem) {
+    .ex-search {
+      grid-template-columns: 1fr auto;
+    }
+
+    .ex-row {
+      grid-template-columns: 1fr auto;
+    }
+
+    .ex-meta {
+      text-align: right;
+    }
+  }
+</style>

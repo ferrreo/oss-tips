@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import MembershipsPage from '@oss-tips/ui/pages/supporter/MembershipsPage.svelte';
+
+  let { data } = $props();
 </script>
 
-<MembershipsPage />
+<MembershipsPage {...data} />

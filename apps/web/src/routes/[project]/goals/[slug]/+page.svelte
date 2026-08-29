@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import ProjectGoalPage from '@oss-tips/ui/pages/public/ProjectGoalPage.svelte';
+  import { page } from '$app/state';
+
+  let { data } = $props();
 </script>
 
-<ProjectGoalPage project={page.params.project} slug={page.params.slug} />
+<ProjectGoalPage {...data} slug={page.params.slug} />

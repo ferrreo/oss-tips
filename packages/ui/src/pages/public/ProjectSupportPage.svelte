@@ -6,27 +6,53 @@
   import TierCard from '../../components/TierCard.svelte';
   import { demoProject, demoTiers } from '../../fixtures/demo.js';
 
-  let selectedTier = $state(demoTiers[1].id);
+  const pageDemo = {
+    lead: 'Choose a cadence and amount, then continue to Stripe Checkout. Entitlements unlock only after the payment event is verified.',
+    tiers: demoTiers,
+  };
+
+  let selectedTier = $state('supporter');
 </script>
 
 <div>
   <PublicNav />
   <main id="main-content">
-    <div class="pl-container" style="padding-top: 1rem;">
+    <div class="pl-container" style="padding-top: 1rem; padding-bottom: 3rem;">
       <ProjectHero project={demoProject} />
+      <p class="pl-page-lead" style="margin-bottom: 1.5rem;">{pageDemo.lead}</p>
       <h2 class="pl-display" style="font-size: 1.25rem; margin-bottom: 1rem;">Choose support</h2>
-      <div class="pl-grid-3" style="margin-bottom: 2rem;">
-        {#each demoTiers as tier (tier.id)}
+      <div class="ps-tiers">
+        {#each pageDemo.tiers as tier (tier.id)}
           <TierCard
-            tier={tier}
+            {tier}
             currency={demoProject.currency}
             selected={selectedTier === tier.id}
             onclick={() => (selectedTier = tier.id)}
           />
         {/each}
       </div>
-      <SupportComposer currency={demoProject.currency} />
+      <SupportComposer tiers={pageDemo.tiers} currency={demoProject.currency} />
     </div>
   </main>
   <PublicFooter />
 </div>
+
+<style>
+  .ps-tiers {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 44rem) {
+    .ps-tiers {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .ps-tiers {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

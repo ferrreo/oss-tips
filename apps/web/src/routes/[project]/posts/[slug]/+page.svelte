@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import ProjectPostPage from '@oss-tips/ui/pages/public/ProjectPostPage.svelte';
+  import { page } from '$app/state';
+
+  let { data } = $props();
 </script>
 
-<ProjectPostPage project={page.params.project} slug={page.params.slug} />
+<ProjectPostPage {...data} slug={page.params.slug} />

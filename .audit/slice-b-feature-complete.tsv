@@ -9,3 +9,4 @@ ts	phase	decision	why	evidence	result
 2026-08-29T18:06:58Z	unit3	Checkout API + projects list from DB; seed includes connected account	Vertical slice needs create path before webhook	apps/web/src/routes/api/v1/projects	open
 2026-08-29T18:06:58Z	unit4	Mounted Better Auth via kyselyAdapter when DATABASE_URL set	Replace stub with real handler at boundary	packages/auth/src/config.ts	open
 2026-08-29T18:09:40Z	verify	Checkout to inbox to settle path returns transitBalance 0	Prove It Works via committed verify script	scripts/verify-slice-b-money-path.mjs	VERIFIED
+2026-08-29T19:11:00Z	merge	Merged PR #2 and PR #3 into main with uuidv7 checkout ids and optional webhook timestamp	Combine money path with Paperlight UI parity	main	open
