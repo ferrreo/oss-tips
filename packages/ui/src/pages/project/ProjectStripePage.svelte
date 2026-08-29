@@ -11,8 +11,8 @@
 <ProjectDashShell title="Stripe" lede="Stripe paused payouts until Grove finishes identity verification.">
   <StatusBanner
     variant="warning"
-    title="Action required"
-    message="Stripe paused payouts until Grove finishes identity verification."
+    title="Stripe still needs identity documents"
+    message="Payouts stay paused until verification finishes. Charges can still succeed."
   />
   <div class="pl-grid-3" style="margin: 1.5rem 0;">
     <DataCard label="Charges" value="Enabled" />

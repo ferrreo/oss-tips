@@ -9,8 +9,8 @@
 </script>
 
 <div class="pl-status-banner pl-status-banner--{variant}" role="status">
-  <strong>{title}</strong>
+  <p class="pl-status-banner__title">{title}</p>
   {#if message}
-    <p style="margin: 0.25rem 0 0; font-size: 0.875rem;">{message}</p>
+    <p class="pl-status-banner__message">{message}</p>
   {/if}
 </div>

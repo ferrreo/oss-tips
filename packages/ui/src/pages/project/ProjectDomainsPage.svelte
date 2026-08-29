@@ -10,8 +10,8 @@
 <ProjectDashShell title="Custom domains" lede="Public Grove pages on grove.dev. Checkout stays on oss.tips.">
   <StatusBanner
     variant="info"
-    title="Custom domain active"
-    message="grove.dev serves public pages. Checkout stays on oss.tips."
+    title="grove.dev is live"
+    message="Public pages and posts resolve there. Checkout stays on oss.tips."
   />
   <div class="pl-stack" style="margin-top: 1.5rem; max-width: 36rem;">
     <TextField label="Custom domain" value="grove.dev" help="Public pages and posts only." />
