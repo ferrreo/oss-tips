@@ -28,6 +28,21 @@ export function createProjectsRepository(db: Db) {
         .execute();
     },
 
+    async listPublished(limit = 50, cursor?: string): Promise<Project[]> {
+      let query = db
+        .selectFrom('project')
+        .selectAll()
+        .where('status', '=', 'published')
+        .orderBy('updated_at', 'desc')
+        .limit(limit);
+
+      if (cursor) {
+        query = query.where('updated_at', '<', new Date(cursor));
+      }
+
+      return query.execute();
+    },
+
     async create(project: NewProject): Promise<Project> {
       return db
         .insertInto('project')

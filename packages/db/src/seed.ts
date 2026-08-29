@@ -140,6 +140,21 @@ async function main(): Promise<void> {
       .execute();
 
     await trx
+      .insertInto('stripe_connected_account')
+      .values({
+        id: uuidv7(),
+        project_id: projectId,
+        stripe_account_id: 'acct_demo_paperlight',
+        charges_enabled: true,
+        payouts_enabled: true,
+        capabilities: {
+          card_payments: 'active',
+          transfers: 'active',
+        },
+      })
+      .execute();
+
+    await trx
       .insertInto('project_goal')
       .values({
         id: goalId,

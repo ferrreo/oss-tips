@@ -30,6 +30,8 @@ export type CheckoutIntentContext = {
   capabilities: StripeCapabilities;
   successUrl: string;
   cancelUrl: string;
+  /** Stable payment id written into Stripe metadata and our payment row. */
+  paymentId?: string | undefined;
   customerEmail?: string | undefined;
   stripePriceId?: string | undefined;
   membershipPlatformTipMinor?: number | undefined;

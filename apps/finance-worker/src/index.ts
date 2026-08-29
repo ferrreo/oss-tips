@@ -1,5 +1,6 @@
 import {
   createDb,
+  createPaymentsRepository,
   createStripeEventsRepository,
   destroyDb,
   type StripeEvent,
@@ -7,24 +8,92 @@ import {
 import { createLedgerClient } from '@oss-tips/ledger';
 import { createLogger } from '@oss-tips/observability';
 import { isAllowedStripeWebhookEvent } from '@oss-tips/payments';
+import {
+  extractSettlementMetadata,
+  settleOneOffPayment,
+  shouldSettleOneOff,
+} from './settle-one-off.js';
 
 const log = createLogger('@oss-tips/finance-worker');
 const POLL_MS = Number(process.env.FINANCE_WORKER_POLL_MS ?? 1_000);
 const BATCH_SIZE = Number(process.env.FINANCE_WORKER_BATCH_SIZE ?? 10);
 
-async function processStripeEvent(event: StripeEvent): Promise<void> {
-  const payload = event.payload as { type?: string };
-  const type = payload.type ?? 'unknown';
+async function processStripeEvent(
+  event: StripeEvent,
+  deps: {
+    ledger: ReturnType<typeof createLedgerClient>;
+    payments: ReturnType<typeof createPaymentsRepository>;
+  },
+): Promise<void> {
+  const payload = event.payload as Record<string, unknown>;
+  const type = event.event_type || (typeof payload.type === 'string' ? payload.type : 'unknown');
 
   if (!isAllowedStripeWebhookEvent(type)) {
     throw new Error(`Unsupported stripe event type: ${type}`);
   }
 
-  // Ledger posting and payment read-model updates land here in Slice B.
-  log.info('processing stripe event', {
+  if (!shouldSettleOneOff(type)) {
+    log.info('acknowledged non-settlement event', {
+      id: event.id,
+      stripeEventId: event.stripe_event_id,
+      type,
+    });
+    return;
+  }
+
+  const extracted = extractSettlementMetadata(payload, event.stripe_account_id);
+  if ('error' in extracted) {
+    throw new Error(extracted.error);
+  }
+
+  const settlement = await settleOneOffPayment({
+    ledger: deps.ledger,
+    stripeEventId: event.stripe_event_id,
+    metadata: extracted,
+  });
+
+  if (!settlement.ok) {
+    if (settlement.skipped) {
+      log.info('skipped settlement', {
+        id: event.id,
+        reason: settlement.error,
+      });
+      return;
+    }
+    throw new Error(settlement.error);
+  }
+
+  const existing = await deps.payments.findById(extracted.paymentId);
+  if (existing) {
+    await deps.payments.markSettled(existing.id);
+  } else {
+    await deps.payments.create({
+      id: extracted.paymentId,
+      project_id: extracted.projectId,
+      user_id: null,
+      stripe_account_id: extracted.stripeAccountId,
+      stripe_payment_intent_id: extracted.stripePaymentIntentId,
+      stripe_charge_id: null,
+      currency: extracted.currency,
+      exponent: 2,
+      customer_charge_minor: extracted.customerChargeMinor,
+      project_amount_minor: extracted.projectAmountMinor,
+      platform_tip_minor: extracted.platformTipMinor,
+      oss_project_fee_minor: extracted.ossProjectFeeMinor,
+      stripe_application_fee_minor: extracted.applicationFeeMinor,
+      status: 'succeeded',
+      cadence: extracted.cadence,
+      feature_mode: extracted.featureMode,
+      settled_at: new Date(),
+    });
+  }
+
+  log.info('settled one-off payment', {
     id: event.id,
     stripeEventId: event.stripe_event_id,
-    type,
+    paymentId: settlement.paymentId,
+    transitBalance: settlement.transitBalance.toString(),
+    semanticKey: settlement.semanticKey,
   });
 }
 
@@ -39,6 +108,7 @@ async function main() {
 
   const db = createDb(databaseUrl);
   const stripeEvents = createStripeEventsRepository(db);
+  const payments = createPaymentsRepository(db);
   const ledger = createLedgerClient(process.env);
 
   log.info('ready', {
@@ -51,9 +121,8 @@ async function main() {
 
       for (const event of batch) {
         try {
-          await processStripeEvent(event);
+          await processStripeEvent(event, { ledger, payments });
           await stripeEvents.markProcessed(event.id);
-          void ledger;
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err);
           await stripeEvents.markFailed(event.id, message);

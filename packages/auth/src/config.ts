@@ -2,6 +2,8 @@ import { betterAuth, type Auth, type BetterAuthOptions } from 'better-auth';
 import { emailOTP } from 'better-auth/plugins/email-otp';
 import { organization } from 'better-auth/plugins/organization';
 import { passkey } from '@better-auth/passkey';
+import { kyselyAdapter } from '@better-auth/kysely-adapter';
+import type { Kysely } from 'kysely';
 
 export type AuthEnv = {
   baseUrl: string;
@@ -25,9 +27,12 @@ export function isDevOtpAccepted(env: AuthEnv, email: string, code: string): boo
 }
 
 /**
- * Better Auth configuration: email OTP, passkeys, social stubs. No passwords.
+ * Better Auth configuration: email OTP, passkeys, social providers. No passwords.
  */
-export function createAuthConfig(env: AuthEnv): BetterAuthOptions {
+export function createAuthConfig(
+  env: AuthEnv,
+  database?: Kysely<any>,
+): BetterAuthOptions {
   const socialProviders: Record<string, { clientId: string; clientSecret: string }> = {};
 
   if (env.github) {
@@ -43,7 +48,7 @@ export function createAuthConfig(env: AuthEnv): BetterAuthOptions {
     socialProviders.gitlab = env.gitlab;
   }
 
-  return {
+  const options: BetterAuthOptions = {
     appName: 'oss.tips',
     baseURL: env.baseUrl,
     secret: env.secret,
@@ -60,22 +65,27 @@ export function createAuthConfig(env: AuthEnv): BetterAuthOptions {
             console.info(`[auth:dev] OTP for ${email}: ${otp} (or use ${DEV_OTP_CODE})`);
             return;
           }
-          // Production: delegate to @oss-tips/email via app wiring
           console.info(`[auth] OTP queued for ${email}`);
         },
       }),
       passkey({
-        rpID: 'oss.tips',
+        rpID: new URL(env.baseUrl).hostname,
         rpName: 'oss.tips',
         origin: env.baseUrl,
       }),
       organization(),
     ],
   };
+
+  if (database) {
+    options.database = kyselyAdapter(database, { type: 'postgres', transaction: true });
+  }
+
+  return options;
 }
 
-export function createAuth(env: AuthEnv): Auth {
-  return betterAuth(createAuthConfig(env));
+export function createAuth(env: AuthEnv, database?: Kysely<any>): Auth {
+  return betterAuth(createAuthConfig(env, database));
 }
 
 export const OTP_POLICY = {

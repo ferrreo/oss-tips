@@ -56,12 +56,13 @@ The web app runs at [http://localhost:3000](http://localhost:3000).
 
 SvelteKit application with `adapter-node`. Routes wire thin `+page.svelte` files to page compositions from `@oss-tips/ui`. Paperlight CSS is loaded from `@oss-tips/design-tokens/css`.
 
-API stubs:
+API routes:
 
 - `GET /api/v1/health`
-- `GET /api/v1/projects`
-- `POST /api/webhooks/stripe` (durable inbox stub)
-- `/api/auth/[...all]` (Better Auth mount stub)
+- `GET /api/v1/projects` (from Postgres when `DATABASE_URL` is set)
+- `POST /api/v1/projects/:slug/checkout` (creates Stripe Checkout intent + pending payment)
+- `POST /api/webhooks/stripe` (signed durable inbox into `stripe_event`)
+- `/api/auth/[...all]` (Better Auth handler when database is configured)
 
 ### Workers
 

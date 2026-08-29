@@ -3,20 +3,26 @@ import type { NewStripeEvent, StripeEvent } from '../types.js';
 
 export function createStripeEventsRepository(db: Db) {
   return {
-    async insertIfNew(event: NewStripeEvent): Promise<StripeEvent | undefined> {
+    async insertIfNew(
+      event: NewStripeEvent,
+    ): Promise<{ event: StripeEvent; created: boolean } | undefined> {
       try {
-        return await db
+        const created = await db
           .insertInto('stripe_event')
           .values(event)
           .returningAll()
           .executeTakeFirst();
+        if (!created) return undefined;
+        return { event: created, created: true };
       } catch (err: unknown) {
         if (isUniqueViolation(err)) {
-          return db
+          const existing = await db
             .selectFrom('stripe_event')
             .selectAll()
             .where('stripe_event_id', '=', event.stripe_event_id)
             .executeTakeFirst();
+          if (!existing) return undefined;
+          return { event: existing, created: false };
         }
         throw err;
       }
