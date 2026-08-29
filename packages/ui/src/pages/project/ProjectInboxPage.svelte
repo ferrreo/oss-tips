@@ -1,12 +1,13 @@
 <script lang="ts">
   import DashboardShell from '../../components/DashboardShell.svelte';
   import ThreadView from '../../components/ThreadView.svelte';
-  import { demoProject, demoThreads, projectNavGroups } from '../../fixtures/demo.js';
+  import { demoProject, demoThreads, projectNavGroups, type Thread } from '../../fixtures/demo.js';
   import { extraThreads, inboxPreviewRows } from './project-demo.js';
 
-  const threads = [...demoThreads, ...extraThreads];
-  let selectedId = $state(threads[0].id);
-  const selected = $derived(threads.find((thread) => thread.id === selectedId) ?? threads[0]);
+  const threads: Thread[] = [...demoThreads, ...extraThreads];
+  const initialThread = threads[0] as Thread;
+  let selectedId = $state(initialThread.id);
+  const selected = $derived(threads.find((thread) => thread.id === selectedId) ?? initialThread);
 </script>
 
 <DashboardShell projectName={demoProject.name} navGroups={projectNavGroups} title="Inbox">

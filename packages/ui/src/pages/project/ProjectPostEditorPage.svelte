@@ -7,7 +7,14 @@
   import { demoProject, demoPosts, projectNavGroups } from '../../fixtures/demo.js';
   import { extraPosts } from './project-demo.js';
 
-  const draft = demoPosts[0];
+  const draft = demoPosts[0] ?? {
+    id: 'p1',
+    slug: 'paperlight-1-0',
+    title: 'Paperlight 1.0 design tokens shipped',
+    excerpt: 'Semantic colour tokens, typography stacks, and motion defaults are now stable.',
+    publishedAt: '2026-08-15',
+    tierVisibility: 'Public',
+  };
   let title = $state(draft.title);
   let visibility = $state('public');
   let body = $state(
