@@ -15,11 +15,8 @@
     min-height: 100%;
     background: var(--pl-canvas);
     color: var(--pl-ink);
-    font-family:
-      'IBM Plex Sans',
-      system-ui,
-      -apple-system,
-      sans-serif;
+    font-family: var(--pl-font-ui);
+    font-weight: 400;
     line-height: 1.5;
   }
 

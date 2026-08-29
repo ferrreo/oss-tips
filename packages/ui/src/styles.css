@@ -10,6 +10,7 @@ body {
   margin: 0;
   font-family: var(--pl-font-ui);
   font-size: 1rem;
+  font-weight: 400;
   line-height: 1.5;
   color: var(--pl-ink);
   background-color: var(--pl-canvas);
@@ -150,6 +151,19 @@ a:hover {
 .pl-page-title {
   font-size: 2rem;
   margin-bottom: 0.5rem;
+}
+
+.pl-dashboard,
+.pl-admin,
+.pl-sidebar-nav,
+.pl-public-nav,
+.pl-table {
+  font-family: var(--pl-font-ui);
+}
+
+.pl-dashboard :is(h1, h2, h3, h4),
+.pl-admin :is(h1, h2, h3, h4) {
+  font-family: var(--pl-font-ui);
 }
 
 .pl-page-lead {
@@ -353,7 +367,7 @@ a:hover {
 
 .pl-badge--ochre {
   background: color-mix(in srgb, var(--pl-ochre) 15%, transparent);
-  color: var(--pl-ochre);
+  color: color-mix(in srgb, var(--pl-ochre) 55%, var(--pl-ink));
   border-color: color-mix(in srgb, var(--pl-ochre) 35%, transparent);
 }
 
@@ -443,6 +457,7 @@ a:hover {
 
 .pl-table th {
   text-align: left;
+  font-family: var(--pl-font-ui);
   font-weight: 600;
   font-size: 0.8125rem;
   color: var(--pl-ink-muted);
@@ -584,7 +599,8 @@ a:hover {
 
 .pl-goal__overline {
   margin: 0 0 0.25rem;
-  font-size: 0.6875rem;
+  font-family: var(--pl-font-ui);
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -703,6 +719,7 @@ a:hover {
 }
 
 .pl-public-nav__links a {
+  font-family: var(--pl-font-ui);
   color: var(--pl-ink-muted);
   font-weight: 500;
   font-size: 0.9375rem;
@@ -819,7 +836,8 @@ a:hover {
 
 .pl-dashboard__overline {
   margin: 0 0 0.25rem;
-  font-size: 0.6875rem;
+  font-family: var(--pl-font-ui);
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -828,9 +846,9 @@ a:hover {
 
 .pl-dashboard__project {
   display: block;
-  font-family: var(--pl-font-display);
+  font-family: var(--pl-font-ui);
   font-size: 1.125rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .pl-dashboard__main {
@@ -844,7 +862,9 @@ a:hover {
 }
 
 .pl-dashboard__title {
+  font-family: var(--pl-font-ui);
   font-size: 1.75rem;
+  font-weight: 600;
 }
 
 .pl-dashboard__lede {
@@ -864,13 +884,13 @@ a:hover {
   width: var(--pl-sidebar);
   flex-shrink: 0;
   border-right: 1px solid var(--pl-border);
+  border-left: 4px solid var(--pl-info);
   background: color-mix(in srgb, var(--pl-info) 10%, var(--pl-surface));
   padding: 1.5rem 0;
   position: sticky;
   top: 0;
   align-self: flex-start;
   min-height: 100vh;
-  box-shadow: inset 4px 0 0 var(--pl-info);
 }
 
 .pl-admin__brand {
@@ -882,6 +902,7 @@ a:hover {
 .pl-admin__accent {
   margin: 0;
   color: var(--pl-info);
+  font-family: var(--pl-font-ui);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -896,7 +917,9 @@ a:hover {
 
 .pl-admin__context {
   margin: 0 0 0.5rem;
+  font-family: var(--pl-font-ui);
   font-size: 0.8125rem;
+  font-weight: 500;
   color: var(--pl-info);
 }
 
@@ -915,7 +938,8 @@ a:hover {
 
 .pl-sidebar-nav__group {
   padding: 0.5rem 1rem;
-  font-size: 0.6875rem;
+  font-family: var(--pl-font-ui);
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -927,6 +951,7 @@ a:hover {
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1rem;
+  font-family: var(--pl-font-ui);
   font-size: 0.9375rem;
   font-weight: 500;
   color: var(--pl-ink-muted);
