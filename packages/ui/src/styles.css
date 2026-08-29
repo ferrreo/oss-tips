@@ -1048,6 +1048,14 @@ a:hover {
 
 .pl-chart__plot {
   position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: default;
   border-radius: var(--pl-radius-md);
 }
 

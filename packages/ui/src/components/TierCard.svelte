@@ -12,10 +12,11 @@
 
   let { tier, currency = 'GBP', cadence = 'monthly', selected = false, onclick }: Props = $props();
 
-  const priceMinor =
-    cadence === 'annual' ? tier.annualMinor : cadence === 'one-off' ? tier.oneOffMinor : tier.monthlyMinor;
+  const priceMinor = $derived(
+    cadence === 'annual' ? tier.annualMinor : cadence === 'one-off' ? tier.oneOffMinor : tier.monthlyMinor,
+  );
 
-  const cadenceLabel = cadence === 'one-off' ? 'one-off' : cadence;
+  const cadenceLabel = $derived(cadence === 'one-off' ? 'one-off' : cadence);
 </script>
 
 <button

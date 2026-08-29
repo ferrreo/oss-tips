@@ -22,7 +22,7 @@
     class?: string;
   }
 
-  let { series, label = 'Support over time', range = 'Last 30 days', unit, class: className = '' }: Props = $props();
+  let { series, label = 'Support over time', range = 'Last 30 days', unit = '', class: className = '' }: Props = $props();
 
   const labels = $derived(chartLabels(series));
   const domain = $derived(valueDomain(series));
@@ -99,12 +99,17 @@
   {#if labels.length === 0}
     <p class="pl-chart__empty">No points to plot.</p>
   {:else}
-    <div
+    <button
+      type="button"
       class="pl-chart__plot pl-focus-ring"
-      role="img"
-      tabindex="0"
       aria-label="{label}. {range}. Use arrow keys to read each date."
       onkeydown={onChartKey}
+      onclick={(event) => {
+        if (labels.length === 0) return;
+        const rect = event.currentTarget.getBoundingClientRect();
+        const t = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+        activeIndex = Math.round(t * (labels.length - 1));
+      }}
     >
       <svg viewBox="0 0 {CHART_WIDTH} {CHART_HEIGHT}" class="pl-chart__svg">
         {#each ticks as tick (tick)}
@@ -184,7 +189,7 @@
           {/each}
         </div>
       {/if}
-    </div>
+    </button>
 
     <p class="pl-chart__live" aria-live="polite">
       {activeLabel}

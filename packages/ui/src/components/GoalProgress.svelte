@@ -9,7 +9,7 @@
 
   let { goal }: Props = $props();
 
-  const percent = formatPercent(goal.raisedMinor, goal.targetMinor);
+  const percent = $derived(formatPercent(goal.raisedMinor, goal.targetMinor));
 </script>
 
 <article class="pl-goal">

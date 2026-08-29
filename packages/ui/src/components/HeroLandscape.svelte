@@ -1,6 +1,6 @@
 <script lang="ts">
-  import lightUrl from '../../static/hero-landscape-light.svg';
-  import darkUrl from '../../static/hero-landscape-dark.svg';
+  const lightUrl = new URL('../../static/hero-landscape-light.svg', import.meta.url).href;
+  const darkUrl = new URL('../../static/hero-landscape-dark.svg', import.meta.url).href;
 
   interface Props {
     theme?: 'light' | 'dark';
@@ -10,17 +10,15 @@
 
   let { theme, compact = false, class: className = '' }: Props = $props();
 
-  let resolved = $state<'light' | 'dark'>(theme ?? 'light');
+  let observed = $state<'light' | 'dark'>('light');
+  const resolved = $derived(theme ?? observed);
 
   $effect(() => {
-    if (theme) {
-      resolved = theme;
-      return;
-    }
+    if (theme) return;
     if (typeof document === 'undefined') return;
     const root = document.documentElement;
     const sync = () => {
-      resolved = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      observed = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
     };
     sync();
     const observer = new MutationObserver(sync);

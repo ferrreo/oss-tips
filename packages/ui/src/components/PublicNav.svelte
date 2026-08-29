@@ -10,17 +10,15 @@
 
   let { theme }: Props = $props();
 
-  let resolved = $state<'light' | 'dark'>(theme ?? 'light');
+  let observed = $state<'light' | 'dark'>('light');
+  const resolved = $derived(theme ?? observed);
 
   $effect(() => {
-    if (theme) {
-      resolved = theme;
-      return;
-    }
+    if (theme) return;
     if (typeof document === 'undefined') return;
     const root = document.documentElement;
     const sync = () => {
-      resolved = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      observed = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
     };
     sync();
     const observer = new MutationObserver(sync);

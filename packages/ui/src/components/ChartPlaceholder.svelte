@@ -14,7 +14,7 @@
     label = 'Chart',
     range = 'Last 30 days',
     series,
-    unit,
+    unit = '',
     class: className = '',
   }: Props = $props();
 
