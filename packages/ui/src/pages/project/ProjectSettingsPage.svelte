@@ -30,7 +30,9 @@
             { value: 'project_5pct', label: 'Project 5%' },
           ]}
           value={feeMode}
-          onchange={(v) => (feeMode = v)}
+          onchange={(v) => {
+            if (v === 'standard' || v === 'project_5pct') feeMode = v;
+          }}
         />
       </div>
       <Button variant="primary">Save settings</Button>
