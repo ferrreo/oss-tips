@@ -4,7 +4,15 @@
   import Badge from '../../components/Badge.svelte';
   import { demoProject, demoPosts } from '../../fixtures/demo.js';
 
-  const post = demoPosts[0];
+  const pageDemo = {
+    post: demoPosts[0],
+    followOn: [
+      'The remaining work is replica Postgres in the second region and a warm checkout failover. Progress stays before fees so the public number matches the ledger.',
+      'Backer credits will land on the cookbook colophon when the documentation goal closes. Public RSS still lists the title and excerpt only.',
+    ],
+  };
+
+  const post = pageDemo.post;
 </script>
 
 <div>
@@ -16,17 +24,16 @@
       </p>
       <Badge>{post.tierVisibility}</Badge>
       <h1 class="pl-page-title" style="margin-top: 0.75rem;">{post.title}</h1>
-      <time class="pl-muted" style="font-size: 0.875rem;">{post.publishedAt}</time>
+      <p class="pl-muted" style="font-size: 0.875rem;">
+        <time datetime={post.publishedAt}>{post.publishedLabel}</time>
+        · {post.author}
+      </p>
       <article class="pl-prose" style="margin-top: 2rem;">
         <p>{post.excerpt}</p>
-        <p>
-          Paperlight semantic tokens are now stable across light and dark themes. Components use CSS custom properties
-          with the <span class="pl-mono">--pl-*</span> prefix for consistent theming without runtime StyleX.
-        </p>
-        <p>
-          Storybook stories cover every product route so designers and engineers can review full page compositions with
-          realistic fixtures before shipping.
-        </p>
+        <p>{post.body}</p>
+        {#each pageDemo.followOn as paragraph (paragraph)}
+          <p>{paragraph}</p>
+        {/each}
       </article>
     </div>
   </main>

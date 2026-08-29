@@ -11,6 +11,7 @@ const meta: Meta<TermsDocPage> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+export const Default: Story = { args: { doc: 'privacy' } };
 export const Privacy: Story = { args: { doc: 'privacy' } };
 export const AcceptableUse: Story = { args: { doc: 'acceptable-use' } };
 export const Refunds: Story = { args: { doc: 'refunds' } };
