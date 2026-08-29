@@ -1,5 +1,5 @@
 import { adminNavGroups } from '../fixtures/demo.js';
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import AdminShell from './AdminShell.svelte';
 
 const meta: Meta<AdminShell> = {

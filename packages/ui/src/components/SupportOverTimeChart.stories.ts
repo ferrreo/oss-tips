@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import SupportOverTimeChart from './SupportOverTimeChart.svelte';
 import { demoGrowthSeries, demoRevenueSeries } from './chartModel.js';
 

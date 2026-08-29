@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import ChartPlaceholder from './ChartPlaceholder.svelte';
 import { demoRevenueSeries } from './chartModel.js';
 

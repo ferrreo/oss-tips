@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import Toast from './Toast.svelte';
 
 const meta: Meta<Toast> = {

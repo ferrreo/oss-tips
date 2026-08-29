@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/svelte';
+import type { Preview } from '@storybook/svelte-vite';
 import '@oss-tips/design-tokens/css';
 import '../src/styles.css';
 

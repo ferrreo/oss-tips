@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import ProjectDomainsPage from './ProjectDomainsPage.svelte';
 
 const meta: Meta<ProjectDomainsPage> = {

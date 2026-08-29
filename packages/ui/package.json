@@ -31,19 +31,20 @@
     "@oss-tips/design-tokens": "workspace:*"
   },
   "devDependencies": {
-    "@storybook/addon-a11y": "8.6.18",
-    "@storybook/addon-essentials": "^8.6.18",
-    "@storybook/svelte": "8.6.18",
-    "@storybook/svelte-vite": "8.6.18",
-    "@sveltejs/package": "^2.3.10",
-    "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "@storybook/addon-a11y": "10.5.10",
+    "@storybook/addon-docs": "10.5.10",
+    "@storybook/addon-mcp": "^0.7.0",
+    "@storybook/svelte-vite": "10.5.10",
+    "@sveltejs/package": "^2.5.8",
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@tsconfig/svelte": "^5.0.4",
-    "storybook": "8.6.18",
-    "svelte": "^5.19.6",
-    "svelte-check": "^4.1.4",
+    "storybook": "10.5.10",
+    "svelte": "^5.57.0",
+    "svelte-check": "^4.7.6",
     "typescript": "^5.8.2",
-    "vite": "^6.2.0",
-    "vitest": "^3.0.9"
+    "valibot": "^1.4.2",
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"

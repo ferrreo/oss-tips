@@ -28,8 +28,8 @@
     "build-storybook": "pnpm --filter @oss-tips/ui build-storybook"
   },
   "devDependencies": {
-    "prettier": "^3.5.3",
+    "prettier": "^3.9.6",
     "typescript": "^5.8.2",
-    "vitest": "^3.0.9"
+    "vitest": "^4.1.11"
   }
 }

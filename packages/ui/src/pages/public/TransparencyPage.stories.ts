@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import TransparencyPage from './TransparencyPage.svelte';
 
 const meta: Meta<TransparencyPage> = {

@@ -9,7 +9,9 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -18,10 +20,10 @@
   },
   "dependencies": {
     "@oss-tips/domain": "workspace:*",
-    "stripe": "^17.7.0"
+    "stripe": "^22.6.0"
   },
   "devDependencies": {
     "typescript": "^5.8.2",
-    "vitest": "^3.0.9"
+    "vitest": "^4.1.11"
   }
 }

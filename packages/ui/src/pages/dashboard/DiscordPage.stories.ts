@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import DiscordPage from './DiscordPage.svelte';
 
 const meta: Meta<DiscordPage> = {

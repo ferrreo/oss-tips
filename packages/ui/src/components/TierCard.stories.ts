@@ -1,5 +1,5 @@
 import { demoTiers } from '../fixtures/demo.js';
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import TierCard from './TierCard.svelte';
 
 const meta: Meta<TierCard> = {

@@ -1,5 +1,5 @@
 import { projectNavGroups } from "../fixtures/demo.js";
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import SidebarNav from './SidebarNav.svelte';
 
 const meta: Meta<SidebarNav> = {

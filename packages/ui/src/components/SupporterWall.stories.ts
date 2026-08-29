@@ -1,5 +1,5 @@
 import { demoSupporters } from "../fixtures/demo.js";
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import SupporterWall from './SupporterWall.svelte';
 
 const meta: Meta<SupporterWall> = {

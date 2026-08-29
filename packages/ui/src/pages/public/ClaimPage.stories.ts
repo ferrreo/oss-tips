@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import ClaimPage from './ClaimPage.svelte';
 
 const meta: Meta<ClaimPage> = {

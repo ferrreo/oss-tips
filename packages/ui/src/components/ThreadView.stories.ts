@@ -1,5 +1,5 @@
 import { demoThreads } from "../fixtures/demo.js";
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import ThreadView from './ThreadView.svelte';
 
 const meta: Meta<ThreadView> = {

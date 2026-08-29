@@ -10,7 +10,9 @@
     },
     "./openapi.json": "./dist/openapi.json"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json && node dist/generate-openapi.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -25,6 +27,6 @@
   "devDependencies": {
     "openapi3-ts": "^4.6.1",
     "typescript": "^5.8.2",
-    "vitest": "^3.0.9"
+    "vitest": "^4.1.11"
   }
 }
