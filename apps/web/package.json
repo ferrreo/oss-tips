@@ -21,7 +21,8 @@
     "@oss-tips/payments": "workspace:*",
     "@oss-tips/ui": "workspace:*",
     "@sveltejs/adapter-node": "^5.5.7",
-    "@sveltejs/kit": "^2.70.3"
+    "@sveltejs/kit": "^2.70.3",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.3.0",

@@ -17,8 +17,8 @@
     cadence = 'one-off',
   }: Props = $props();
 
-  const projectFeeMinor = Math.round(projectAmountMinor * (projectFeePercent / 100));
-  const totalMinor = projectAmountMinor + projectFeeMinor + tipMinor;
+  const projectFeeMinor = $derived(Math.round(projectAmountMinor * (projectFeePercent / 100)));
+  const totalMinor = $derived(projectAmountMinor + projectFeeMinor + tipMinor);
 </script>
 
 <div class="pl-fee-disclosure" aria-label="Fee breakdown">

@@ -23,7 +23,7 @@
     'aria-label': ariaLabel,
   }: Props = $props();
 
-  const variantClass = `pl-btn--${variant}`;
+  const variantClass = $derived(`pl-btn--${variant}`);
 </script>
 
 <button

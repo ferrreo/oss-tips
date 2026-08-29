@@ -10,7 +10,7 @@
 
   let { supporters, currency = 'GBP', showAmounts = true }: Props = $props();
 
-  const visible = supporters.filter((s) => s.public);
+  const visible = $derived(supporters.filter((s) => s.public));
 </script>
 
 <section aria-label="Supporter wall">

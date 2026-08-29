@@ -23,7 +23,8 @@
     "@better-auth/passkey": "^1.7.2",
     "@oss-tips/domain": "workspace:*",
     "better-auth": "^1.7.2",
-    "kysely": "^0.29.5"
+    "kysely": "^0.29.5",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "typescript": "^5.8.2",

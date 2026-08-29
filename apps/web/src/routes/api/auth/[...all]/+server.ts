@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { toSvelteKitHandler } from '@oss-tips/auth';
 import type { RequestHandler } from './$types';
 import { getAuth } from '$lib/server/auth';

@@ -7,7 +7,7 @@
 
   let { value, max = 100, label }: Props = $props();
 
-  const percent = Math.min(100, Math.max(0, (value / max) * 100));
+  const percent = $derived(Math.min(100, Math.max(0, (value / max) * 100)));
 </script>
 
 <div
