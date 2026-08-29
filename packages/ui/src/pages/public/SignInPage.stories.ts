@@ -12,6 +12,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 export const CodeSent: Story = {
-  args: { initialStep: 'otp', initialEmail: 'ada@grove.dev' },
+  args: { step: 'otp', email: 'ada@grove.dev' },
 };
 export const Dark: Story = { globals: { theme: 'dark' } };

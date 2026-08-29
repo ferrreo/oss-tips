@@ -6,11 +6,11 @@
   import StatusBanner from '../../components/StatusBanner.svelte';
 
   interface Props {
-    initialStep?: 'email' | 'otp';
-    initialEmail?: string;
+    step?: 'email' | 'otp';
+    email?: string;
   }
 
-  let { initialStep = 'email', initialEmail = '' }: Props = $props();
+  let { step = $bindable('email'), email = $bindable('') }: Props = $props();
 
   const pageDemo = {
     title: 'Sign in',
@@ -21,8 +21,6 @@
     ],
   };
 
-  let email = $state(initialEmail);
-  let step = $state<'email' | 'otp'>(initialStep);
   let otp = $state('');
 </script>
 
