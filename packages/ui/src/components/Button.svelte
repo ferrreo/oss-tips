@@ -38,7 +38,7 @@
   onclick={onclick}
 >
   {#if loading}
-    <span class="pl-muted">Loading…</span>
+    <span class="pl-btn__loading">Loading…</span>
   {:else if children}
     {@render children()}
   {:else}
