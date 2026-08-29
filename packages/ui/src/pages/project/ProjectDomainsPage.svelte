@@ -1,14 +1,13 @@
 <script lang="ts">
-  import DashboardShell from '../../components/DashboardShell.svelte';
   import TextField from '../../components/TextField.svelte';
   import Button from '../../components/Button.svelte';
   import StatusBanner from '../../components/StatusBanner.svelte';
   import Table from '../../components/Table.svelte';
-  import { demoProject, projectNavGroups } from '../../fixtures/demo.js';
+  import ProjectDashShell from './ProjectDashShell.svelte';
   import { domainRows } from './project-demo.js';
 </script>
 
-<DashboardShell projectName={demoProject.name} navGroups={projectNavGroups} title="Custom domains">
+<ProjectDashShell title="Custom domains" lede="Public Grove pages on grove.dev. Checkout stays on oss.tips.">
   <StatusBanner
     variant="info"
     title="Custom domain active"
@@ -30,4 +29,4 @@
     ]}
     rows={domainRows}
   />
-</DashboardShell>
+</ProjectDashShell>

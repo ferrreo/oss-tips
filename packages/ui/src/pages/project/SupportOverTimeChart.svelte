@@ -57,12 +57,12 @@
 <section class="pl-surface" style="padding: 1.25rem;">
   <div class="pl-row pl-row--between" style="margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
     <div>
-      <h2 class="pl-display" style="font-size: 1.125rem;">{title}</h2>
-      <p class="pl-muted" style="margin: 0.25rem 0 0; font-size: 0.8125rem;">{range}</p>
+      <h2 style="font-size: 1.125rem; font-family: var(--pl-font-ui); font-weight: 600;">{title}</h2>
+      <p style="margin: 0.25rem 0 0; font-size: 0.8125rem; color: var(--pl-ink);">{range}</p>
     </div>
     <ul style="display: flex; flex-wrap: wrap; gap: 1rem; list-style: none; margin: 0; padding: 0;">
       {#each series as item (item.id)}
-        <li style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.8125rem;">
+        <li style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.8125rem; color: var(--pl-ink);">
           <span
             aria-hidden="true"
             style="width: 1.25rem; border-top: 2px {item.dashed ? 'dashed' : 'solid'} {item.color};"
@@ -92,7 +92,7 @@
         x={padL - 8}
         y={yAt(tick) + 4}
         text-anchor="end"
-        fill="var(--pl-ink-muted)"
+        fill="var(--pl-ink)"
         font-size="11"
         font-family="var(--pl-font-ui)"
       >
@@ -105,7 +105,7 @@
         x={xAt(index, labels.length)}
         y={height - 8}
         text-anchor="middle"
-        fill="var(--pl-ink-muted)"
+        fill="var(--pl-ink)"
         font-size="11"
         font-family="var(--pl-font-ui)"
       >

@@ -1,27 +1,26 @@
 <script lang="ts">
-  import DashboardShell from '../../components/DashboardShell.svelte';
   import Button from '../../components/Button.svelte';
   import Table from '../../components/Table.svelte';
   import StatusBanner from '../../components/StatusBanner.svelte';
   import TextField from '../../components/TextField.svelte';
-  import { demoProject, projectNavGroups } from '../../fixtures/demo.js';
+  import ProjectDashShell from './ProjectDashShell.svelte';
   import { webhookDeliveries, webhookRows } from './project-demo.js';
 </script>
 
-<DashboardShell projectName={demoProject.name} navGroups={projectNavGroups} title="Webhooks">
+<ProjectDashShell title="Webhooks" lede="Grove sends signed payment and membership events to your servers.">
   <StatusBanner
     variant="warning"
     title="1 failed delivery"
-    message="ledger.posted to https://hooks.grove.dev/ledger — retry scheduled."
+    message="The ledger.posted event to hooks.grove.dev failed. A retry is scheduled."
   />
   <div class="pl-row pl-row--between" style="margin: 1rem 0;">
-    <p class="pl-muted">Signed webhook endpoints for your backend.</p>
+    <p style="margin: 0; color: var(--pl-ink);">{webhookRows.length} endpoints registered.</p>
     <Button variant="primary">Add endpoint</Button>
   </div>
   <div class="pl-surface" style="padding: 1.25rem; margin-bottom: 1.5rem; max-width: 36rem;">
     <div class="pl-stack">
       <TextField label="Endpoint URL" value="https://api.grove.dev/hooks" />
-      <TextField label="Events" value="payment.*, membership.*, entitlement.*" />
+      <TextField label="Events" value="payment.*, membership.*, entitlement.*" help="Use the event names your server already handles." />
     </div>
   </div>
   <Table
@@ -46,4 +45,4 @@
     ]}
     rows={webhookDeliveries}
   />
-</DashboardShell>
+</ProjectDashShell>
