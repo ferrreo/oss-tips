@@ -1,7 +1,7 @@
 <script lang="ts">
   import PublicNav from '../../components/PublicNav.svelte';
   import PublicFooter from '../../components/PublicFooter.svelte';
-  import Button from '../../components/Button.svelte';
+  import HeroLandscape from '../../components/HeroLandscape.svelte';
   import Badge from '../../components/Badge.svelte';
   import { featuredProjects, formatMoney, type Project } from '../../fixtures/demo.js';
 
@@ -9,7 +9,7 @@
     strapline: 'Open source thrives with you.',
     support: 'Direct support for the tools you rely on. Clear fees. No hidden platform balance.',
     cadences: [
-      { name: 'One-off', body: 'Send any amount from $2. Some projects grant temporary access with that gift.' },
+      { name: 'One-off', body: 'Send any amount from $2. Some projects grant temporary access with that payment.' },
       { name: 'Monthly', body: 'A membership that renews each month. Cancel any time; access lasts through the paid period.' },
       { name: 'Annual', body: 'A year of support at the project’s annual price, with the same rewards as monthly.' },
     ],
@@ -54,37 +54,30 @@
         <h1 class="pl-display home-strapline">{pageDemo.strapline}</h1>
         <p class="pl-page-lead" style="margin-bottom: 2rem;">{pageDemo.support}</p>
         <div class="pl-row" style="flex-wrap: wrap;">
-          <Button variant="primary">Support a project</Button>
-          <Button variant="secondary">Explore projects</Button>
+          <a class="pl-btn pl-btn--primary pl-focus-ring" href="/explore">Explore projects</a>
+          <a class="pl-btn pl-btn--secondary pl-focus-ring" href="/about">How oss.tips works</a>
         </div>
       </div>
     </section>
-    <figure class="home-landscape" aria-hidden="true">
-      <svg viewBox="0 0 1600 240" fill="none">
-        <rect width="1600" height="240" fill="var(--pl-canvas-subtle)" />
-        <path d="M0 160 C240 120 420 190 680 140 C940 90 1180 180 1600 130 L1600 240 L0 240 Z" fill="var(--pl-fern)" opacity="0.35" />
-        <path d="M0 190 C300 150 560 210 860 170 C1160 130 1380 200 1600 165 L1600 240 L0 240 Z" fill="var(--pl-moss)" opacity="0.28" />
-        <circle cx="1320" cy="58" r="24" fill="var(--pl-ochre)" opacity="0.4" />
-      </svg>
-    </figure>
+    <HeroLandscape />
 
     <section class="pl-section">
       <div class="pl-container">
         <h2 class="pl-display" style="font-size: 1.5rem; margin-bottom: 1rem;">Featured projects</h2>
-        <p class="pl-muted" style="margin-bottom: 1.5rem; max-width: 40rem;">
+        <p class="pl-page-lead" style="margin-bottom: 1.5rem; font-size: 1rem;">
           Hand-picked by the team. We do not rank projects by how much money they raise.
         </p>
         <div class="home-projects">
           {#each pageDemo.projects as project (project.slug)}
             <article class="pl-surface" style="padding: 1.25rem;">
               <div class="pl-row" style="margin-bottom: 0.5rem;">
-                <strong>{project.name}</strong>
+                <a href="/{project.slug}"><strong>{project.name}</strong></a>
                 {#if project.verified}
                   <Badge variant="forest">Verified</Badge>
                 {/if}
               </div>
               <p class="pl-muted" style="font-size: 0.875rem; margin-bottom: 0.75rem;">{project.description}</p>
-              <p class="pl-mono pl-muted" style="font-size: 0.75rem; margin-bottom: 0.75rem;">{project.repository}</p>
+              <p class="pl-mono pl-muted" style="font-size: 0.8125rem; margin-bottom: 0.75rem;">{project.repository}</p>
               <p class="pl-mono" style="font-size: 0.8125rem;">
                 {project.stats.supporters} supporters · {formatMoney(project.stats.monthlyRecurringMinor, project.currency)}/mo
               </p>
@@ -151,18 +144,6 @@
     font-size: clamp(2rem, 5vw, 3.25rem);
     max-width: 36rem;
     margin-bottom: 1rem;
-  }
-
-  .home-landscape {
-    margin: 0;
-    line-height: 0;
-    border-block: 1px solid var(--pl-border);
-  }
-
-  .home-landscape svg {
-    display: block;
-    width: 100%;
-    height: auto;
   }
 
   .home-projects {

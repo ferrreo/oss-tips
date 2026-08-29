@@ -33,23 +33,30 @@
 
 <div>
   <PublicNav />
-  <main id="main-content" class="pl-section">
-    <div class="pl-container pl-container--reading">
-      <h1 class="pl-page-title">Terms of service</h1>
-      <p class="pl-muted" style="margin-bottom: 2rem;">{pageDemo.updated}</p>
-      <div class="pl-prose">
-        {#each pageDemo.sections as section (section.heading)}
-          <h2>{section.heading}</h2>
-          <p>{section.body}</p>
-        {/each}
-        <h2>Related documents</h2>
-        <ul>
-          {#each pageDemo.docs as doc (doc.href)}
-            <li><a href={doc.href}>{doc.label}</a></li>
-          {/each}
-        </ul>
+  <main id="main-content">
+    <section class="pl-public-hero">
+      <div class="pl-container pl-container--reading">
+        <p class="pl-public-hero__brand">oss.tips</p>
+        <h1 class="pl-display pl-public-hero__title">Terms of service</h1>
+        <p class="pl-page-lead">{pageDemo.updated}</p>
       </div>
-    </div>
+    </section>
+    <section class="pl-section" style="padding-top: 0;">
+      <div class="pl-container pl-container--reading">
+        <div class="pl-prose">
+          {#each pageDemo.sections as section (section.heading)}
+            <h2>{section.heading}</h2>
+            <p>{section.body}</p>
+          {/each}
+          <h2>Related documents</h2>
+          <ul>
+            {#each pageDemo.docs as doc (doc.href)}
+              <li><a href={doc.href}>{doc.label}</a></li>
+            {/each}
+          </ul>
+        </div>
+      </div>
+    </section>
   </main>
   <PublicFooter />
 </div>

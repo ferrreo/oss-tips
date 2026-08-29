@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Button from './Button.svelte';
   import ThemeToggle from './ThemeToggle.svelte';
   import wordmarkLight from '../assets/oss-tips-wordmark-light.svg';
   import wordmarkDark from '../assets/oss-tips-wordmark-dark.svg';
@@ -29,6 +28,7 @@
   const wordmark = $derived(resolved === 'dark' ? wordmarkDark : wordmarkLight);
 </script>
 
+<a class="pl-skip-link" href="#main-content">Skip to content</a>
 <header class="pl-public-nav">
   <a class="pl-public-nav__home pl-focus-ring" href="/" aria-label="oss.tips home">
     <img class="pl-public-nav__wordmark" src={wordmark} alt="oss.tips" width="128" height="28" />
@@ -43,6 +43,6 @@
   </nav>
   <div class="pl-public-nav__actions">
     <ThemeToggle />
-    <Button variant="secondary">Sign in</Button>
+    <a class="pl-btn pl-btn--secondary pl-focus-ring" href="/signin">Sign in</a>
   </div>
 </header>

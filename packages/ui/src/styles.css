@@ -155,7 +155,29 @@ a:hover {
 .pl-page-lead {
   color: var(--pl-ink-muted);
   font-size: 1.125rem;
+  line-height: 1.55;
   max-width: 40rem;
+}
+
+.pl-public-hero {
+  padding: 3.5rem 0 2.25rem;
+  background: var(--pl-canvas);
+}
+
+.pl-public-hero__brand {
+  margin: 0 0 0.75rem;
+  font-family: var(--pl-font-display);
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--pl-forest);
+}
+
+.pl-public-hero__title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  max-width: 18ch;
+  margin-bottom: 1rem;
 }
 
 .pl-table-wrap {
@@ -1365,13 +1387,13 @@ a:hover {
 
 .pl-prose p {
   margin: 0 0 1rem;
-  color: var(--pl-ink-muted);
+  color: var(--pl-ink);
 }
 
 .pl-prose ul {
   margin: 0 0 1rem;
   padding-left: 1.25rem;
-  color: var(--pl-ink-muted);
+  color: var(--pl-ink);
 }
 
 /* Theme toggle */

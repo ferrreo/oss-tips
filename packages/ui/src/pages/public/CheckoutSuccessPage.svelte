@@ -2,8 +2,8 @@
   import PublicNav from '../../components/PublicNav.svelte';
   import PublicFooter from '../../components/PublicFooter.svelte';
   import StatusBanner from '../../components/StatusBanner.svelte';
-  import Button from '../../components/Button.svelte';
   import FeeDisclosure from '../../components/FeeDisclosure.svelte';
+  import { cadencePhrase } from '../labels.js';
   import { demoProject, formatMoney } from '../../fixtures/demo.js';
 
   const pageDemo = {
@@ -11,7 +11,7 @@
     cadence: 'monthly',
     tier: 'Sapling',
     entitlement: 'Sapling rewards for 30 days',
-    expires: '2026-09-27',
+    expires: '27 Sep 2026',
     reference: 'cs_test_a1GroveSapling',
     receiptEmail: 'ada@example.com',
   };
@@ -21,14 +21,16 @@
   <PublicNav />
   <main id="main-content" class="pl-section">
     <div class="pl-container pl-container--reading">
+      <p class="pl-public-hero__brand">oss.tips</p>
       <StatusBanner
         variant="info"
         title="Payment received"
-        message="Your support is being processed. Entitlements activate after Stripe verification."
+        message="Stripe received the payment. Access starts after it confirms."
       />
       <h1 class="pl-page-title" style="margin-top: 1.5rem;">Thank you for supporting {demoProject.name}</h1>
       <p class="pl-page-lead">
-        You paid {formatMoney(pageDemo.amountMinor, demoProject.currency)} {pageDemo.cadence} to {demoProject.name}. A receipt will be emailed to {pageDemo.receiptEmail}.
+        You paid {formatMoney(pageDemo.amountMinor, demoProject.currency)} as a {cadencePhrase(pageDemo.cadence)} to
+        {demoProject.name}. A receipt will be emailed to {pageDemo.receiptEmail}.
       </p>
       <dl class="cs-meta">
         <div>
@@ -36,7 +38,7 @@
           <dd>{pageDemo.tier}</dd>
         </div>
         <div>
-          <dt class="pl-muted">Entitlement</dt>
+          <dt class="pl-muted">Access</dt>
           <dd>{pageDemo.entitlement} (expires {pageDemo.expires})</dd>
         </div>
         <div>
@@ -52,8 +54,8 @@
         />
       </div>
       <div class="pl-row" style="flex-wrap: wrap;">
-        <Button variant="primary">Create account to manage support</Button>
-        <Button variant="secondary">Return to project</Button>
+        <a class="pl-btn pl-btn--primary pl-focus-ring" href="/signin">Create an account to manage this support</a>
+        <a class="pl-btn pl-btn--secondary pl-focus-ring" href="/{demoProject.slug}">Return to {demoProject.name}</a>
       </div>
     </div>
   </main>
@@ -68,7 +70,7 @@
   }
 
   .cs-meta dt {
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     margin-bottom: 0.15rem;
   }
 

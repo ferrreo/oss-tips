@@ -10,5 +10,9 @@ const meta: Meta<TermsDocPage> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
-export const Dark: Story = { globals: { theme: 'dark' } };
+export const Default: Story = { args: { doc: 'privacy' } };
+export const Privacy: Story = { args: { doc: 'privacy' } };
+export const AcceptableUse: Story = { args: { doc: 'acceptable-use' } };
+export const Refunds: Story = { args: { doc: 'refunds' } };
+export const Cookies: Story = { args: { doc: 'cookies' } };
+export const Dark: Story = { args: { doc: 'privacy' }, globals: { theme: 'dark' } };

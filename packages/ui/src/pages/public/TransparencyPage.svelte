@@ -5,6 +5,7 @@
   import Table from '../../components/Table.svelte';
 
   const pageDemo = {
+    lead: 'These figures use settled Stripe data only. The numbers below are demo totals until production reports exist.',
     cards: [
       { label: 'Projects published', value: '1,248', compare: '+12 this month', compareDirection: 'up' as const, sparkline: [980, 1040, 1112, 1180, 1220, 1248] },
       { label: 'Support processed (30d)', value: '$2.4M', compare: 'Settled volume', compareDirection: 'neutral' as const, sparkline: [18, 19, 21, 20, 23, 24] },
@@ -28,27 +29,34 @@
 
 <div>
   <PublicNav />
-  <main id="main-content" class="pl-section">
-    <div class="pl-container">
-      <h1 class="pl-page-title">Transparency</h1>
-      <p class="pl-page-lead">These figures use settled Stripe data only. Demo numbers until production totals exist.</p>
-      <div class="tr-grid">
-        {#each pageDemo.cards as card (card.label)}
-          <DataCard
-            label={card.label}
-            value={card.value}
-            compare={card.compare}
-            compareDirection={card.compareDirection}
-            sparkline={card.sparkline}
-          />
-        {/each}
+  <main id="main-content">
+    <section class="pl-public-hero">
+      <div class="pl-container">
+        <p class="pl-public-hero__brand">oss.tips</p>
+        <h1 class="pl-display pl-public-hero__title">Transparency</h1>
+        <p class="pl-page-lead">{pageDemo.lead}</p>
       </div>
-      <div class="pl-prose" style="margin-top: 2rem;">
-        <h2>How we report</h2>
-        <p>Totals update after Stripe settles. We do not publish leaderboards by payment volume.</p>
+    </section>
+    <section class="pl-section" style="padding-top: 0;">
+      <div class="pl-container">
+        <div class="tr-grid">
+          {#each pageDemo.cards as card (card.label)}
+            <DataCard
+              label={card.label}
+              value={card.value}
+              compare={card.compare}
+              compareDirection={card.compareDirection}
+              sparkline={card.sparkline}
+            />
+          {/each}
+        </div>
+        <div class="pl-prose" style="margin-top: 2rem;">
+          <h2>How we report</h2>
+          <p>Totals update after Stripe settles. We do not publish leaderboards by payment volume.</p>
+        </div>
+        <Table columns={pageDemo.columns} rows={pageDemo.rows} caption="Reporting rules" />
       </div>
-      <Table columns={pageDemo.columns} rows={pageDemo.rows} caption="Reporting rules" />
-    </div>
+    </section>
   </main>
   <PublicFooter />
 </div>
@@ -57,7 +65,6 @@
   .tr-grid {
     display: grid;
     gap: 1rem;
-    margin-top: 2rem;
   }
 
   @media (min-width: 44rem) {

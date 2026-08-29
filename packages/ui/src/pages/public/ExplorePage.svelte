@@ -21,7 +21,7 @@
         repository: 'github.com/oss-tips/river-md',
         verified: true,
         currency: 'USD',
-        feeMode: 'standard',
+        feeMode: 'standard' as const,
         logoLetter: 'R',
         tags: ['markdown', 'editor'],
         stats: {
@@ -39,7 +39,7 @@
         repository: 'github.com/oss-tips/seed-bot',
         verified: false,
         currency: 'USD',
-        feeMode: 'project_5pct',
+        feeMode: 'project_5pct' as const,
         logoLetter: 'S',
         tags: ['discord', 'bot'],
         stats: {
@@ -74,62 +74,73 @@
 
 <div>
   <PublicNav />
-  <main id="main-content" class="pl-section">
-    <div class="pl-container">
-      <h1 class="pl-page-title">Explore projects</h1>
-      <p class="pl-page-lead">
-        Search by name, repository, ecosystem, or tag. Ranking prefers exact name matches and recent project activity, not payment volume.
-      </p>
-      <div class="ex-search">
-        <TextField
-          label="Search"
-          bind:value={search}
-          placeholder="Project name or repository…"
-          type="search"
-        />
-        <div class="pl-row" style="flex-wrap: wrap; padding-top: 1.75rem;">
-          {#each pageDemo.filters as filter (filter.id)}
-            <button
-              type="button"
-              class="ex-chip pl-focus-ring"
-              aria-pressed={activeFilter === filter.id}
-              onclick={() => (activeFilter = activeFilter === filter.id ? null : filter.id)}
-            >
-              {filter.label}
-            </button>
+  <main id="main-content">
+    <section class="pl-public-hero">
+      <div class="pl-container">
+        <p class="pl-public-hero__brand">oss.tips</p>
+        <h1 class="pl-display pl-public-hero__title">Explore projects</h1>
+        <p class="pl-page-lead">
+          Search by name, repository, or tag. Ranking prefers exact name matches and recent project activity, not payment
+          volume.
+        </p>
+      </div>
+    </section>
+    <section class="pl-section" style="padding-top: 0;">
+      <div class="pl-container">
+        <div class="ex-search">
+          <TextField
+            label="Search projects"
+            name="explore-search"
+            bind:value={search}
+            placeholder="Grove, vitest-run, github.com/…"
+            type="search"
+          />
+          <div class="pl-row" style="flex-wrap: wrap; padding-top: 1.75rem;" role="group" aria-label="Filter projects">
+            {#each pageDemo.filters as filter (filter.id)}
+              <button
+                type="button"
+                class="ex-chip pl-focus-ring"
+                aria-pressed={activeFilter === filter.id}
+                onclick={() => (activeFilter = activeFilter === filter.id ? null : filter.id)}
+              >
+                {filter.label}
+              </button>
+            {/each}
+          </div>
+        </div>
+        <p class="pl-muted" style="font-size: 0.875rem; margin-bottom: 1rem;">{visible.length} projects</p>
+        <div class="pl-stack">
+          {#each visible as project (project.slug)}
+            <article class="pl-surface" style="padding: 1.25rem;">
+              <div class="ex-row">
+                <div>
+                  <div class="pl-row" style="margin-bottom: 0.25rem;">
+                    <h2 style="font-size: 1.125rem;">
+                      <a href="/{project.slug}">{project.name}</a>
+                    </h2>
+                    {#if project.verified}
+                      <Badge variant="forest">Verified</Badge>
+                    {/if}
+                  </div>
+                  <p class="pl-muted" style="font-size: 0.875rem;">{project.description}</p>
+                </div>
+                <div class="ex-meta">
+                  <p class="pl-mono" style="font-size: 0.8125rem;">{project.repository}</p>
+                  <p class="pl-muted" style="font-size: 0.8125rem;">
+                    {project.stats.supporters} supporters · {formatMoney(project.stats.monthlyRecurringMinor, project.currency)}/mo
+                  </p>
+                </div>
+              </div>
+              <div class="pl-row" style="margin-top: 0.75rem; flex-wrap: wrap;">
+                {#each project.tags as tag (tag)}
+                  <Badge>{tag}</Badge>
+                {/each}
+              </div>
+            </article>
           {/each}
         </div>
       </div>
-      <p class="pl-muted" style="font-size: 0.8125rem; margin-bottom: 1rem;">{visible.length} projects</p>
-      <div class="pl-stack">
-        {#each visible as project (project.slug)}
-          <article class="pl-surface" style="padding: 1.25rem;">
-            <div class="ex-row">
-              <div>
-                <div class="pl-row" style="margin-bottom: 0.25rem;">
-                  <h2 style="font-size: 1.125rem;">{project.name}</h2>
-                  {#if project.verified}
-                    <Badge variant="forest">Verified</Badge>
-                  {/if}
-                </div>
-                <p class="pl-muted" style="font-size: 0.875rem;">{project.description}</p>
-              </div>
-              <div class="ex-meta">
-                <p class="pl-mono" style="font-size: 0.8125rem;">{project.repository}</p>
-                <p class="pl-muted" style="font-size: 0.8125rem;">
-                  {project.stats.supporters} supporters · {formatMoney(project.stats.monthlyRecurringMinor, project.currency)}/mo
-                </p>
-              </div>
-            </div>
-            <div class="pl-row" style="margin-top: 0.75rem; flex-wrap: wrap;">
-              {#each project.tags as tag (tag)}
-                <Badge>{tag}</Badge>
-              {/each}
-            </div>
-          </article>
-        {/each}
-      </div>
-    </div>
+    </section>
   </main>
   <PublicFooter />
 </div>
@@ -138,7 +149,7 @@
   .ex-search {
     display: grid;
     gap: 1rem;
-    margin: 1.5rem 0 1rem;
+    margin: 0 0 1rem;
   }
 
   .ex-chip {
@@ -147,7 +158,7 @@
     border-radius: 999px;
     border: 1px solid var(--pl-border);
     background: var(--pl-surface);
-    color: var(--pl-ink-muted);
+    color: var(--pl-ink);
     font: inherit;
     cursor: pointer;
   }

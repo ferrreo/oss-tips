@@ -3,6 +3,7 @@
   import ThreadView from '../../components/ThreadView.svelte';
   import Badge from '../../components/Badge.svelte';
   import { formatMoney } from '../../fixtures/demo.js';
+  import { cadenceLabel } from '../labels.js';
   import SupporterAccountNav from './SupporterAccountNav.svelte';
   import { requireThread, supporterThreads } from './supporter-demo.js';
 
@@ -14,6 +15,7 @@
   <PublicNav />
   <main id="main-content" class="pl-section">
     <div class="pl-container">
+      <p class="pl-public-hero__brand">oss.tips</p>
       <h1 class="pl-page-title">Inbox</h1>
       <p class="pl-page-lead">Replies from projects you support. Threads stay bound to the payment that started them.</p>
       <SupporterAccountNav current="inbox" />
@@ -26,6 +28,7 @@
                 type="button"
                 class="pl-focus-ring inbox-item"
                 aria-current={thread.id === selectedId ? 'true' : undefined}
+                aria-label="{thread.unread ? 'Unread: ' : ''}{thread.subject} from {thread.project}"
                 onclick={() => (selectedId = thread.id)}
               >
                 <div class="pl-row pl-row--between">
@@ -35,7 +38,7 @@
                   {/if}
                 </div>
                 <span class="pl-muted" style="font-size: 0.8125rem;">
-                  {thread.project} · {formatMoney(thread.amountMinor)} · {thread.cadence}
+                  {thread.project} · {formatMoney(thread.amountMinor)} · {cadenceLabel(thread.cadence)}
                 </span>
               </button>
             </li>

@@ -10,5 +10,16 @@ const meta: Meta<ProjectPostPage> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
-export const Dark: Story = { globals: { theme: 'dark' } };
+export const Default: Story = {
+  args: { slug: 'infrastructure-goal-update' },
+};
+export const GroveInfrastructure: Story = {
+  args: { slug: 'infrastructure-goal-update' },
+};
+export const GroveRelease: Story = {
+  args: { slug: 'grove-1-0' },
+};
+export const Dark: Story = {
+  args: { slug: 'infrastructure-goal-update' },
+  globals: { theme: 'dark' },
+};
