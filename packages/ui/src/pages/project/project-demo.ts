@@ -356,15 +356,16 @@ export const extraThreads: Thread[] = [
 export const inboxThreads: Thread[] = [...demoThreads, ...extraThreads];
 
 export function inboxPreviewFromThread(thread: Thread): InboxPreviewRow {
-  return {
+  const row: InboxPreviewRow = {
     id: thread.id,
     initial: thread.supporter.slice(0, 1).toUpperCase(),
     name: thread.supporter,
     snippet: thread.preview,
     amount: thread.amountLabel,
     time: thread.relativeTime,
-    unread: thread.unread,
   };
+  if (thread.unread) row.unread = true;
+  return row;
 }
 
 export const inboxPreviewRows: InboxPreviewRow[] = inboxThreads.map(inboxPreviewFromThread);

@@ -13,7 +13,12 @@
 </script>
 
 <div class="project-dash">
-  <DashboardShell projectName={demoProject.name} navGroups={projectNavGroups} {title} {lede}>
+  <DashboardShell
+    projectName={demoProject.name}
+    navGroups={projectNavGroups}
+    title={title ?? ''}
+    lede={lede ?? ''}
+  >
     {@render children?.()}
   </DashboardShell>
 </div>
