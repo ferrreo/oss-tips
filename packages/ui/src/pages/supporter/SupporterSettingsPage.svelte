@@ -1,6 +1,5 @@
 <script lang="ts">
   import PublicNav from '../../components/PublicNav.svelte';
-  import PublicFooter from '../../components/PublicFooter.svelte';
   import TextField from '../../components/TextField.svelte';
   import Button from '../../components/Button.svelte';
   import SegmentedControl from '../../components/SegmentedControl.svelte';
@@ -94,5 +93,4 @@
       </div>
     </div>
   </main>
-  <PublicFooter />
 </div>

@@ -12,10 +12,12 @@
     failedJobs,
     reconciliationRows,
     formatMoney,
+    requireItem,
   } from './admin-demo.js';
 
   const openCases = adminCases.filter((c) => c.status !== 'resolved');
   const mismatches = reconciliationRows.filter((r) => r.status === 'mismatch');
+  const oldestReview = requireItem(reviewQueue.slice().reverse(), 'reviewQueue');
 </script>
 
 <AdminShell navGroups={adminNav('/admin')} title="Platform overview">
@@ -27,7 +29,7 @@
   <StatusBanner
     variant="info"
     title="{reviewQueue.length} projects in the review queue"
-    message="First-payment activation, duplicate claims, and impersonation flags. Oldest item has waited {reviewQueue[reviewQueue.length - 1].queueDays} days."
+    message="First-payment activation, duplicate claims, and impersonation flags. Oldest item has waited {oldestReview.queueDays} days."
   />
 
   <div class="pl-grid-3" style="margin: 1.5rem 0;">

@@ -1,6 +1,5 @@
 <script lang="ts">
   import PublicNav from '../../components/PublicNav.svelte';
-  import PublicFooter from '../../components/PublicFooter.svelte';
   import Table from '../../components/Table.svelte';
   import Button from '../../components/Button.svelte';
   import Badge from '../../components/Badge.svelte';
@@ -72,17 +71,16 @@
         </div>
       </section>
 
-      {#if pastDue.length}
+      {#each pastDue as membership (membership.id)}
         <p class="pl-muted" style="font-size: 0.875rem; margin-top: 1rem;">
-          {pastDue[0].projectName} is past due. Access and mapped Discord roles remain during the seven-day grace.
+          {membership.projectName} is past due. Access and mapped Discord roles remain during the seven-day grace.
         </p>
-      {/if}
-      {#if cancelled.length}
+      {/each}
+      {#each cancelled as membership (membership.id)}
         <p class="pl-muted" style="font-size: 0.875rem; margin-top: 0.5rem;">
-          {cancelled[0].projectName} is cancelled. Entitlements ran to the paid-period end.
+          {membership.projectName} is cancelled. Entitlements ran to the paid-period end.
         </p>
-      {/if}
+      {/each}
     </div>
   </main>
-  <PublicFooter />
 </div>
