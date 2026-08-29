@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import OverviewPage from '@oss-tips/ui/pages/dashboard/OverviewPage.svelte';
+
+  let { data } = $props();
 </script>
 
-<OverviewPage project={page.params.project} />
+<OverviewPage {...data} />

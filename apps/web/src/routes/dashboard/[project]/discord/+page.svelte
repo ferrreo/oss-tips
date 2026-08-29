@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import DiscordPage from '@oss-tips/ui/pages/dashboard/DiscordPage.svelte';
+
+  let { data } = $props();
 </script>
 
-<DiscordPage project={page.params.project} />
+<DiscordPage {...data} />

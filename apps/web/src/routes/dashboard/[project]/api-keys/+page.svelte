@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import ApiKeysPage from '@oss-tips/ui/pages/dashboard/ApiKeysPage.svelte';
+
+  let { data } = $props();
 </script>
 
-<ApiKeysPage project={page.params.project} />
+<ApiKeysPage {...data} />

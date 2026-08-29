@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import MembershipsPage from '@oss-tips/ui/pages/dashboard/MembershipsPage.svelte';
+
+  let { data } = $props();
 </script>
 
-<MembershipsPage project={page.params.project} />
+<MembershipsPage {...data} />

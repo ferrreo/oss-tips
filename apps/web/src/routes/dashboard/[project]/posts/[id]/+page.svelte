@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import EditPostPage from '@oss-tips/ui/pages/dashboard/EditPostPage.svelte';
+  import { page } from '$app/state';
+
+  let { data } = $props();
 </script>
 
-<EditPostPage project={page.params.project} id={page.params.id} />
+<EditPostPage {...data} id={page.params.id} />

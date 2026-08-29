@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import SettingsPage from '@oss-tips/ui/pages/dashboard/SettingsPage.svelte';
+
+  let { data } = $props();
 </script>
 
-<SettingsPage project={page.params.project} />
+<SettingsPage {...data} />
