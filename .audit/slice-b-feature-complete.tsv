@@ -1,0 +1,6 @@
+ts	phase	decision	why	evidence	result
+2026-08-29T18:00:47Z	frame	Resume after main merge 46c280d; scaffold is real, Slice B money path is stub	Session pickup found PR1 merged; feature-complete predicate unmet	git:46c280d docs/09	open
+2026-08-29T18:00:47Z	frame	Done predicate: one-off payment persists webhook, finance worker posts ledger with zero transit, projects list from DB, Better Auth mounted	Falsifiable check for Slice B vertical slice before C/D/E	docs/09-IMPLEMENTATION-PLAN.md#Slice-B	open
+2026-08-29T18:00:47Z	frame	Rigor high on money path (idempotency + ledger); medium on UI fixture wiring	Financial correctness is one-way; UI can iterate	docs/03-DATA-AND-LEDGER.md	open
+2026-08-29T18:01:09Z	design	Sequence units: durable inbox, finance settle, checkout+projects API, Better Auth mount	Riskiest unknown first is money path; scaffold already exists so skip re-scaffolding	docs/09 Slice B	open
+2026-08-29T18:01:09Z	design	Skip architect/arena; money pipeline shape is specified in docs/03	Laziness Protocol: settled design, second arena would be over-engineering	docs/03-DATA-AND-LEDGER.md#11	open
