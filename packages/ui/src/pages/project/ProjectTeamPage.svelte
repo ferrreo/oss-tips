@@ -1,15 +1,14 @@
 <script lang="ts">
-  import DashboardShell from '../../components/DashboardShell.svelte';
   import Table from '../../components/Table.svelte';
   import Button from '../../components/Button.svelte';
   import TextField from '../../components/TextField.svelte';
-  import { demoProject, projectNavGroups } from '../../fixtures/demo.js';
+  import ProjectDashShell from './ProjectDashShell.svelte';
   import { teamRows } from './project-demo.js';
 </script>
 
-<DashboardShell projectName={demoProject.name} navGroups={projectNavGroups} title="Team">
+<ProjectDashShell title="Team" lede="People who can change Grove's page, money, or posts.">
   <div class="pl-row pl-row--between" style="margin-bottom: 1rem;">
-    <p class="pl-muted">Owners, finance, and editors with scoped permissions.</p>
+    <p style="margin: 0; color: var(--pl-ink);">{teamRows.length} people have dashboard access.</p>
     <Button variant="primary">Invite member</Button>
   </div>
   <div class="pl-surface" style="padding: 1.25rem; margin-bottom: 1.5rem; max-width: 36rem;">
@@ -28,4 +27,4 @@
     ]}
     rows={teamRows}
   />
-</DashboardShell>
+</ProjectDashShell>

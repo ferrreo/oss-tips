@@ -1,29 +1,29 @@
 <script lang="ts">
-  import DashboardShell from '../../components/DashboardShell.svelte';
   import TextField from '../../components/TextField.svelte';
   import Button from '../../components/Button.svelte';
   import SegmentedControl from '../../components/SegmentedControl.svelte';
   import Table from '../../components/Table.svelte';
-  import { demoProject, demoPosts, projectNavGroups } from '../../fixtures/demo.js';
+  import { demoPosts } from '../../fixtures/demo.js';
+  import ProjectDashShell from './ProjectDashShell.svelte';
   import { extraPosts } from './project-demo.js';
 
   const draft = demoPosts[0] ?? {
     id: 'p1',
-    slug: 'grove-1-0',
-    title: 'Grove 1.0 tokens and docs',
-    excerpt: 'Semantic colour tokens, typography stacks, and motion defaults are now stable.',
-    publishedAt: '2026-08-15',
+    slug: 'infrastructure-goal-update',
+    title: 'Infrastructure goal: 60% and the second region is scoped',
+    excerpt: 'Checkout failover plan, object-storage cutover, and what $45,230 has already bought.',
+    publishedAt: '2026-05-28',
     tierVisibility: 'Public',
   };
   let title = $state(draft.title);
   let visibility = $state('public');
   let body = $state(
-    'Shared colour tokens, type stacks, and motion defaults are stable. This post is public and marks the Grove 1.0 docs release.',
+    'We signed the second-region contract and started the object-storage cutover. The remaining $29,770 funds replica Postgres and a warm checkout failover.',
   );
   const recent = [...demoPosts, ...extraPosts];
 </script>
 
-<DashboardShell projectName={demoProject.name} navGroups={projectNavGroups} title="Edit post">
+<ProjectDashShell title="Edit post" lede="Write an update for Grove supporters and the public.">
   <div class="pl-grid-2">
     <div class="pl-stack">
       <TextField label="Title" bind:value={title} placeholder="Post title" />
@@ -33,8 +33,8 @@
         <SegmentedControl
           options={[
             { value: 'public', label: 'Public' },
-            { value: 'sapling', label: 'Sapling+' },
-            { value: 'canopy', label: 'Canopy' },
+            { value: 'supporter', label: 'Supporter+' },
+            { value: 'backer', label: 'Backer+' },
           ]}
           value={visibility}
           onchange={(v) => (visibility = v)}
@@ -53,7 +53,7 @@
     <div>
       <h2 style="font-size: 1rem; margin-bottom: 0.75rem;">Recent posts</h2>
       <Table
-        caption="Reuse title or visibility from an earlier post"
+        caption="Reuse title or visibility from an earlier Grove post"
         columns={[
           { key: 'title', label: 'Title' },
           { key: 'visibility', label: 'Visibility' },
@@ -62,9 +62,9 @@
         rows={recent.map((post) => ({
           title: post.title,
           visibility: post.tierVisibility,
-          published: post.publishedAt,
+          published: post.publishedLabel,
         }))}
       />
     </div>
   </div>
-</DashboardShell>
+</ProjectDashShell>

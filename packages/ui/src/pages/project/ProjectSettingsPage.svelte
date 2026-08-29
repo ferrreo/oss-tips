@@ -1,10 +1,11 @@
 <script lang="ts">
-  import DashboardShell from '../../components/DashboardShell.svelte';
   import TextField from '../../components/TextField.svelte';
   import Button from '../../components/Button.svelte';
   import SegmentedControl from '../../components/SegmentedControl.svelte';
   import Table from '../../components/Table.svelte';
-  import { demoProject, projectNavGroups } from '../../fixtures/demo.js';
+  import { demoProject } from '../../fixtures/demo.js';
+  import { feeModeLabels } from '../../lib/labels.js';
+  import ProjectDashShell from './ProjectDashShell.svelte';
   import { settingsLinks } from './project-demo.js';
 
   let feeMode = $state(demoProject.feeMode);
@@ -13,7 +14,7 @@
   let description = $state(demoProject.description);
 </script>
 
-<DashboardShell projectName={demoProject.name} navGroups={projectNavGroups} title="Settings">
+<ProjectDashShell title="Settings" lede="Public Grove identity, fees, and where the project already appears.">
   <div class="pl-grid-2">
     <div class="pl-stack">
       <TextField label="Project name" bind:value={name} />
@@ -26,8 +27,8 @@
         <span class="pl-field__label">Fee mode</span>
         <SegmentedControl
           options={[
-            { value: 'standard', label: 'Standard' },
-            { value: 'project_5pct', label: 'Project 5%' },
+            { value: 'standard', label: feeModeLabels.standard },
+            { value: 'project_5pct', label: feeModeLabels.project_5pct },
           ]}
           value={feeMode}
           onchange={(v) => {
@@ -42,7 +43,7 @@
     <div>
       <h2 style="font-size: 1rem; margin-bottom: 0.75rem;">Public links</h2>
       <Table
-        caption="Where this project already appears"
+        caption="Where Grove already appears"
         columns={[
           { key: 'label', label: 'Surface' },
           { key: 'value', label: 'Value' },
@@ -51,4 +52,4 @@
       />
     </div>
   </div>
-</DashboardShell>
+</ProjectDashShell>

@@ -1,4 +1,5 @@
 import type { Goal, Payment, Post, Thread } from '../../fixtures/demo.js';
+import { demoThreads, formatMoney, formatPercent } from '../../fixtures/demo.js';
 
 export interface ChartSeries {
   id: string;
@@ -30,12 +31,13 @@ export interface ToolCard {
   title: string;
   blurb: string;
   href: string;
+  cta: string;
 }
 
 export const overviewMetrics = [
   { label: 'Total support', value: '$12,841', compare: '+18.2%', compareDirection: 'up' as const },
   { label: 'New supporters', value: '284', compare: '+24.1%', compareDirection: 'up' as const },
-  { label: 'MRR', value: '$6,421', compare: '+22.7%', compareDirection: 'up' as const },
+  { label: 'Monthly recurring', value: '$6,421', compare: '+22.7%', compareDirection: 'up' as const },
 ];
 
 export const supportOverTimeLabels = [
@@ -75,268 +77,297 @@ export const supportOverTimeSeries: ChartSeries[] = [
   },
 ];
 
-export const inboxPreviewRows: InboxPreviewRow[] = [
-  {
-    id: 'in1',
-    initial: 'H',
-    name: 'Helena R.',
-    snippet: 'Does the annual tier include all Sapling rewards?',
-    amount: '$100',
-    time: '2h',
-    unread: true,
-  },
-  {
-    id: 'in2',
-    initial: 'Y',
-    name: 'Yuki S.',
-    snippet: 'Could you confirm the entitlement duration for my one-off gift?',
-    amount: '$50',
-    time: '1d',
-  },
-  {
-    id: 'in3',
-    initial: 'A',
-    name: 'Ada L.',
-    snippet: 'Thanks for the early-release access — the tokens look great.',
-    amount: '$25',
-    time: '1d',
-    unread: true,
-  },
-  {
-    id: 'in4',
-    initial: 'M',
-    name: 'Marcus T.',
-    snippet: 'Receipt for August renewal landed twice in my inbox.',
-    amount: '$10',
-    time: '2d',
-  },
-  {
-    id: 'in5',
-    initial: 'D',
-    name: 'Devon K.',
-    snippet: 'Can I switch from monthly Seed to annual Sapling mid-cycle?',
-    amount: '$5',
-    time: '3d',
-    unread: true,
-  },
-  {
-    id: 'in6',
-    initial: 'N',
-    name: 'Noor A.',
-    snippet: 'Posted a thank-you on the wall — keep the docs coming.',
-    amount: '$15',
-    time: '4d',
-  },
-];
-
 export const rankedSupporters: RankedSupporter[] = [
-  { rank: 1, initial: 'H', name: 'Helena R.', cadence: 'annual', amount: '$100' },
-  { rank: 2, initial: 'Y', name: 'Yuki S.', cadence: 'one-off', amount: '$50' },
-  { rank: 3, initial: 'A', name: 'Ada L.', cadence: 'monthly', amount: '$25' },
-  { rank: 4, initial: 'N', name: 'Noor A.', cadence: 'monthly', amount: '$15' },
-  { rank: 5, initial: 'M', name: 'Marcus T.', cadence: 'monthly', amount: '$10' },
-  { rank: 6, initial: 'D', name: 'Devon K.', cadence: 'monthly', amount: '$5' },
+  { rank: 1, initial: 'A', name: 'alex_dev', cadence: 'monthly', amount: '$100.00' },
+  { rank: 2, initial: 'K', name: 'kohei_rust', cadence: 'one-off', amount: '$100.00' },
+  { rank: 3, initial: 'L', name: 'lara_code', cadence: 'monthly', amount: '$25.00' },
+  { rank: 4, initial: 'M', name: 'marina_ux', cadence: 'annual', amount: '$25.00' },
+  { rank: 5, initial: 'J', name: 'jane_dev', cadence: 'monthly', amount: '$10.00' },
+  { rank: 6, initial: 'N', name: 'nia_docs', cadence: 'monthly', amount: '$10.00' },
 ];
 
 export const toolCards: ToolCard[] = [
   {
     title: 'Discord',
-    blurb: 'Give Discord roles when someone is an active member.',
+    blurb: 'Grant Discord roles while a Grove membership is active.',
     href: '/grove/discord',
+    cta: 'Open Discord',
   },
   {
     title: 'Posts',
-    blurb: 'Write updates. Gate some of them by tier.',
+    blurb: 'Write updates. Gate some of them by Coffee, Supporter, or Backer.',
     href: '/grove/posts',
+    cta: 'Write a post',
   },
   {
     title: 'Webhooks',
-    blurb: 'Get signed payment and membership events in your own app.',
+    blurb: 'Send signed payment and membership events to Grove servers.',
     href: '/grove/webhooks',
+    cta: 'Open webhooks',
   },
   {
     title: 'API',
-    blurb: 'Server keys to read payments, members, and project data.',
+    blurb: 'Server keys to read payments, members, and Grove project data.',
     href: '/grove/api-keys',
+    cta: 'Manage keys',
   },
   {
     title: 'Custom domain',
-    blurb: 'Host public pages on your domain. Checkout stays on oss.tips.',
+    blurb: 'Host public Grove pages on grove.dev. Checkout stays on oss.tips.',
     href: '/grove/domains',
+    cta: 'Open domains',
   },
 ];
 
+function goal(
+  partial: Omit<Goal, 'percentLabel'> & { percentLabel?: string },
+): Goal {
+  return {
+    ...partial,
+    percentLabel: partial.percentLabel ?? `${formatPercent(partial.raisedMinor, partial.targetMinor)}%`,
+  };
+}
+
 export const extraGoals: Goal[] = [
-  {
+  goal({
     id: 'g3',
     slug: 'a11y-audit',
     title: 'Accessibility audit sprint',
-    description: 'Independent WCAG 2.2 AA review of dashboard and checkout.',
+    description: 'Independent WCAG 2.2 AA review of Grove public pages and checkout.',
     targetMinor: 150000,
     raisedMinor: 67000,
     basis: 'before fees',
     deadline: '2026-10-15',
-    currency: 'GBP',
-  },
-  {
+    currency: 'USD',
+  }),
+  goal({
     id: 'g4',
-    slug: 'token-library',
-    title: 'Token library expansion',
-    description: 'Ship density, motion, and chart tokens for dense operator views.',
+    slug: 'windows-notes',
+    title: 'Windows release-note exporter',
+    description: 'Signed Windows installers and notes for the next Grove CLI.',
     targetMinor: 80000,
     raisedMinor: 24000,
     basis: 'active supporters',
-    currency: 'GBP',
-  },
-  {
+    currency: 'USD',
+  }),
+  goal({
     id: 'g5',
     slug: 'i18n-pass',
-    title: 'Internationalisation pass',
-    description: 'Locale-aware money, dates, and copy for EN, DE, and JA.',
+    title: 'Locale-aware release notes',
+    description: 'Dates, money, and changelog copy for English, German, and Japanese.',
     targetMinor: 120000,
     raisedMinor: 18000,
     basis: 'before fees',
     deadline: '2027-01-31',
-    currency: 'GBP',
-  },
+    currency: 'USD',
+  }),
 ];
 
 export const extraPayments: Payment[] = [
   {
-    id: 'pay_5',
-    date: '2026-08-23',
-    supporter: 'Helena R.',
+    id: 'pay_12',
+    date: '2026-05-17',
+    relativeTime: '12 days ago',
+    supporter: 'alex_dev',
     amountMinor: 10000,
-    currency: 'GBP',
+    currency: 'USD',
     cadence: 'annual',
     status: 'succeeded',
+    method: 'Visa ••4242',
+    feeMinor: 320,
+    netMinor: 9680,
+    reference: 'pi_3GroveAlexAnnual',
   },
   {
-    id: 'pay_6',
-    date: '2026-08-22',
-    supporter: 'Devon K.',
+    id: 'pay_13',
+    date: '2026-05-16',
+    relativeTime: '13 days ago',
+    supporter: 'dylan_builds',
     amountMinor: 500,
-    currency: 'GBP',
+    currency: 'USD',
     cadence: 'monthly',
     status: 'succeeded',
+    method: 'Visa ••9101',
+    feeMinor: 45,
+    netMinor: 455,
+    reference: 'pi_3GroveDylanRetry',
   },
   {
-    id: 'pay_7',
-    date: '2026-08-21',
-    supporter: 'Noor A.',
-    amountMinor: 1500,
-    currency: 'GBP',
+    id: 'pay_14',
+    date: '2026-05-15',
+    relativeTime: '14 days ago',
+    supporter: 'lara_code',
+    amountMinor: 2500,
+    currency: 'USD',
     cadence: 'monthly',
     status: 'refunded',
+    method: 'Mastercard ••4444',
+    feeMinor: 0,
+    netMinor: 0,
+    reference: 'pi_3GroveLaraRefund',
   },
   {
-    id: 'pay_8',
-    date: '2026-08-20',
+    id: 'pay_15',
+    date: '2026-05-14',
+    relativeTime: '15 days ago',
     supporter: 'Guest',
     amountMinor: 2500,
-    currency: 'GBP',
+    currency: 'USD',
     cadence: 'one-off',
     status: 'failed',
+    method: 'SEPA Debit',
+    feeMinor: 0,
+    netMinor: 0,
+    reference: 'pi_3GroveGuestFail',
   },
 ];
 
 export const extraPosts: Post[] = [
   {
-    id: 'p4',
-    slug: 'roadmap-autumn',
-    title: 'Autumn roadmap: charts, exports, and Discord sync',
-    excerpt: 'What we are shipping next for operators who live in the dashboard.',
-    publishedAt: '2026-08-05',
-    tierVisibility: 'Public',
-  },
-  {
-    id: 'p5',
-    slug: 'canopy-office-hours',
-    title: 'Canopy office hours in September',
-    excerpt: 'Two live sessions on adapter polish and token contribution.',
-    publishedAt: '2026-07-28',
-    tierVisibility: 'Canopy',
-  },
-  {
     id: 'p6',
-    slug: 'draft-brand-notes',
-    title: 'Draft: brand-board dashboard notes',
-    excerpt: 'Internal notes on metric cards, inbox density, and tool tiles.',
+    slug: 'roadmap-autumn',
+    title: 'Autumn roadmap: checks, exports, and Discord sync',
+    excerpt: 'What Grove is shipping next for maintainers who live in the dashboard.',
+    body: 'Dependency freshness checks get a weekly digest. Release-note exports land as CSV and JSONL. Discord role sync retries failed grants overnight.',
+    publishedAt: '2026-05-01',
+    publishedLabel: 'May 1, 2026',
+    tierVisibility: 'Public',
+    author: 'Ada Lovelace',
+  },
+  {
+    id: 'p7',
+    slug: 'champion-office-hours',
+    title: 'Champion office hours in June',
+    excerpt: 'Two live sessions on the Windows exporter and locale-aware notes.',
+    body: 'Champion members can book the 12th or the 19th. We will walk through the Windows exporter and the German changelog preview.',
+    publishedAt: '2026-04-22',
+    publishedLabel: 'Apr 22, 2026',
+    tierVisibility: 'Backer+',
+    author: 'Marcus Chen',
+  },
+  {
+    id: 'p8',
+    slug: 'draft-inbox-notes',
+    title: 'Draft: inbox density notes',
+    excerpt: 'Internal notes on unread badges, guest replies, and failed renewals.',
+    body: 'Keep unread threads at the top. Guest one-off replies should not require an account. Failed Coffee renewals stay in a seven-day grace window.',
     publishedAt: '—',
+    publishedLabel: 'Draft',
     tierVisibility: 'Draft',
+    author: 'Yuki Sato',
   },
 ];
 
 export const extraThreads: Thread[] = [
   {
-    id: 't3',
-    subject: 'Thanks for early-release access',
+    id: 't7',
+    subject: 'Early-release access',
     project: 'Grove',
-    amountMinor: 2500,
+    supporter: 'priya_oss',
+    amountMinor: 1000,
+    amountLabel: '$10.00',
     cadence: 'monthly',
-    unread: true,
+    relativeTime: '8 days ago',
+    preview: 'Thanks for the early-release access — the CLI notes look great.',
+    status: 'resolved',
     messages: [
       {
-        id: 'm4',
-        author: 'Ada L.',
-        body: 'Thanks for the early-release access — the tokens look great.',
-        timestamp: '2026-08-26T16:10:00Z',
+        id: 'm12',
+        author: 'priya_oss',
+        body: 'Thanks for the early-release access — the CLI notes look great.',
+        timestamp: '2026-05-21T16:10:00Z',
+        relativeTime: '8 days ago',
       },
     ],
   },
   {
-    id: 't4',
-    subject: 'Duplicate August receipt',
+    id: 't8',
+    subject: 'Duplicate May receipt',
     project: 'Grove',
+    supporter: 'nia_docs',
     amountMinor: 1000,
+    amountLabel: '$10.00',
     cadence: 'monthly',
+    relativeTime: '9 days ago',
+    preview: 'Receipt for the May renewal landed twice in my inbox.',
+    status: 'resolved',
     messages: [
       {
-        id: 'm5',
-        author: 'Marcus T.',
-        body: 'Receipt for August renewal landed twice in my inbox.',
-        timestamp: '2026-08-25T11:42:00Z',
+        id: 'm13',
+        author: 'nia_docs',
+        body: 'Receipt for the May renewal landed twice in my inbox.',
+        timestamp: '2026-05-20T11:42:00Z',
+        relativeTime: '9 days ago',
       },
       {
-        id: 'm6',
+        id: 'm14',
         author: 'Grove team',
         body: 'The second mail was a Stripe retry. Only one charge settled.',
-        timestamp: '2026-08-25T13:05:00Z',
+        timestamp: '2026-05-20T13:05:00Z',
+        relativeTime: '9 days ago',
       },
     ],
   },
   {
-    id: 't5',
-    subject: 'Switching to annual Sapling',
+    id: 't9',
+    subject: 'Switching to annual Backer',
     project: 'Grove',
-    amountMinor: 500,
+    supporter: 'jane_dev',
+    amountMinor: 1000,
+    amountLabel: '$10.00',
     cadence: 'monthly',
+    relativeTime: '10 days ago',
+    preview: 'Can I switch from monthly Supporter to annual Backer mid-cycle?',
+    status: 'awaiting reply',
     unread: true,
     messages: [
       {
-        id: 'm7',
-        author: 'Devon K.',
-        body: 'Can I switch from monthly Seed to annual Sapling mid-cycle?',
-        timestamp: '2026-08-24T08:18:00Z',
+        id: 'm15',
+        author: 'jane_dev',
+        body: 'Can I switch from monthly Supporter to annual Backer mid-cycle?',
+        timestamp: '2026-05-19T08:18:00Z',
+        relativeTime: '10 days ago',
       },
     ],
   },
   {
-    id: 't6',
+    id: 't10',
     subject: 'Thank-you on the wall',
     project: 'Grove',
+    supporter: 'opensourcefan',
     amountMinor: 1500,
+    amountLabel: '$15.00',
     cadence: 'monthly',
+    relativeTime: '11 days ago',
+    preview: 'Posted a thank-you on the wall — keep the release notes coming.',
+    status: 'resolved',
     messages: [
       {
-        id: 'm8',
-        author: 'Noor A.',
-        body: 'Posted a thank-you on the wall — keep the docs coming.',
-        timestamp: '2026-08-23T19:04:00Z',
+        id: 'm16',
+        author: 'opensourcefan',
+        body: 'Posted a thank-you on the wall — keep the release notes coming.',
+        timestamp: '2026-05-18T19:04:00Z',
+        relativeTime: '11 days ago',
       },
     ],
   },
 ];
+
+export const inboxThreads: Thread[] = [...demoThreads, ...extraThreads];
+
+export function inboxPreviewFromThread(thread: Thread): InboxPreviewRow {
+  return {
+    id: thread.id,
+    initial: thread.supporter.slice(0, 1).toUpperCase(),
+    name: thread.supporter,
+    snippet: thread.preview,
+    amount: thread.amountLabel,
+    time: thread.relativeTime,
+    unread: thread.unread,
+  };
+}
+
+export const inboxPreviewRows: InboxPreviewRow[] = inboxThreads.map(inboxPreviewFromThread);
 
 export const supporterGrowthSeries: ChartSeries[] = [
   {
@@ -361,28 +392,28 @@ export const supporterGrowthSeries: ChartSeries[] = [
 ];
 
 export const analyticsBreakdown = [
-  { source: 'Monthly Sapling', gross: '$4,210', fees: '$168', net: '$4,042', share: '32.8%' },
-  { source: 'Annual Canopy', gross: '$3,180', fees: '$127', net: '$3,053', share: '24.8%' },
+  { source: 'Monthly Backer', gross: '$4,210', fees: '$168', net: '$4,042', share: '32.8%' },
+  { source: 'Annual Champion', gross: '$3,180', fees: '$127', net: '$3,053', share: '24.8%' },
   { source: 'One-off gifts', gross: '$2,640', fees: '$106', net: '$2,534', share: '20.6%' },
-  { source: 'Monthly Seed', gross: '$1,620', fees: '$65', net: '$1,555', share: '12.6%' },
-  { source: 'Annual Sapling', gross: '$1,191', fees: '$48', net: '$1,143', share: '9.3%' },
+  { source: 'Monthly Coffee', gross: '$1,620', fees: '$65', net: '$1,555', share: '12.6%' },
+  { source: 'Annual Supporter', gross: '$1,191', fees: '$48', net: '$1,143', share: '9.3%' },
 ];
 
 export const apiKeyRows = [
-  { name: 'production-read', scope: 'read:payments', created: '2026-06-01', lastUsed: '2026-08-27' },
-  { name: 'ci-tests', scope: 'read:project', created: '2026-07-15', lastUsed: '2026-08-20' },
-  { name: 'webhooks-replay', scope: 'write:webhooks', created: '2026-05-12', lastUsed: '2026-08-26' },
-  { name: 'exports-finance', scope: 'read:exports', created: '2026-04-03', lastUsed: '2026-08-18' },
-  { name: 'discord-sync', scope: 'read:memberships', created: '2026-03-22', lastUsed: '2026-08-27' },
-  { name: 'staging-sandbox', scope: 'read:project', created: '2026-08-01', lastUsed: '2026-08-25' },
+  { name: 'production-read', scope: 'read:payments', created: '2026-03-01', lastUsed: '2026-05-29' },
+  { name: 'ci-tests', scope: 'read:project', created: '2026-04-15', lastUsed: '2026-05-20' },
+  { name: 'webhooks-replay', scope: 'write:webhooks', created: '2026-02-12', lastUsed: '2026-05-28' },
+  { name: 'exports-finance', scope: 'read:exports', created: '2026-01-03', lastUsed: '2026-05-18' },
+  { name: 'discord-sync', scope: 'read:memberships', created: '2026-01-22', lastUsed: '2026-05-29' },
+  { name: 'staging-sandbox', scope: 'read:project', created: '2026-05-01', lastUsed: '2026-05-25' },
 ];
 
 export const discordRoleRows = [
-  { tier: 'Seed', role: 'supporters', members: '142', lastSync: '2026-08-27 09:14' },
-  { tier: 'Sapling', role: 'sapling', members: '88', lastSync: '2026-08-27 09:14' },
-  { tier: 'Canopy', role: 'canopy', members: '31', lastSync: '2026-08-27 09:14' },
-  { tier: 'Annual bonus', role: 'annual-circle', members: '19', lastSync: '2026-08-26 18:02' },
-  { tier: 'Alumni', role: 'past-supporters', members: '54', lastSync: '2026-08-20 11:40' },
+  { tier: 'Coffee', role: 'supporters', members: '142', lastSync: '2026-05-29 09:14' },
+  { tier: 'Supporter', role: 'supporter', members: '88', lastSync: '2026-05-29 09:14' },
+  { tier: 'Backer', role: 'backer', members: '31', lastSync: '2026-05-29 09:14' },
+  { tier: 'Champion', role: 'champion', members: '19', lastSync: '2026-05-28 18:02' },
+  { tier: 'Alumni', role: 'past-supporters', members: '54', lastSync: '2026-05-20 11:40' },
 ];
 
 export const domainRows = [
@@ -394,7 +425,7 @@ export const domainRows = [
 ];
 
 export const exportRows = [
-  { type: 'Payments', range: 'August 2026', format: 'CSV', status: 'Ready' },
+  { type: 'Payments', range: 'May 2026', format: 'CSV', status: 'Ready' },
   { type: 'Memberships', range: 'All time', format: 'CSV', status: 'Ready' },
   { type: 'Ledger events', range: 'Last 30 days', format: 'JSONL', status: 'Ready' },
   { type: 'Supporters', range: 'All time', format: 'CSV', status: 'Ready' },
@@ -403,19 +434,19 @@ export const exportRows = [
 ];
 
 export const membershipRows = [
-  { name: 'Helena R.', tier: 'Canopy', cadence: 'annual', amount: '£100.00', status: 'Active', renews: '2027-03-01' },
-  { name: 'Ada L.', tier: 'Canopy', cadence: 'monthly', amount: '£25.00', status: 'Active', renews: '2026-09-15' },
-  { name: 'Yuki S.', tier: 'Sapling', cadence: 'one-off', amount: '£50.00', status: 'Entitled', renews: '—' },
-  { name: 'Noor A.', tier: 'Sapling', cadence: 'monthly', amount: '£15.00', status: 'Active', renews: '2026-09-12' },
-  { name: 'Marcus T.', tier: 'Seed', cadence: 'monthly', amount: '£10.00', status: 'Past due', renews: '2026-08-25' },
-  { name: 'Devon K.', tier: 'Seed', cadence: 'monthly', amount: '£5.00', status: 'Active', renews: '2026-09-20' },
+  { name: 'alex_dev', tier: 'Champion', cadence: 'monthly', amount: formatMoney(10000), status: 'active', renews: '2026-06-29' },
+  { name: 'marina_ux', tier: 'Backer', cadence: 'annual', amount: formatMoney(25000), status: 'active', renews: '2027-03-01' },
+  { name: 'kohei_rust', tier: 'Champion', cadence: 'one-off', amount: formatMoney(10000), status: 'entitled', renews: '—' },
+  { name: 'lara_code', tier: 'Backer', cadence: 'monthly', amount: formatMoney(2500), status: 'active', renews: '2026-06-15' },
+  { name: 'dylan_builds', tier: 'Coffee', cadence: 'monthly', amount: formatMoney(500), status: 'past_due', renews: '2026-05-23' },
+  { name: 'jane_dev', tier: 'Supporter', cadence: 'monthly', amount: formatMoney(1000), status: 'active', renews: '2026-06-20' },
 ];
 
 export const onboardingSteps = [
   { step: '1', label: 'Identity', detail: 'Grove · grove.dev', status: 'Complete' },
   { step: '2', label: 'Ownership', detail: 'github.com/oss-tips/grove', status: 'In progress' },
   { step: '3', label: 'Stripe', detail: 'acct_1Grove · charges enabled', status: 'Waiting' },
-  { step: '4', label: 'Page & tiers', detail: 'Seed, Sapling, Canopy drafted', status: 'Waiting' },
+  { step: '4', label: 'Page & tiers', detail: 'Coffee, Supporter, Backer, Champion drafted', status: 'Waiting' },
   { step: '5', label: 'Publish', detail: 'Directory listing after first payment', status: 'Waiting' },
 ];
 
@@ -457,5 +488,5 @@ export const settingsLinks = [
   { label: 'Website', value: 'https://grove.dev' },
   { label: 'Repository', value: 'github.com/oss-tips/grove' },
   { label: 'Support email', value: 'hello@grove.dev' },
-  { label: 'Currency', value: 'GBP' },
+  { label: 'Currency', value: 'USD' },
 ];

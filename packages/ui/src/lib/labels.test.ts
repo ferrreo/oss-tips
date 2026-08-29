@@ -5,11 +5,13 @@ import {
   labelCaseStatus,
   labelEntitlementStatus,
   labelFeeMode,
+  labelApiScope,
   labelInboxStatus,
   labelMembershipStatus,
   labelPaymentStatus,
   labelReconciliationStatus,
   labelRisk,
+  labelStripeCapability,
   humanizeStatus,
 } from './labels.js';
 
@@ -33,6 +35,7 @@ describe('labels', () => {
     expect(labelMembershipStatus('past_due')).toBe('Past due');
     expect(labelMembershipStatus('cancelled')).toBe('Cancelled');
     expect(labelMembershipStatus('canceled')).toBe('Cancelled');
+    expect(labelMembershipStatus('entitled')).toBe('Entitled');
   });
 
   it('maps every reconciliation status', () => {
@@ -64,6 +67,8 @@ describe('labels', () => {
     expect(labelRisk('low')).toBe('Low');
     expect(labelFeeMode('standard')).toBe('Standard');
     expect(labelFeeMode('project_5pct')).toBe('Project pays 5%');
+    expect(labelStripeCapability('card_payments')).toBe('Card payments');
+    expect(labelApiScope('read:payments,write:webhooks')).toBe('Read payments, Write webhooks');
     expect(labelAuditAction('case.open')).toBe('Opened case');
     expect(labelAuditAction('refund.exceptional')).toBe('Issued exceptional refund');
   });

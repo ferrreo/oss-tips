@@ -31,6 +31,7 @@ const MEMBERSHIP_STATUS = {
   past_due: 'Past due',
   cancelled: 'Cancelled',
   canceled: 'Cancelled',
+  entitled: 'Entitled',
 } satisfies Record<string, string>;
 
 const RECONCILIATION_STATUS = {
@@ -87,6 +88,22 @@ const AUDIT_ACTION = {
   'view_as.start': 'Started view-as session',
 } satisfies Record<string, string>;
 
+const STRIPE_CAPABILITY = {
+  card_payments: 'Card payments',
+  transfers: 'Transfers',
+  payouts: 'Payouts',
+  sepa_debit_payments: 'SEPA debit',
+  link_payments: 'Link',
+} satisfies Record<string, string>;
+
+const API_SCOPE = {
+  'read:payments': 'Read payments',
+  'read:project': 'Read project',
+  'write:webhooks': 'Write webhooks',
+  'read:exports': 'Read exports',
+  'read:memberships': 'Read memberships',
+} satisfies Record<string, string>;
+
 export function labelCaseStatus(status: string): string {
   return labelFrom(CASE_STATUS, status);
 }
@@ -127,6 +144,17 @@ export function labelAuditAction(action: string): string {
   return labelFrom(AUDIT_ACTION, action);
 }
 
+export function labelStripeCapability(value: string): string {
+  return labelFrom(STRIPE_CAPABILITY, value);
+}
+
+export function labelApiScope(value: string): string {
+  return value
+    .split(',')
+    .map((part) => labelFrom(API_SCOPE, part.trim()))
+    .join(', ');
+}
+
 const ALL_LABELS = {
   ...CASE_STATUS,
   ...PAYMENT_STATUS,
@@ -138,6 +166,8 @@ const ALL_LABELS = {
   ...RISK,
   ...FEE_MODE,
   ...AUDIT_ACTION,
+  ...STRIPE_CAPABILITY,
+  ...API_SCOPE,
 };
 
 /** Generic fallback when the domain is unknown. Prefer a specific label* helper. */

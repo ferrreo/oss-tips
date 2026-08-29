@@ -1,15 +1,18 @@
 <script lang="ts">
-  import DashboardShell from '../../components/DashboardShell.svelte';
   import TextField from '../../components/TextField.svelte';
   import Button from '../../components/Button.svelte';
   import StatusBanner from '../../components/StatusBanner.svelte';
   import Table from '../../components/Table.svelte';
-  import { demoProject, projectNavGroups } from '../../fixtures/demo.js';
+  import ProjectDashShell from './ProjectDashShell.svelte';
   import { discordRoleRows } from './project-demo.js';
 </script>
 
-<DashboardShell projectName={demoProject.name} navGroups={projectNavGroups} title="Discord">
-  <StatusBanner variant="info" title="Bot connected" message="Role mappings sync on entitlement changes." />
+<ProjectDashShell title="Discord" lede="Grove grants Discord roles when a membership is active.">
+  <StatusBanner
+    variant="info"
+    title="Bot connected"
+    message="Roles update when a Grove membership starts, renews, or ends."
+  />
   <div class="pl-stack" style="margin-top: 1.5rem; max-width: 36rem;">
     <TextField label="Discord server ID" value="123456789012345678" />
     <TextField
@@ -22,7 +25,7 @@
   </div>
   <h2 style="font-size: 1rem; margin: 2rem 0 0.75rem;">Tier role mappings</h2>
   <Table
-    caption="Roles granted from active entitlements"
+    caption="Roles granted from active Grove entitlements"
     columns={[
       { key: 'tier', label: 'Tier' },
       { key: 'role', label: 'Discord role' },
@@ -31,4 +34,4 @@
     ]}
     rows={discordRoleRows}
   />
-</DashboardShell>
+</ProjectDashShell>
