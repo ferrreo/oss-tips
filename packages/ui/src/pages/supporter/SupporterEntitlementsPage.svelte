@@ -4,7 +4,7 @@
   import Badge from '../../components/Badge.svelte';
   import DataCard from '../../components/DataCard.svelte';
   import SupporterAccountNav from './SupporterAccountNav.svelte';
-  import { labelEntitlementStatus } from '../../lib/labels.js';
+  import { entitlementStatusLabel } from '../labels.js';
   import { supporterEntitlements } from './supporter-demo.js';
 
   const today = '2026-08-29';
@@ -24,13 +24,14 @@
   <PublicNav />
   <main id="main-content" class="pl-section">
     <div class="pl-container">
+      <p class="pl-public-hero__brand">oss.tips</p>
       <h1 class="pl-page-title">Entitlements</h1>
       <p class="pl-page-lead">Rewards from one-off and recurring support. Duration was shown before you paid.</p>
       <SupporterAccountNav current="entitlements" />
 
       <div class="pl-grid-3" style="margin-bottom: 1.5rem;">
         <DataCard label="Active" value={String(active.length)} compare="Renew with the membership" />
-        <DataCard label="Permanent" value={String(permanent.length)} compare="One-off gifts that do not expire" />
+        <DataCard label="Permanent" value={String(permanent.length)} compare="One-off payments that do not expire" />
         <DataCard label="Expired" value={String(expired.length)} compare="Kept for your records" />
       </div>
 
@@ -46,16 +47,16 @@
         rows={supporterEntitlements.map((e) => ({
           project: e.projectName,
           tier: e.tierName,
-          expires: e.permanent ? 'Permanent' : (e.expiresAt ?? '—'),
-          status: labelEntitlementStatus(statusOf(e)),
+          expires: e.expiresLabel,
+          status: entitlementStatusLabel(statusOf(e)),
           source: e.permanent ? 'One-off' : 'Membership',
         }))}
       />
 
       <div class="pl-row" style="margin-top: 1rem; flex-wrap: wrap;">
-        <Badge variant="forest">{active.length} {labelEntitlementStatus('active')}</Badge>
-        <Badge>{permanent.length} {labelEntitlementStatus('permanent')}</Badge>
-        <Badge variant="ochre">{expired.length} {labelEntitlementStatus('expired')}</Badge>
+        <Badge variant="forest">{active.length} active</Badge>
+        <Badge>{permanent.length} permanent</Badge>
+        <Badge variant="ochre">{expired.length} expired</Badge>
       </div>
     </div>
   </main>

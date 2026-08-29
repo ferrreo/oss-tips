@@ -23,7 +23,7 @@
       {
         id: 'supporters',
         heading: 'For supporters',
-        body: 'Sign in with an email code or OAuth to manage memberships and replies. One-off gifts work as a guest. You can claim the receipt later with a link.',
+        body: 'Sign in with an email code or OAuth to manage memberships and replies. One-off support works as a guest. You can claim the receipt later with a link.',
       },
       {
         id: 'api',
@@ -42,33 +42,43 @@
 
 <div>
   <PublicNav />
-  <main id="main-content" class="pl-section">
-    <div class="pl-container pl-container--reading">
-      <h1 class="pl-page-title">Documentation</h1>
-      <nav aria-label="Docs sections" style="margin-bottom: 2rem;">
-        <ul class="docs-nav">
-          {#each pageDemo.nav as item (item.href)}
-            <li><a href={item.href}>{item.label}</a></li>
+  <main id="main-content">
+    <section class="pl-public-hero">
+      <div class="pl-container pl-container--reading">
+        <p class="pl-public-hero__brand">oss.tips</p>
+        <h1 class="pl-display pl-public-hero__title">Documentation</h1>
+        <p class="pl-page-lead">
+          How projects publish, how supporters pay, and how access is granted after Stripe confirms a payment.
+        </p>
+        <nav aria-label="Docs sections" style="margin-top: 1.5rem;">
+          <ul class="docs-nav">
+            {#each pageDemo.nav as item (item.href)}
+              <li><a href={item.href}>{item.label}</a></li>
+            {/each}
+          </ul>
+        </nav>
+      </div>
+    </section>
+    <section class="pl-section" style="padding-top: 0;">
+      <div class="pl-container pl-container--reading">
+        <div class="pl-prose">
+          {#each pageDemo.sections as section (section.id)}
+            <h2 id={section.id}>{section.heading}</h2>
+            <p>{section.body}</p>
+          {/each}
+        </div>
+        <ul class="docs-api">
+          {#each pageDemo.endpoints as endpoint (endpoint.path)}
+            <li class="pl-mono">
+              <strong>{endpoint.method}</strong>
+              {endpoint.path}
+              <span class="pl-muted"> · {endpoint.note}</span>
+            </li>
           {/each}
         </ul>
-      </nav>
-      <div class="pl-prose">
-        {#each pageDemo.sections as section (section.id)}
-          <h2 id={section.id}>{section.heading}</h2>
-          <p>{section.body}</p>
-        {/each}
+        <p class="pl-mono pl-muted" style="font-size: 0.875rem;">{pageDemo.events}</p>
       </div>
-      <ul class="docs-api">
-        {#each pageDemo.endpoints as endpoint (endpoint.path)}
-          <li class="pl-mono">
-            <strong>{endpoint.method}</strong>
-            {endpoint.path}
-            <span class="pl-muted"> · {endpoint.note}</span>
-          </li>
-        {/each}
-      </ul>
-      <p class="pl-mono pl-muted" style="font-size: 0.875rem;">{pageDemo.events}</p>
-    </div>
+    </section>
   </main>
   <PublicFooter />
 </div>

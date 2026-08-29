@@ -37,23 +37,30 @@
 
 <div>
   <PublicNav />
-  <main id="main-content" class="pl-section">
-    <div class="pl-container pl-container--reading">
-      <h1 class="pl-page-title">Security</h1>
-      <div class="pl-prose">
-        <p>{pageDemo.lead}</p>
-        {#each pageDemo.groups as group (group.heading)}
-          <h2>{group.heading}</h2>
-          <ul>
-            {#each group.items as item (item)}
-              <li>{item}</li>
-            {/each}
-          </ul>
-        {/each}
-        <h2>Report a project</h2>
-        <p>{pageDemo.report}</p>
+  <main id="main-content">
+    <section class="pl-public-hero">
+      <div class="pl-container pl-container--reading">
+        <p class="pl-public-hero__brand">oss.tips</p>
+        <h1 class="pl-display pl-public-hero__title">Security</h1>
+        <p class="pl-page-lead">{pageDemo.lead}</p>
       </div>
-    </div>
+    </section>
+    <section class="pl-section" style="padding-top: 0;">
+      <div class="pl-container pl-container--reading">
+        <div class="pl-prose">
+          {#each pageDemo.groups as group (group.heading)}
+            <h2>{group.heading}</h2>
+            <ul>
+              {#each group.items as item (item)}
+                <li>{item}</li>
+              {/each}
+            </ul>
+          {/each}
+          <h2>Report a project</h2>
+          <p>{pageDemo.report}</p>
+        </div>
+      </div>
+    </section>
   </main>
   <PublicFooter />
 </div>

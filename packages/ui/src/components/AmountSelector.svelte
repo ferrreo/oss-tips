@@ -2,6 +2,7 @@
   import SegmentedControl from './SegmentedControl.svelte';
   import TextField from './TextField.svelte';
   import { formatMoney } from '../fixtures/demo.js';
+  import { labelCadence } from '../lib/labels.js';
 
   interface Props {
     currency?: string;
@@ -77,7 +78,7 @@
   <p class="pl-muted" style="margin-top: 1rem; font-size: 0.875rem;">
     Selected: <strong>{formatMoney(selectedAmountMinor, currency)}</strong>
     {#if cadence !== 'one-off'}
-      / {cadence}
+      / {labelCadence(cadence)}
     {/if}
   </p>
 </div>

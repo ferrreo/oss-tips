@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Tier } from '../fixtures/demo.js';
   import { formatMoney } from '../fixtures/demo.js';
+  import { labelCadence } from '../lib/labels.js';
 
   interface Props {
     tier: Tier;
@@ -16,7 +17,7 @@
     cadence === 'annual' ? tier.annualMinor : cadence === 'one-off' ? tier.oneOffMinor : tier.monthlyMinor,
   );
 
-  const cadenceLabel = $derived(cadence === 'one-off' ? 'one-off' : cadence);
+  const cadenceLabel = $derived(labelCadence(cadence).toLowerCase());
 </script>
 
 <button

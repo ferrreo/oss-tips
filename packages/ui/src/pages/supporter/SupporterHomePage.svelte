@@ -4,7 +4,7 @@
   import Table from '../../components/Table.svelte';
   import Badge from '../../components/Badge.svelte';
   import SupporterAccountNav from './SupporterAccountNav.svelte';
-  import { labelCadence, labelEntitlementStatus, labelMembershipStatus } from '../../lib/labels.js';
+  import { cadenceLabel, entitlementStatusLabel, membershipStatusLabel } from '../labels.js';
   import {
     formatMoney,
     lifetimeSupport,
@@ -24,9 +24,10 @@
   <PublicNav />
   <main id="main-content" class="pl-section">
     <div class="pl-container">
+      <p class="pl-public-hero__brand">oss.tips</p>
       <h1 class="pl-page-title">Your support</h1>
       <p class="pl-page-lead">
-        {supporterName} — memberships, entitlements, and lifetime support across projects.
+        {supporterName} — memberships, access, and lifetime totals across the projects you support.
       </p>
       <SupporterAccountNav current="home" />
 
@@ -51,7 +52,7 @@
 
       <h2 style="font-size: 1.125rem; margin-bottom: 0.75rem;">Memberships</h2>
       <Table
-        caption="Recurring memberships, including past-due and cancelled."
+        caption="Recurring memberships, including past-due and cancelled periods."
         columns={[
           { key: 'project', label: 'Project' },
           { key: 'tier', label: 'Tier' },
@@ -62,9 +63,9 @@
         rows={supporterMemberships.map((m) => ({
           project: m.projectName,
           tier: m.tierName,
-          amount: `${formatMoney(m.amountMinor, m.currency)}/${labelCadence(m.cadence)}`,
-          status: labelMembershipStatus(m.status),
-          renews: m.renewsAt ?? '—',
+          amount: `${formatMoney(m.amountMinor, m.currency)} / ${cadenceLabel(m.cadence)}`,
+          status: membershipStatusLabel(m.status),
+          renews: m.renewsLabel,
         }))}
       />
 
@@ -79,18 +80,19 @@
         ]}
         rows={supporterEntitlements.map((e) => {
           const expired = !e.permanent && e.expiresAt && e.expiresAt < '2026-08-29';
+          const status = e.permanent ? 'permanent' : expired ? 'expired' : 'active';
           return {
             project: e.projectName,
             tier: e.tierName,
-            expires: e.permanent ? 'Permanent' : (e.expiresAt ?? '—'),
-            status: labelEntitlementStatus(e.permanent ? 'permanent' : expired ? 'expired' : 'active'),
+            expires: e.expiresLabel,
+            status: entitlementStatusLabel(status),
           };
         })}
       />
 
       <h2 style="font-size: 1.125rem; margin: 2rem 0 0.75rem;">Lifetime support by project</h2>
       <Table
-        caption="One-off gifts plus settled recurring charges. Supporter tips to oss.tips are not included."
+        caption="One-off payments plus settled recurring charges. Tips to oss.tips are not included."
         columns={[
           { key: 'project', label: 'Project' },
           { key: 'oneOff', label: 'One-off' },
@@ -106,8 +108,8 @@
       />
 
       <p class="pl-muted" style="font-size: 0.875rem; margin-top: 1rem;">
-        <Badge>{labelMembershipStatus('past_due')}</Badge>
-        ledger-kit is in the seven-day grace period. Entitlements stay until the grace ends.
+        <Badge>Past due</Badge>
+        ledger-kit is in the seven-day grace period. Access stays until the grace ends.
       </p>
     </div>
   </main>

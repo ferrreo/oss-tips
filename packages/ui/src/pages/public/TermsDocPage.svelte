@@ -42,7 +42,7 @@
           body: 'Abuse, harassment, and fraudulent payments are prohibited and may lead to account restriction. Chargebacks for delivered entitlements are reviewed as cases.',
         },
         {
-          heading: 'Content',
+          heading: 'Posts',
           body: 'Posts may not include arbitrary HTML, script, or free-form iframes. Embeds are limited to YouTube, Vimeo, and PeerTube.',
         },
       ],
@@ -85,7 +85,7 @@
 
   const content = $derived(
     pageDemo[doc] ?? {
-      title: doc.replace(/-/g, ' '),
+      title: 'Legal document',
       sections: [
         {
           heading: 'Document',
@@ -98,20 +98,29 @@
 
 <div>
   <PublicNav />
-  <main id="main-content" class="pl-section">
-    <div class="pl-container pl-container--reading">
-      <p class="pl-muted" style="margin-bottom: 0.5rem;">
-        <a href="/terms">Terms</a> / {doc}
-      </p>
-      <h1 class="pl-page-title">{content.title}</h1>
-      <p class="pl-muted" style="margin-bottom: 2rem;">Last updated August 2026</p>
-      <div class="pl-prose">
-        {#each content.sections as section (section.heading)}
-          <h2>{section.heading}</h2>
-          <p>{section.body}</p>
-        {/each}
+  <main id="main-content">
+    <section class="pl-public-hero">
+      <div class="pl-container pl-container--reading">
+        <p class="pl-muted" style="margin-bottom: 0.75rem;">
+          <a href="/terms">Terms</a>
+          /
+          {content.title}
+        </p>
+        <p class="pl-public-hero__brand">oss.tips</p>
+        <h1 class="pl-display pl-public-hero__title">{content.title}</h1>
+        <p class="pl-page-lead">Last updated August 2026</p>
       </div>
-    </div>
+    </section>
+    <section class="pl-section" style="padding-top: 0;">
+      <div class="pl-container pl-container--reading">
+        <div class="pl-prose">
+          {#each content.sections as section (section.heading)}
+            <h2>{section.heading}</h2>
+            <p>{section.body}</p>
+          {/each}
+        </div>
+      </div>
+    </section>
   </main>
   <PublicFooter />
 </div>

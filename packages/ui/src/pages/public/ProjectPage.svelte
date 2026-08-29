@@ -1,6 +1,7 @@
 <script lang="ts">
   import PublicNav from '../../components/PublicNav.svelte';
   import PublicFooter from '../../components/PublicFooter.svelte';
+  import HeroLandscape from '../../components/HeroLandscape.svelte';
   import ProjectHero from '../../components/ProjectHero.svelte';
   import SupportComposer from '../../components/SupportComposer.svelte';
   import GoalProgress from '../../components/GoalProgress.svelte';
@@ -16,6 +17,12 @@
     demoPosts,
     formatMoney,
   } from '../../fixtures/demo.js';
+
+  function requireGoal() {
+    const goal = demoGoals.find((item) => item.slug === 'infrastructure-upgrade');
+    if (!goal) throw new Error('Grove demo goal infrastructure-upgrade is missing');
+    return goal;
+  }
 
   const pageDemo = {
     community: [
@@ -45,7 +52,7 @@
     ],
     thanks: demoSupporters.filter((supporter) => supporter.public && supporter.message),
     embed: '<script async src="https://oss.tips/widgets/grove/thanks.js"><\/script>',
-    goal: demoGoals.find((goal) => goal.slug === 'infrastructure-upgrade'),
+    goal: requireGoal(),
   };
 
   let selectedTier = $state('supporter');
@@ -54,16 +61,7 @@
 <div>
   <PublicNav />
   <main id="main-content">
-    <figure class="pp-landscape" aria-hidden="true">
-      <svg viewBox="0 0 1600 280" fill="none">
-        <rect width="1600" height="280" fill="var(--pl-canvas-subtle)" />
-        <path d="M0 190 C220 150 380 220 620 170 C860 120 1100 210 1600 150 L1600 280 L0 280 Z" fill="var(--pl-fern)" opacity="0.35" />
-        <path d="M0 220 C280 180 520 240 820 200 C1120 160 1340 230 1600 190 L1600 280 L0 280 Z" fill="var(--pl-moss)" opacity="0.28" />
-        <path d="M180 200 C230 120 320 110 360 190 C320 165 250 175 180 200 Z" fill="var(--pl-forest)" opacity="0.55" />
-        <path d="M330 210 C410 115 520 105 560 200 C500 165 410 180 330 210 Z" fill="var(--pl-forest)" opacity="0.7" />
-        <circle cx="1280" cy="72" r="28" fill="var(--pl-ochre)" opacity="0.4" />
-      </svg>
-    </figure>
+    <HeroLandscape />
     <div class="pl-container" style="padding-top: 0.5rem; padding-bottom: 3rem;">
       <div class="pp-identity">
         <ProjectHero project={demoProject} />
@@ -72,13 +70,15 @@
             <a href={link.href}>{link.label}</a>
           {/each}
         </div>
+        <div class="pl-row" style="margin-top: 1.25rem; flex-wrap: wrap;">
+          <a class="pl-btn pl-btn--primary pl-focus-ring" href="#support">Support {demoProject.name}</a>
+          <a class="pl-btn pl-btn--secondary pl-focus-ring" href="#updates">Read updates</a>
+        </div>
       </div>
 
-      <div class="pp-compose">
+      <div id="support" class="pp-compose">
         <SupportComposer tiers={demoTiers} currency={demoProject.currency} />
-        {#if pageDemo.goal}
-          <GoalProgress goal={pageDemo.goal} />
-        {/if}
+        <GoalProgress goal={pageDemo.goal} />
       </div>
 
       <h2 class="pl-display" style="font-size: 1.25rem; margin-bottom: 1rem;">Membership tiers</h2>
@@ -93,19 +93,21 @@
         {/each}
       </div>
 
-      <div class="pp-feed">
+      <div id="updates" class="pp-feed">
         <section>
           <h2 class="pl-display" style="font-size: 1.125rem; margin-bottom: 0.75rem;">Recent updates</h2>
           {#each demoPosts as post (post.id)}
             <article class="pp-update">
               <div class="pl-row" style="margin-bottom: 0.25rem; flex-wrap: wrap;">
-                <h3 style="font-size: 1rem;">{post.title}</h3>
+                <h3 style="font-size: 1rem;">
+                  <a href="/{demoProject.slug}/posts/{post.slug}">{post.title}</a>
+                </h3>
                 <Badge>{post.tierVisibility}</Badge>
               </div>
               <p class="pl-muted" style="font-size: 0.875rem;">{post.excerpt}</p>
-              <a href="/{demoProject.slug}/posts/{post.slug}" style="font-size: 0.8125rem;">
+              <p class="pl-muted" style="font-size: 0.8125rem; margin: 0.25rem 0 0;">
                 {post.publishedLabel} · {post.author}
-              </a>
+              </p>
             </article>
           {/each}
         </section>
@@ -145,12 +147,12 @@
             </article>
           {/each}
         </div>
-        <p class="pl-mono pl-muted" style="font-size: 0.75rem; margin-top: 1rem; overflow-wrap: anywhere;">
+        <p class="pl-mono pl-muted" style="font-size: 0.8125rem; margin-top: 1rem; overflow-wrap: anywhere;">
           {pageDemo.embed}
         </p>
       </section>
 
-      <p class="pl-muted" style="font-size: 0.8125rem; margin-top: 2rem;">
+      <p class="pl-muted" style="font-size: 0.875rem; margin-top: 2rem;">
         Secure payments via Stripe. {demoProject.name} is the merchant of record.
         <a href="/pricing">How fees work</a>
         ·
@@ -162,25 +164,14 @@
 </div>
 
 <style>
-  .pp-landscape {
-    margin: 0;
-  }
-
-  .pp-landscape svg {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 14rem;
-  }
-
   .pp-identity {
-    margin-bottom: 0.5rem;
+    margin-bottom: 2rem;
   }
 
   .pp-compose {
     display: grid;
     gap: 1.5rem;
-    margin: 1.5rem 0 2.5rem;
+    margin: 0 0 2.5rem;
   }
 
   .pp-tiers {

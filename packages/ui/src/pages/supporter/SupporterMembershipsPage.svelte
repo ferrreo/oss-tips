@@ -5,7 +5,7 @@
   import Badge from '../../components/Badge.svelte';
   import DataCard from '../../components/DataCard.svelte';
   import SupporterAccountNav from './SupporterAccountNav.svelte';
-  import { labelCadence, labelMembershipStatus } from '../../lib/labels.js';
+  import { cadenceLabel, membershipStatusLabel } from '../labels.js';
   import {
     formatMoney,
     monthlyActiveMinor,
@@ -23,14 +23,17 @@
   <main id="main-content" class="pl-section">
     <div class="pl-container">
       <div class="pl-row pl-row--between" style="margin-bottom: 0.25rem; flex-wrap: wrap;">
-        <h1 class="pl-page-title">Memberships</h1>
+        <div>
+          <p class="pl-public-hero__brand">oss.tips</p>
+          <h1 class="pl-page-title">Memberships</h1>
+        </div>
         <Button variant="secondary">Manage platform tip</Button>
       </div>
       <p class="pl-page-lead">Recurring support you control. Downgrades apply at the next renewal.</p>
       <SupporterAccountNav current="memberships" />
 
       <div class="pl-grid-3" style="margin-bottom: 1.5rem;">
-        <DataCard label="Active" value={String(active.length)} compare="{formatMoney(monthlyActiveMinor)} / month equivalent" />
+        <DataCard label="Active memberships" value={String(active.length)} compare="{formatMoney(monthlyActiveMinor)} / month equivalent" />
         <DataCard label="Past due" value={String(pastDue.length)} compare="Grace period still open" compareDirection="down" />
         <DataCard
           label="oss.tips tip"
@@ -52,10 +55,10 @@
         rows={supporterMemberships.map((m) => ({
           project: m.projectName,
           tier: m.tierName,
-          cadence: labelCadence(m.cadence),
+          cadence: cadenceLabel(m.cadence),
           amount: formatMoney(m.amountMinor, m.currency),
-          status: labelMembershipStatus(m.status),
-          renews: m.renewsAt ?? 'Ended 2026-08-01',
+          status: membershipStatusLabel(m.status),
+          renews: m.renewsLabel,
         }))}
       />
 
@@ -79,7 +82,7 @@
       {/each}
       {#each cancelled as membership (membership.id)}
         <p class="pl-muted" style="font-size: 0.875rem; margin-top: 0.5rem;">
-          {membership.projectName} is cancelled. Entitlements ran to the paid-period end.
+          {membership.projectName} is cancelled. Access ran to the paid-period end.
         </p>
       {/each}
     </div>
