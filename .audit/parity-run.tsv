@@ -1,0 +1,3 @@
+2026-08-29T18:08:31Z	agg	Merged W2 fixtures + W4 dashboard into fer/paperlight-parity-wireup-d583	W2 PASS W4 remote present	4efeb65	open
+2026-08-29T18:09:42Z	agg	Merged W4 tip + W5 admin/supporter	swarm drain	262b25b	open
+2026-08-29T18:18:07Z	report	All W1-W6 PASS; SB+web+verify green	swarm aggregate	9a4255d	PASS
