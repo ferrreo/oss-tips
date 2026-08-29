@@ -1,10 +1,10 @@
 import { projectNavGroups } from '../fixtures/demo.js';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import DashboardShell from './DashboardShell.svelte';
+import DashboardShellPreview from './DashboardShellPreview.svelte';
 
-const meta: Meta<DashboardShell> = {
+const meta: Meta<DashboardShellPreview> = {
   title: 'Components/DashboardShell',
-  component: DashboardShell,
+  component: DashboardShellPreview,
   parameters: { layout: 'fullscreen' },
 };
 

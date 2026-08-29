@@ -5,6 +5,7 @@
   import Table from '../../components/Table.svelte';
   import TextField from '../../components/TextField.svelte';
   import { demoProject, demoTiers, projectNavGroups } from '../../fixtures/demo.js';
+  import { labelCadence } from '../../lib/labels.js';
   import { membershipRows } from './project-demo.js';
 </script>
 
@@ -36,6 +37,9 @@
       { key: 'status', label: 'Status' },
       { key: 'renews', label: 'Renews' },
     ]}
-    rows={membershipRows}
+    rows={membershipRows.map((row) => ({
+      ...row,
+      cadence: labelCadence(row.cadence),
+    }))}
   />
 </DashboardShell>

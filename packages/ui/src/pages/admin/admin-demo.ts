@@ -1,6 +1,7 @@
 import { adminNavGroups, formatMoney, type NavGroup } from '../../fixtures/demo.js';
+import { humanizeStatus } from '../../lib/labels.js';
 
-export { formatMoney };
+export { formatMoney, humanizeStatus };
 
 export function requireItem<T>(items: readonly T[], label: string): T {
   const item = items[0];

@@ -63,10 +63,10 @@
       label="Custom amount"
       type="number"
       placeholder="Enter amount"
-      value={customAmount}
+      bind:value={customAmount}
       help="Minimum £2.00. Localised at checkout."
-      oninput={() => {
-        const major = parseFloat(customAmount);
+      oninput={(event) => {
+        const major = parseFloat((event.currentTarget as HTMLInputElement).value);
         if (!isNaN(major)) {
           selectedAmountMinor = Math.round(major * 100);
           onamountchange?.(selectedAmountMinor);

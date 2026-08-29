@@ -10,6 +10,7 @@ import {
   labelPaymentStatus,
   labelReconciliationStatus,
   labelRisk,
+  humanizeStatus,
 } from './labels.js';
 
 describe('labels', () => {
@@ -74,5 +75,8 @@ describe('labels', () => {
     expect(labelAuditAction('foo.bar_baz')).toBe('Foo Bar Baz');
     expect(labelCaseStatus('needs_owner')).not.toBe('needs_owner');
     expect(labelMembershipStatus('past_due')).not.toBe('past_due');
+    expect(humanizeStatus('project_5pct')).toBe('Project pays 5%');
+    expect(humanizeStatus('first_payment')).toBe('First Payment');
+    expect(humanizeStatus('mismatch')).toBe('Mismatch');
   });
 });

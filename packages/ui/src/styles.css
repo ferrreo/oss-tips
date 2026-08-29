@@ -694,6 +694,7 @@ a:hover {
   padding: 0.875rem 1.5rem;
   border-bottom: 1px solid var(--pl-border);
   background: var(--pl-canvas);
+  font-family: var(--pl-font-ui);
 }
 
 .pl-public-nav__home {
@@ -713,7 +714,11 @@ a:hover {
 }
 
 .pl-public-nav__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--pl-touch);
   color: var(--pl-ink-muted);
+  font-family: var(--pl-font-ui);
   font-weight: 500;
   font-size: 0.9375rem;
   border-radius: var(--pl-radius-sm);

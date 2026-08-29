@@ -1,4 +1,5 @@
 <script lang="ts">
+  import HeroLandscape from './HeroLandscape.svelte';
   import wordmarkLight from '../assets/oss-tips-wordmark-light.svg';
   import wordmarkDark from '../assets/oss-tips-wordmark-dark.svg';
 
@@ -28,6 +29,9 @@
 </script>
 
 <footer class="pl-public-footer">
+  <div class="pl-public-footer__landscape">
+    <HeroLandscape theme={resolved} compact />
+  </div>
   <div class="pl-container">
     <div class="pl-public-footer__grid">
       <div>
