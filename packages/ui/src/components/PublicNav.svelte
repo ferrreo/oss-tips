@@ -8,24 +8,42 @@
     theme?: 'light' | 'dark';
   }
 
-  let { theme = 'light' }: Props = $props();
+  let { theme }: Props = $props();
 
-  const wordmark = theme === 'dark' ? wordmarkDark : wordmarkLight;
+  let resolved = $state<'light' | 'dark'>(theme ?? 'light');
+
+  $effect(() => {
+    if (theme) {
+      resolved = theme;
+      return;
+    }
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    const sync = () => {
+      resolved = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    };
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    return () => observer.disconnect();
+  });
+
+  const wordmark = $derived(resolved === 'dark' ? wordmarkDark : wordmarkLight);
 </script>
 
 <header class="pl-public-nav">
-  <a href="/" aria-label="oss.tips home">
-    <img class="pl-public-nav__wordmark" src={wordmark} alt="oss.tips" />
+  <a class="pl-public-nav__home pl-focus-ring" href="/" aria-label="oss.tips home">
+    <img class="pl-public-nav__wordmark" src={wordmark} alt="oss.tips" width="128" height="28" />
   </a>
   <nav aria-label="Public navigation">
     <ul class="pl-public-nav__links">
-      <li><a href="/explore">Explore</a></li>
-      <li><a href="/about">About</a></li>
-      <li><a href="/docs">Docs</a></li>
-      <li><a href="/pricing">How fees work</a></li>
+      <li><a class="pl-focus-ring" href="/explore">Explore</a></li>
+      <li><a class="pl-focus-ring" href="/about">About</a></li>
+      <li><a class="pl-focus-ring" href="/docs">Docs</a></li>
+      <li><a class="pl-focus-ring" href="/pricing">How fees work</a></li>
     </ul>
   </nav>
-  <div class="pl-row">
+  <div class="pl-public-nav__actions">
     <ThemeToggle />
     <Button variant="secondary">Sign in</Button>
   </div>

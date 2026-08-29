@@ -1,4 +1,4 @@
-import { projectNavGroups } from "../fixtures/demo.js";
+import { projectNavGroups } from '../fixtures/demo.js';
 import type { Meta, StoryObj } from '@storybook/svelte';
 import DashboardShell from './DashboardShell.svelte';
 
@@ -11,5 +11,21 @@ const meta: Meta<DashboardShell> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = { args: { projectName: "Paperlight", navGroups: projectNavGroups, title: "Overview" } };
-export const Dark: Story = { args: { projectName: "Paperlight", navGroups: projectNavGroups, title: "Overview" }, globals: { theme: 'dark' } };
+export const Default: Story = {
+  args: {
+    projectName: 'Paperlight',
+    navGroups: projectNavGroups,
+    title: 'Overview',
+    lede: 'Revenue, unanswered inbox, and the current goal.',
+  },
+};
+
+export const Dark: Story = {
+  args: {
+    projectName: 'Paperlight',
+    navGroups: projectNavGroups,
+    title: 'Overview',
+    lede: 'Revenue, unanswered inbox, and the current goal.',
+  },
+  globals: { theme: 'dark' },
+};

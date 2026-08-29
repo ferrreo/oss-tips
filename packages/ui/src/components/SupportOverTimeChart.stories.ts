@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import ChartPlaceholder from './ChartPlaceholder.svelte';
-import { demoRevenueSeries } from './chartModel.js';
+import SupportOverTimeChart from './SupportOverTimeChart.svelte';
+import { demoGrowthSeries, demoRevenueSeries } from './chartModel.js';
 
-const meta: Meta<ChartPlaceholder> = {
-  title: 'Components/ChartPlaceholder',
-  component: ChartPlaceholder,
+const meta: Meta<SupportOverTimeChart> = {
+  title: 'Components/SupportOverTimeChart',
+  component: SupportOverTimeChart,
 };
 
 export default meta;
@@ -27,4 +27,12 @@ export const Dark: Story = {
     unit: 'GBP',
   },
   globals: { theme: 'dark' },
+};
+
+export const SupporterGrowth: Story = {
+  args: {
+    label: 'Supporter growth',
+    range: 'Last 90 days',
+    series: demoGrowthSeries(),
+  },
 };

@@ -14,6 +14,8 @@
 
   const priceMinor =
     cadence === 'annual' ? tier.annualMinor : cadence === 'one-off' ? tier.oneOffMinor : tier.monthlyMinor;
+
+  const cadenceLabel = cadence === 'one-off' ? 'one-off' : cadence;
 </script>
 
 <button
@@ -22,28 +24,40 @@
   aria-pressed={selected}
   onclick={onclick}
 >
-  <div class="pl-row pl-row--between" style="margin-bottom: 0.5rem;">
-    <strong>{tier.name}</strong>
-    {#if tier.popular}
-      <span class="pl-badge pl-badge--ochre">Popular</span>
-    {/if}
-    {#if selected}
-      <span class="pl-badge pl-badge--forest" aria-label="Selected">✓</span>
-    {/if}
+  <div class="pl-tier-card__top">
+    <strong class="pl-tier-card__name">{tier.name}</strong>
+    <div class="pl-tier-card__badges">
+      {#if tier.popular}
+        <span class="pl-badge pl-badge--ochre">Most popular</span>
+      {/if}
+      {#if selected}
+        <span class="pl-tier-card__check" aria-label="Selected">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+            <path
+              class="pl-tier-card__check-path"
+              d="M3.2 8.2 L6.4 11.2 L12.8 4.6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      {/if}
+    </div>
   </div>
-  <p class="pl-muted" style="font-size: 0.875rem; margin: 0 0 0.75rem;">{tier.description}</p>
+  <p class="pl-tier-card__desc">{tier.description}</p>
   <div class="pl-tier-card__price">
     {formatMoney(priceMinor, currency)}
     {#if cadence !== 'one-off'}
-      <span class="pl-muted" style="font-size: 0.875rem;">/ {cadence}</span>
+      <span class="pl-tier-card__cadence">/ {cadenceLabel}</span>
     {/if}
   </div>
   {#if tier.memberLimit}
-    <p class="pl-muted" style="font-size: 0.8125rem; margin-top: 0.5rem;">
-      {tier.memberLimit} member limit
-    </p>
+    <p class="pl-tier-card__limit">{tier.memberLimit} member limit</p>
   {/if}
-  <ul style="margin: 0.75rem 0 0; padding-left: 1.125rem; font-size: 0.875rem; color: var(--pl-ink-muted);">
+  <ul class="pl-tier-card__rewards">
     {#each tier.rewards as reward (reward)}
       <li>{reward}</li>
     {/each}

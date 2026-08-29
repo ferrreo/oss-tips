@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 420" role="img" aria-labelledby="pld-title pld-desc">
+  <title id="pld-title">Paperlight forest and mountains, dark</title>
+  <desc id="pld-desc">A night canopy landscape with distant ridges, a moss mid-range, and an asymmetric forest.</desc>
+  <defs>
+    <linearGradient id="pld-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0C0E0A"/>
+      <stop offset="48%" stop-color="#11130F"/>
+      <stop offset="100%" stop-color="#1A1E16"/>
+    </linearGradient>
+    <linearGradient id="pld-far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3A4634"/>
+      <stop offset="100%" stop-color="#2A3326"/>
+    </linearGradient>
+    <linearGradient id="pld-mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5A6A42"/>
+      <stop offset="100%" stop-color="#3E4C30"/>
+    </linearGradient>
+    <linearGradient id="pld-near" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A3A22"/>
+      <stop offset="100%" stop-color="#171A15"/>
+    </linearGradient>
+    <radialGradient id="pld-moon" cx="78%" cy="20%" r="16%">
+      <stop offset="0%" stop-color="#EDE7D8" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#C6A36B" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#C6A36B" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="pld-grain" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.06"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="1600" height="420" fill="url(#pld-sky)"/>
+  <g fill="#EDE7D8" opacity="0.35">
+    <circle cx="220" cy="54" r="1.2"/>
+    <circle cx="310" cy="38" r="0.9"/>
+    <circle cx="460" cy="70" r="1.1"/>
+    <circle cx="620" cy="32" r="0.8"/>
+    <circle cx="790" cy="58" r="1"/>
+    <circle cx="980" cy="26" r="0.9"/>
+    <circle cx="1080" cy="64" r="1.1"/>
+    <circle cx="1420" cy="44" r="0.8"/>
+  </g>
+  <circle cx="1240" cy="86" r="150" fill="url(#pld-moon)"/>
+  <circle cx="1248" cy="90" r="18" fill="#EDE7D8"/>
+  <circle cx="1256" cy="86" r="18" fill="#11130F" opacity="0.18"/>
+  <path fill="url(#pld-far)" d="M0 248 C120 236 180 198 280 210 C390 224 450 168 560 186 C680 206 740 150 860 172 C980 196 1060 140 1180 168 C1280 190 1360 148 1480 176 C1540 190 1580 168 1600 174 L1600 420 L0 420 Z"/>
+  <path fill="#34382E" opacity="0.7" d="M0 286 C90 270 170 248 260 262 C360 278 430 230 540 248 C650 266 720 228 830 246 C940 264 1020 220 1140 244 C1240 262 1340 228 1460 250 C1520 262 1570 246 1600 252 L1600 420 L0 420 Z"/>
+  <path fill="url(#pld-mid)" d="M0 304 C140 288 210 262 330 278 C450 296 520 250 650 272 C780 296 860 248 990 274 C1110 298 1200 256 1330 282 C1430 300 1510 270 1600 286 L1600 420 L0 420 Z"/>
+  <path fill="#4D5E3C" d="M0 332 C110 318 200 304 310 318 C430 334 510 300 640 318 C760 336 850 304 980 322 C1100 340 1200 308 1340 326 C1440 340 1520 318 1600 330 L1600 420 L0 420 Z"/>
+  <g fill="url(#pld-near)">
+    <path d="M-20 420 L-20 348 C20 330 48 300 78 318 C96 296 118 268 148 292 C168 270 188 248 218 274 C236 252 262 228 292 258 C318 236 344 214 376 246 C398 226 426 206 458 238 C486 216 518 196 554 230 C584 210 618 192 654 226 C686 206 722 188 760 222 C792 204 830 190 868 220 C900 202 938 188 978 218 C1010 200 1048 188 1086 216 C1116 200 1150 190 1184 214 C1214 200 1248 192 1280 214 C1310 200 1344 194 1376 214 C1404 202 1436 196 1466 214 C1494 204 1524 200 1552 216 C1574 206 1590 204 1618 218 L1620 420 Z"/>
+  </g>
+  <g fill="#0C0E0A">
+    <path d="M42 348 L58 292 L74 348 Z"/>
+    <path d="M78 352 L98 278 L118 352 Z"/>
+    <path d="M112 350 L128 304 L144 350 Z"/>
+    <path d="M168 346 L192 256 L216 346 Z"/>
+    <path d="M208 348 L226 292 L244 348 Z"/>
+    <path d="M248 344 L278 238 L308 344 Z"/>
+    <path d="M300 348 L318 296 L336 348 Z"/>
+    <path d="M352 346 L372 280 L392 346 Z"/>
+    <path d="M1180 348 L1200 286 L1220 348 Z"/>
+    <path d="M1228 346 L1258 240 L1288 346 Z"/>
+    <path d="M1280 350 L1298 298 L1316 350 Z"/>
+    <path d="M1336 344 L1368 232 L1400 344 Z"/>
+    <path d="M1392 348 L1412 284 L1432 348 Z"/>
+    <path d="M1448 346 L1474 250 L1500 346 Z"/>
+    <path d="M1510 350 L1526 304 L1542 350 Z"/>
+  </g>
+  <g fill="#91A66E" opacity="0.35">
+    <path d="M60 360 C68 336 78 336 86 360 C78 352 68 352 60 360 Z"/>
+    <path d="M186 358 C198 326 214 326 226 358 C214 348 198 348 186 358 Z"/>
+    <path d="M266 356 C282 314 304 314 320 356 C304 344 282 344 266 356 Z"/>
+    <path d="M1238 358 C1254 316 1276 316 1292 358 C1276 346 1254 346 1238 358 Z"/>
+    <path d="M1350 354 C1370 304 1396 304 1416 354 C1396 340 1370 340 1350 354 Z"/>
+    <path d="M1460 358 C1474 328 1492 328 1506 358 C1492 348 1474 348 1460 358 Z"/>
+  </g>
+  <path fill="#1D211B" d="M0 392 C180 372 320 402 520 384 C740 364 920 398 1140 378 C1320 364 1460 390 1600 376 L1600 420 L0 420 Z"/>
+  <path fill="#151813" d="M0 404 C220 392 420 412 680 398 C940 384 1180 410 1600 396 L1600 420 L0 420 Z"/>
+  <g fill="#71834F" opacity="0.55">
+    <ellipse cx="214" cy="396" rx="10" ry="5"/>
+    <ellipse cx="248" cy="400" rx="7" ry="3.5"/>
+    <ellipse cx="1310" cy="398" rx="11" ry="5"/>
+    <ellipse cx="1344" cy="402" rx="6" ry="3"/>
+  </g>
+  <g fill="#C6A36B" opacity="0.55">
+    <circle cx="236" cy="388" r="2.2"/>
+    <circle cx="1328" cy="390" r="2"/>
+  </g>
+  <rect width="1600" height="420" filter="url(#pld-grain)" pointer-events="none"/>
+</svg>

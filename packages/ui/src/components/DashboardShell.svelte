@@ -7,16 +7,19 @@
     projectName: string;
     navGroups: NavGroup[];
     title?: string;
+    lede?: string;
     children?: Snippet;
   }
 
-  let { projectName, navGroups, title, children }: Props = $props();
+  let { projectName, navGroups, title, lede, children }: Props = $props();
 </script>
 
 <div class="pl-dashboard">
+  <a class="pl-skip-link" href="#main-content">Skip to content</a>
   <aside class="pl-dashboard__sidebar" aria-label="Project dashboard navigation">
-    <div style="padding: 0 1rem 1rem;">
-      <strong class="pl-display" style="font-size: 1rem;">{projectName}</strong>
+    <div class="pl-dashboard__brand">
+      <p class="pl-dashboard__overline">Project dashboard</p>
+      <strong class="pl-dashboard__project">{projectName}</strong>
     </div>
     <SidebarNav groups={navGroups} />
   </aside>
@@ -24,6 +27,9 @@
     {#if title}
       <header class="pl-dashboard__header">
         <h1 class="pl-dashboard__title">{title}</h1>
+        {#if lede}
+          <p class="pl-dashboard__lede">{lede}</p>
+        {/if}
       </header>
     {/if}
     {@render children?.()}

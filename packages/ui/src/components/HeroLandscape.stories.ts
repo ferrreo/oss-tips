@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import PublicFooter from './PublicFooter.svelte';
+import HeroLandscape from './HeroLandscape.svelte';
 
-const meta: Meta<PublicFooter> = {
-  title: 'Components/PublicFooter',
-  component: PublicFooter,
+const meta: Meta<HeroLandscape> = {
+  title: 'Components/HeroLandscape',
+  component: HeroLandscape,
   parameters: { layout: 'fullscreen' },
 };
 
@@ -12,3 +12,4 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = { args: { theme: 'light' } };
 export const Dark: Story = { args: { theme: 'dark' }, globals: { theme: 'dark' } };
+export const Compact: Story = { args: { theme: 'light', compact: true } };
