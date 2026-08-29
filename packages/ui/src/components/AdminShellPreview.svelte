@@ -9,7 +9,7 @@
     projectContext?: string;
   }
 
-  let { navGroups, title, lede, projectContext }: Props = $props();
+  let { navGroups = [], title, lede, projectContext }: Props = $props();
 </script>
 
 <AdminShell {navGroups} {title} {lede} {projectContext}>

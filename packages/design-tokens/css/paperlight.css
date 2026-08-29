@@ -8,8 +8,8 @@
   --pl-surface: #fffdf8;
   --pl-surface-raised: #f4eedf;
   --pl-ink: #1e2a22;
-  --pl-ink-muted: #667065;
-  --pl-ink-faint: #6f766e;
+  --pl-ink-muted: #5c665b;
+  --pl-ink-faint: #61685f;
   --pl-forest: #2d5c3a;
   --pl-forest-hover: #244a30;
   --pl-moss: #7c8a5b;
@@ -34,8 +34,8 @@
   --pl-surface: #171a15;
   --pl-surface-raised: #1d211b;
   --pl-ink: #ede7d8;
-  --pl-ink-muted: #b7b4a6;
-  --pl-ink-faint: #96988c;
+  --pl-ink-muted: #b4b1a3;
+  --pl-ink-faint: #8e9084;
   --pl-forest: #91a66e;
   --pl-forest-hover: #a5ba82;
   --pl-moss: #71834f;
@@ -46,16 +46,16 @@
   --pl-success: #a5c87d;
   --pl-warning: #d8b06c;
   --pl-danger: #d47a6e;
-  --pl-info: #82aeb5;
+  --pl-info: #8aada6;
   --pl-focus: #b5cf8d;
   --pl-overlay: rgba(0, 0, 0, 0.64);
-  --pl-shadow: 0 1px 2px rgba(0, 0, 0, 0.32), 0 16px 40px rgba(0, 0, 0, 0.22);
+  --pl-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 16px rgba(0, 0, 0, 0.18);
   --pl-on-forest: #11130f;
 }
 
 :root {
   --pl-font-display: Newsreader, 'EB Garamond', Georgia, serif;
-  --pl-font-ui: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  --pl-font-ui: 'Source Sans 3', system-ui, sans-serif;
   --pl-font-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
   --pl-radius-sm: 0.375rem;
   --pl-radius-md: 0.625rem;

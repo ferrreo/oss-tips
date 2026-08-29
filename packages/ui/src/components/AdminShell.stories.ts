@@ -1,7 +1,9 @@
+import { adminNavGroups } from '../fixtures/demo.js';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import AdminShellPreview from './AdminShellPreview.svelte';
 
 const sharedArgs = {
+  navGroups: adminNavGroups,
   title: 'Overview',
   lede: 'Review queue, settlement volume, and failed jobs.',
   projectContext: 'Acting on Grove. Refunds and restrictions stay on this project.',
