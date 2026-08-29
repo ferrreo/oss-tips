@@ -4,7 +4,7 @@
   import SegmentedControl from '../../components/SegmentedControl.svelte';
   import Table from '../../components/Table.svelte';
   import { demoProject } from '../../fixtures/demo.js';
-  import { feeModeLabels } from '../../lib/labels.js';
+  import { labelFeeMode } from '../../lib/labels.js';
   import ProjectDashShell from './ProjectDashShell.svelte';
   import { settingsLinks } from './project-demo.js';
 
@@ -27,8 +27,8 @@
         <span class="pl-field__label">Fee mode</span>
         <SegmentedControl
           options={[
-            { value: 'standard', label: feeModeLabels.standard },
-            { value: 'project_5pct', label: feeModeLabels.project_5pct },
+            { value: 'standard', label: labelFeeMode('standard') },
+            { value: 'project_5pct', label: labelFeeMode('project_5pct') },
           ]}
           value={feeMode}
           onchange={(v) => {
