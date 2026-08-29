@@ -126,3 +126,26 @@ export function labelFeeMode(mode: string): string {
 export function labelAuditAction(action: string): string {
   return labelFrom(AUDIT_ACTION, action);
 }
+
+const ALL_LABELS = {
+  ...CASE_STATUS,
+  ...PAYMENT_STATUS,
+  ...MEMBERSHIP_STATUS,
+  ...RECONCILIATION_STATUS,
+  ...ENTITLEMENT_STATUS,
+  ...INBOX_STATUS,
+  ...CADENCE,
+  ...RISK,
+  ...FEE_MODE,
+  ...AUDIT_ACTION,
+};
+
+/** Generic fallback when the domain is unknown. Prefer a specific label* helper. */
+export function humanizeMachineValue(value: string): string {
+  return labelFrom(ALL_LABELS, value);
+}
+
+/** Prefer specific label* helpers; covers mixed admin tables and unknown enums. */
+export function humanizeStatus(value: string): string {
+  return humanizeMachineValue(value);
+}

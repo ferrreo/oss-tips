@@ -8,6 +8,8 @@
     type?: 'button' | 'submit' | 'reset';
     onclick?: (e: MouseEvent) => void;
     children?: Snippet;
+    /** Visible text when the story (or a caller) does not pass children. */
+    label?: string;
     class?: string;
     'aria-label'?: string;
   }
@@ -19,6 +21,7 @@
     type = 'button',
     onclick,
     children,
+    label,
     class: className = '',
     'aria-label': ariaLabel,
   }: Props = $props();
@@ -36,7 +39,9 @@
 >
   {#if loading}
     <span class="pl-muted">Loading…</span>
+  {:else if children}
+    {@render children()}
   {:else}
-    {@render children?.()}
+    {label}
   {/if}
 </button>

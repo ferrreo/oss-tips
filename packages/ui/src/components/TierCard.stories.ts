@@ -16,22 +16,27 @@ function demoTier(id: string) {
   return found;
 }
 
-const sapling = demoTier('sapling');
-const canopy = demoTier('canopy');
+const coffee = demoTier('coffee');
+const supporter = demoTier('supporter');
+const champion = demoTier('champion');
 
 export const Default: Story = {
-  args: { tier: sapling, currency: 'GBP', cadence: 'monthly', selected: false },
+  args: { tier: coffee, currency: 'GBP', cadence: 'monthly', selected: false },
 };
 
 export const Selected: Story = {
-  args: { tier: sapling, currency: 'GBP', cadence: 'monthly', selected: true },
+  args: { tier: coffee, currency: 'GBP', cadence: 'monthly', selected: true },
+};
+
+export const Popular: Story = {
+  args: { tier: supporter, currency: 'GBP', cadence: 'monthly', selected: false },
 };
 
 export const Annual: Story = {
-  args: { tier: canopy, currency: 'GBP', cadence: 'annual' },
+  args: { tier: champion, currency: 'GBP', cadence: 'annual' },
 };
 
 export const Dark: Story = {
-  args: { tier: sapling, currency: 'GBP', cadence: 'monthly', selected: true },
+  args: { tier: coffee, currency: 'GBP', cadence: 'monthly', selected: true },
   globals: { theme: 'dark' },
 };

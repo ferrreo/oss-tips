@@ -156,6 +156,11 @@ a:hover {
   font-family: var(--pl-font-ui);
 }
 
+.pl-page-title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
 .pl-page-lead {
   color: var(--pl-ink-muted);
   font-size: 1.125rem;

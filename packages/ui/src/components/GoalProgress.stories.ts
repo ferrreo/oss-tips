@@ -16,9 +16,9 @@ function demoGoal(id: string) {
   return found;
 }
 
-const designDocs = demoGoal('g1');
-const adapter = demoGoal('g2');
+const infrastructure = demoGoal('g1');
+const documentation = demoGoal('g2');
 
-export const Default: Story = { args: { goal: designDocs } };
-export const ActiveSupporters: Story = { args: { goal: adapter } };
-export const Dark: Story = { args: { goal: designDocs }, globals: { theme: 'dark' } };
+export const Default: Story = { args: { goal: infrastructure } };
+export const ActiveSupporters: Story = { args: { goal: documentation } };
+export const Dark: Story = { args: { goal: infrastructure }, globals: { theme: 'dark' } };
