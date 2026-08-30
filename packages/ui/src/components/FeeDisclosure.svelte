@@ -9,6 +9,7 @@
     tipMinor?: number;
     currency?: string;
     cadence?: string;
+    headingLevel?: 2 | 3;
   }
 
   let {
@@ -17,14 +18,16 @@
     tipMinor = 0,
     currency = 'GBP',
     cadence = 'one-off',
+    headingLevel = 3,
   }: Props = $props();
 
   const projectFeeMinor = $derived(Math.max(0, Math.round(projectAmountMinor * (projectFeePercent / 100))));
   const totalMinor = $derived(Math.max(0, projectAmountMinor + projectFeeMinor + tipMinor));
+  const headingTag = $derived(headingLevel === 2 ? 'h2' : 'h3');
 </script>
 
 <aside class={stylex.attrs(funding.feeDisclosure).class ?? ''} aria-label={t('common.feeBreakdown', {}, $locale)}>
-  <h3 class={stylex.attrs(funding.feeHeading).class ?? ''}>{t('common.beforeConfirm', {}, $locale)}</h3>
+  <svelte:element this={headingTag} class={stylex.attrs(funding.feeHeading).class ?? ''}>{t('common.beforeConfirm', {}, $locale)}</svelte:element>
   <dl class={stylex.attrs(funding.feeList).class ?? ''}>
     <div class={stylex.attrs(funding.feeRow).class ?? ''}>
       <dt class={stylex.attrs(funding.feeRowLabel).class ?? ''}>{t('common.projectReceives', {}, $locale)}</dt>

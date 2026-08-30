@@ -45,4 +45,5 @@ export const ApiError: Story = { args: { initialState: 'error' } };
 export const Success: Story = { args: { initialState: 'success' } };
 export const Dark: Story = { globals: { theme: 'dark' } };
 export const Compact: Story = { parameters: { viewport: { defaultViewport: 'mobile1' } } };
+export const German: Story = { globals: { locale: 'de' } };
 export const RtlSmoke: Story = { globals: { locale: 'fr', direction: 'rtl' } };

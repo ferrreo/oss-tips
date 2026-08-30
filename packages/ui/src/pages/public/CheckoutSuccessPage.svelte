@@ -33,7 +33,11 @@
     paymentStatus = 'processing',
   }: Props = $props();
 
-  const containerClass = stylex.attrs(publicStyles.container, publicStyles.reading).class;
+  const containerClass = stylex.attrs(
+    publicStyles.container,
+    publicStyles.reading,
+    publicStyles.checkoutPage,
+  ).class;
   const cadenceCopy = $derived(
     cadence === 'annual' || cadence === 'yearly'
       ? t('public.cadence.annual', {}, $locale)
@@ -81,56 +85,67 @@
   );
 </script>
 
-<PublicPageFrame mainClass={stylex.attrs(publicStyles.section).class ?? ''}>
+<PublicPageFrame mainClass={stylex.attrs(publicStyles.section, publicStyles.checkoutMain).class ?? ''}>
   {#snippet children()}
     <div class={containerClass}>
-      <p class={stylex.attrs(publicStyles.mono, publicStyles.muted).class}>{t('public.checkout.kicker', {}, $locale)}</p>
-      <StatusBanner variant={paymentStatus === 'failed' ? 'danger' : 'info'} title={statusTitle} message={statusMessage} />
-      <h1 class={stylex.attrs(publicStyles.pageTitle).class}>
-        {pageTitle}
-      </h1>
+      <header class={stylex.attrs(publicStyles.checkoutHeader).class}>
+        <p class={stylex.attrs(publicStyles.mono, publicStyles.muted, publicStyles.checkoutKicker).class}>{t('public.checkout.kicker', {}, $locale)}</p>
+        <h1 class={stylex.attrs(publicStyles.pageTitle, publicStyles.checkoutTitle).class}>
+          {pageTitle}
+        </h1>
+      </header>
+      <div class={stylex.attrs(publicStyles.checkoutStatus).class}>
+        <StatusBanner variant={paymentStatus === 'failed' ? 'danger' : 'info'} title={statusTitle} message={statusMessage} />
+      </div>
       {#if paymentStatus === 'confirmed'}
-        <svg
-          class={stylex.attrs(publicStyles.successSprout).class ?? ''}
-          viewBox="0 0 112 48"
-          aria-hidden="true"
-        >
-          <path class={stylex.attrs(publicStyles.successSproutPath).class ?? ''} d="M56 43 C56 32 56 22 57 10" />
-          <path class={stylex.attrs(publicStyles.successSproutPath).class ?? ''} d="M56 27 C45 17 34 18 26 22 C34 30 45 31 56 27 Z" />
-          <path class={stylex.attrs(publicStyles.successSproutPath).class ?? ''} d="M57 22 C66 13 78 13 87 17 C79 24 68 27 57 22 Z" />
-          <path class={stylex.attrs(publicStyles.successSproutPath).class ?? ''} d="M45 42 C49 46 55 46 60 42" />
-          <circle class={stylex.attrs(publicStyles.successSproutSeed).class ?? ''} cx="56" cy="43" r="3" />
-        </svg>
-        <p class={stylex.attrs(publicStyles.lead).class}>
-          {paidMessage}
-        </p>
-        <dl class={stylex.attrs(publicStyles.meta).class}>
-          <div>
-            <dt class={stylex.attrs(publicStyles.metaLabel).class}>{t('public.checkout.tier', {}, $locale)}</dt>
-            <dd>{tier}</dd>
+        <div class={stylex.attrs(publicStyles.checkoutSuccess).class}>
+          <div class={stylex.attrs(publicStyles.checkoutIntro).class}>
+            <svg
+              class={stylex.attrs(publicStyles.successFlourish).class ?? ''}
+              viewBox="0 0 128 80"
+              aria-hidden="true"
+            >
+              <path class={stylex.attrs(publicStyles.successFlourishStroke).class ?? ''} d="M34 64 C47 70 81 70 94 64" />
+              <path class={stylex.attrs(publicStyles.successFlourishStroke).class ?? ''} d="M64 65 C64 54 65 43 67 32" />
+              <path class={stylex.attrs(publicStyles.successFlourishLeaf).class ?? ''} d="M65 48 C54 39 44 39 36 44 C43 52 53 54 65 48 Z" />
+              <path class={stylex.attrs(publicStyles.successFlourishLeafAccent).class ?? ''} d="M67 39 C76 30 86 30 94 35 C87 43 78 45 67 39 Z" />
+              <path class={stylex.attrs(publicStyles.successFlourishSeed).class ?? ''} d="M64 58 C70 59 73 63 71 68 C67 70 62 68 61 64 C60 61 61 59 64 58 Z" />
+              <path class={stylex.attrs(publicStyles.successFlourishSeedMark).class ?? ''} d="M64 62 C66 63 67 64 67 66" />
+            </svg>
+            <p class={stylex.attrs(publicStyles.lead, publicStyles.checkoutLead).class}>
+              {paidMessage}
+            </p>
           </div>
-          <div>
-            <dt class={stylex.attrs(publicStyles.metaLabel).class}>{t('public.checkout.access', {}, $locale)}</dt>
-            <dd>{entitlement} ({t('public.checkout.expires', { date: expiryLabel }, $locale)})</dd>
+          <div class={stylex.attrs(publicStyles.checkoutDetails).class}>
+            <dl class={stylex.attrs(publicStyles.checkoutMeta).class}>
+              <div class={stylex.attrs(publicStyles.checkoutMetaItem).class}>
+                <dt class={stylex.attrs(publicStyles.metaLabel).class}>{t('public.checkout.tier', {}, $locale)}</dt>
+                <dd class={stylex.attrs(publicStyles.checkoutMetaValue).class}>{tier}</dd>
+              </div>
+              <div class={stylex.attrs(publicStyles.checkoutMetaItem).class}>
+                <dt class={stylex.attrs(publicStyles.metaLabel).class}>{t('public.checkout.access', {}, $locale)}</dt>
+                <dd class={stylex.attrs(publicStyles.checkoutMetaValue).class}>{entitlement} ({t('public.checkout.expires', { date: expiryLabel }, $locale)})</dd>
+              </div>
+              {#if reference}
+                <div class={stylex.attrs(publicStyles.checkoutMetaItem).class}>
+                  <dt class={stylex.attrs(publicStyles.metaLabel).class}>{t('public.checkout.reference', {}, $locale)}</dt>
+                  <dd class={stylex.attrs(publicStyles.mono, publicStyles.breakAnywhere, publicStyles.checkoutMetaValue).class}>{reference}</dd>
+                </div>
+              {/if}
+            </dl>
+            <FeeDisclosure headingLevel={2} projectAmountMinor={amountMinor} tipMinor={tipMinor} cadence={cadence} currency={project.currency} />
           </div>
-          {#if reference}
-            <div>
-              <dt class={stylex.attrs(publicStyles.metaLabel).class}>{t('public.checkout.reference', {}, $locale)}</dt>
-              <dd class={stylex.attrs(publicStyles.mono, publicStyles.breakAnywhere).class}>{reference}</dd>
-            </div>
-          {/if}
-        </dl>
-        <FeeDisclosure projectAmountMinor={amountMinor} tipMinor={tipMinor} cadence={cadence} currency={project.currency} />
+        </div>
       {:else if paymentStatus === 'processing'}
-        <p class={stylex.attrs(publicStyles.lead).class}>
+        <p class={stylex.attrs(publicStyles.lead, publicStyles.checkoutPending).class}>
           {processingMessage}
         </p>
       {/if}
-      <div class={stylex.attrs(publicStyles.row).class}>
+      <div class={stylex.attrs(publicStyles.checkoutActions).class}>
         {#if paymentStatus === 'confirmed'}
-          <a class={stylex.attrs(publicStyles.action, publicStyles.actionPrimary).class} href="/sign-in">{t('public.checkout.createAccount', {}, $locale)}</a>
+          <a class={stylex.attrs(publicStyles.action, publicStyles.actionPrimary, publicStyles.checkoutAction).class} href="/sign-in">{t('public.checkout.createAccount', {}, $locale)}</a>
         {/if}
-        <a class={stylex.attrs(publicStyles.action, publicStyles.actionSecondary).class} href="/{project.slug}">{t('public.checkout.returnTo', { project: project.name }, $locale)}</a>
+        <a class={stylex.attrs(publicStyles.action, publicStyles.actionSecondary, publicStyles.checkoutAction).class} href="/{project.slug}">{t('public.checkout.returnTo', { project: project.name }, $locale)}</a>
       </div>
     </div>
   {/snippet}

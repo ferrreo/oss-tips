@@ -50,6 +50,10 @@ export const Active: Story = {
       throw new Error('Segment did not become active');
   },
 };
+export const Compact: Story = {
+  args: { options, value: 'activity', label: 'Project view' },
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
+};
 export const Dark: Story = {
   args: { options, value: 'activity', label: 'Project view' },
   globals: { theme: 'dark' },

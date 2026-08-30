@@ -75,7 +75,7 @@
       <p class={stylex.attrs(projectStyles.body, projectStyles.small).class}>{tx('project.inbox.permissionBody')}</p>
     </div>
   {:else if threads.length === 0}
-    <EmptyState title={tx('project.inbox.emptyTitle')} description={tx('project.inbox.emptyBody')} />
+    <EmptyState headingLevel={2} title={tx('project.inbox.emptyTitle')} description={tx('project.inbox.emptyBody')} />
   {:else if selected}
     <div class={stylex.attrs(projectStyles.grid2, projectStyles.responsiveStack).class}>
       <aside class={stylex.attrs(projectStyles.surfaceTight).class} aria-label={tx('project.inbox.conversations')}>

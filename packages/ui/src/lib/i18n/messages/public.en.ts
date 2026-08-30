@@ -21,7 +21,7 @@ export const publicMessagesEn = {
   'public.checkout.waiting': 'We’re waiting for Stripe to confirm this payment.',
   'public.checkout.keepReference':
     'Keep this reference if you need to contact support: {reference}.',
-  'public.checkout.createAccount': 'Create an account to manage this support',
+  'public.checkout.createAccount': 'Create an account',
   'public.checkout.returnTo': 'Return to {project}',
   'public.cadence.monthly': 'monthly membership',
   'public.cadence.annual': 'annual membership',

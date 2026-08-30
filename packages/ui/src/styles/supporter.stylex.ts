@@ -33,7 +33,7 @@ export const supporter = stylex.create({
   eyebrow: {
     color: paperlight.forest,
     fontFamily: paperlight.monoFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
     letterSpacing: '0.04em',
     margin: 0,
@@ -51,7 +51,7 @@ export const supporter = stylex.create({
   lede: {
     color: paperlight.inkMuted,
     fontFamily: paperlight.uiFont,
-    fontSize: '1.125rem',
+    fontSize: paperlight.textLg,
     lineHeight: 1.5,
     marginBlock: `${paperlight.space3} 0`,
     maxWidth: '44rem',
@@ -85,8 +85,12 @@ export const supporter = stylex.create({
     minHeight: paperlight.touchTarget,
     paddingInline: paperlight.space3,
     textDecoration: 'none',
-    transitionDuration: paperlight.motionFast,
-    transitionProperty: 'color, border-color, background-color',
+    whiteSpace: 'nowrap',
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'color, border-color, background-color, transform',
     transitionTimingFunction: paperlight.easeOut,
     '@media (hover: hover)': {
       ':hover': {
@@ -101,8 +105,13 @@ export const supporter = stylex.create({
       outlineStyle: 'solid',
       outlineWidth: 2,
     },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
     '@media (prefers-reduced-motion: reduce)': {
-      transitionDuration: '0.01ms',
+      ':active': {
+        transform: 'none',
+      },
     },
   },
   accountLinkActive: {
@@ -112,13 +121,13 @@ export const supporter = stylex.create({
   summaryGrid: {
     display: 'grid',
     gap: paperlight.space4,
-    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+    gridTemplateColumns: 'minmax(0, 1fr)',
     marginBottom: paperlight.space6,
-    '@media (max-width: 50rem)': {
+    '@media (min-width: 33.01rem)': {
       gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
     },
-    '@media (max-width: 33rem)': {
-      gridTemplateColumns: 'minmax(0, 1fr)',
+    '@media (min-width: 50.01rem)': {
+      gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
     },
   },
   section: {
@@ -169,7 +178,7 @@ export const supporter = stylex.create({
   },
   muted: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
   },
   rule: {
     border: 0,
@@ -191,7 +200,7 @@ export const supporter = stylex.create({
   },
   fieldNote: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     lineHeight: 1.45,
     margin: `${paperlight.space2} 0 0`,
   },
@@ -227,7 +236,10 @@ export const supporter = stylex.create({
     paddingBlock: paperlight.space4,
     paddingInline: paperlight.space2,
     textAlign: 'start',
-    transitionDuration: paperlight.motionFast,
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
     transitionProperty: 'background-color, transform',
     transitionTimingFunction: paperlight.easeOut,
     width: '100%',
@@ -242,8 +254,13 @@ export const supporter = stylex.create({
       outlineStyle: 'solid',
       outlineWidth: 2,
     },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
     '@media (prefers-reduced-motion: reduce)': {
-      transitionDuration: '0.01ms',
+      ':active': {
+        transform: 'none',
+      },
     },
   },
   inboxItemSelected: {
@@ -276,26 +293,42 @@ export const supporter = stylex.create({
     justifyContent: 'space-between',
   },
   feedProject: {
+    alignItems: 'center',
     color: paperlight.forest,
-    display: 'inline-block',
+    display: 'inline-flex',
     fontFamily: paperlight.monoFont,
-    fontSize: '0.8125rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
     letterSpacing: '0.03em',
+    minHeight: paperlight.touchTarget,
     textDecoration: 'none',
     textTransform: 'uppercase',
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'color, transform',
+    transitionTimingFunction: paperlight.easeOut,
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
+      },
+    },
   },
   feedTitle: {
     color: paperlight.ink,
     fontFamily: paperlight.displayFont,
-    fontSize: '1.75rem',
+    fontSize: paperlight.text2xl,
     fontWeight: 500,
     lineHeight: 1.08,
     marginBlock: `${paperlight.space2} 0`,
   },
   feedMeta: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     margin: `${paperlight.space2} 0 0`,
   },
   feedBody: {
@@ -389,6 +422,9 @@ export const supporter = stylex.create({
     borderBottomWidth: 0,
     paddingBottom: 0,
   },
+  securitySection: {
+    marginBlockStart: paperlight.space8,
+  },
   securityCopy: {
     minWidth: '12rem',
   },
@@ -399,7 +435,7 @@ export const supporter = stylex.create({
   },
   securityMeta: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     lineHeight: 1.45,
     margin: `${paperlight.space1} 0 0`,
   },

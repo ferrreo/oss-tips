@@ -19,6 +19,12 @@ export const Admin: Story = {
   args: { groups: adminNavGroups, ariaLabel: 'Admin navigation', tone: 'admin' },
 };
 
+export const Compact: Story = {
+  args: { groups: projectNavGroups, ariaLabel: 'Project dashboard navigation' },
+  globals: { locale: 'de' },
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
+};
+
 export const Dark: Story = {
   args: { groups: projectNavGroups, ariaLabel: 'Project dashboard navigation' },
   globals: { theme: 'dark' },

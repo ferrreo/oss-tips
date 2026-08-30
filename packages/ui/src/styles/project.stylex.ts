@@ -29,6 +29,7 @@ export const projectStyles = stylex.create({
     borderRadius: paperlight.radiusLg,
     borderStyle: 'solid',
     borderWidth: 1,
+    minWidth: 0,
     padding: paperlight.space5,
   },
   surfaceTight: {
@@ -37,6 +38,7 @@ export const projectStyles = stylex.create({
     borderRadius: paperlight.radiusLg,
     borderStyle: 'solid',
     borderWidth: 1,
+    minWidth: 0,
     paddingBlock: paperlight.space2,
   },
   formSurface: {
@@ -62,14 +64,14 @@ export const projectStyles = stylex.create({
   connectPreviewKicker: {
     color: paperlight.inkMuted,
     fontFamily: paperlight.monoFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     letterSpacing: '0.04em',
     textTransform: 'uppercase',
   },
   connectPreviewStatus: {
     color: paperlight.forest,
     fontFamily: paperlight.uiFont,
-    fontSize: '1rem',
+    fontSize: paperlight.textMd,
     fontWeight: 650,
     margin: 0,
   },
@@ -77,16 +79,20 @@ export const projectStyles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     gap: paperlight.space4,
+    minWidth: 0,
   },
   stackTight: {
     display: 'flex',
     flexDirection: 'column',
     gap: paperlight.space2,
+    minWidth: 0,
   },
   row: {
     alignItems: 'center',
     display: 'flex',
+    flexWrap: 'wrap',
     gap: paperlight.space3,
+    minWidth: 0,
   },
   publicDisplayCheck: {
     alignItems: 'flex-start',
@@ -118,18 +124,22 @@ export const projectStyles = stylex.create({
   },
   sectionHeading: {
     fontFamily: paperlight.uiFont,
-    fontSize: '1rem',
+    fontSize: paperlight.textMd,
     fontWeight: 650,
     lineHeight: 1.2,
     margin: 0,
-    paddingBlock: `${paperlight.space8} ${paperlight.space3}`,
+    minWidth: 0,
+    overflowWrap: 'anywhere',
+    paddingBlock: `${paperlight.space6} ${paperlight.space3}`,
   },
   cardHeading: {
     fontFamily: paperlight.uiFont,
-    fontSize: '1.125rem',
+    fontSize: paperlight.textLg,
     fontWeight: 650,
     lineHeight: 1.2,
     margin: 0,
+    minWidth: 0,
+    overflowWrap: 'anywhere',
   },
   body: {
     color: paperlight.ink,
@@ -139,10 +149,10 @@ export const projectStyles = stylex.create({
     color: paperlight.inkMuted,
   },
   small: {
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
   },
   micro: {
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
   },
   numeric: {
     fontVariantNumeric: 'tabular-nums',
@@ -180,10 +190,24 @@ export const projectStyles = stylex.create({
     minWidth: 0,
     padding: `${paperlight.space3} ${paperlight.space4}`,
     textAlign: 'start',
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'background-color, transform',
+    transitionTimingFunction: paperlight.easeOut,
     width: '100%',
     '@media (hover: hover)': {
       ':hover': {
         backgroundColor: paperlight.canvasSubtle,
+      },
+    },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
       },
     },
   },
@@ -236,7 +260,7 @@ export const projectStyles = stylex.create({
   },
   toolBlurb: {
     flex: 1,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     margin: 0,
   },
   actionLink: {
@@ -249,13 +273,17 @@ export const projectStyles = stylex.create({
     color: paperlight.ink,
     display: 'inline-flex',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 650,
     justifyContent: 'center',
     minHeight: paperlight.touchTarget,
     paddingInline: paperlight.space4,
     textDecoration: 'none',
-    transitionDuration: paperlight.motionFast,
+    whiteSpace: 'nowrap',
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
     transitionProperty: 'background-color, border-color, transform',
     transitionTimingFunction: paperlight.easeOut,
     '@media (hover: hover)': {
@@ -277,7 +305,7 @@ export const projectStyles = stylex.create({
     color: paperlight.ink,
     display: 'block',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 650,
     marginBlockEnd: paperlight.space2,
   },
@@ -333,7 +361,7 @@ export const projectStyles = stylex.create({
     alignItems: 'center',
     color: paperlight.ink,
     display: 'flex',
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     gap: paperlight.space2,
   },
   chartLegendLine: {

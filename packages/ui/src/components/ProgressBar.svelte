@@ -18,7 +18,7 @@
   const accessibleLabel = $derived(label.trim() || t('common.progress', {}, $locale));
   const progressAttrs = $derived(stylex.attrs(controls.progress));
   const progressBarAttrs = $derived(
-    stylex.attrs(controls.progressBar, controls.progressBarWidth(`${percent}%`)),
+    stylex.attrs(controls.progressBar, controls.progressBarScale(percent / 100)),
   );
   const progressClass = $derived(
     [progressAttrs.class, className].filter(Boolean).join(' '),

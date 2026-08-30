@@ -10,7 +10,22 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = { args: { project: demoProject } };
+export const Fallback: Story = {
+  args: {
+    project: { ...demoProject, logoLetter: 'O' },
+  },
+};
 export const Small: Story = { args: { project: demoProject, size: 'small' } };
+export const Compact: Story = {
+  args: { project: demoProject, size: 'small' },
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
+};
+export const FallbackSmall: Story = {
+  args: {
+    project: { ...demoProject, logoLetter: 'T' },
+    size: 'small',
+  },
+};
 export const WithLogoUrl: Story = {
   args: {
     project: {
@@ -20,3 +35,9 @@ export const WithLogoUrl: Story = {
   },
 };
 export const Dark: Story = { args: { project: demoProject }, globals: { theme: 'dark' } };
+export const DarkFallback: Story = {
+  args: {
+    project: { ...demoProject, logoLetter: 'O' },
+  },
+  globals: { theme: 'dark' },
+};

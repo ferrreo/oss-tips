@@ -21,7 +21,7 @@ export const display = stylex.create({
     color: paperlight.inkMuted,
     display: 'inline-flex',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
     lineHeight: 1.25,
     minHeight: '1.5rem',
@@ -71,7 +71,7 @@ export const display = stylex.create({
   },
   statusMessage: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     marginBlockStart: paperlight.space1,
     marginBlockEnd: 0,
     maxWidth: '40rem',
@@ -96,7 +96,7 @@ export const display = stylex.create({
     borderRadius: paperlight.radiusRound,
     display: 'inline-flex',
     flex: '0 0 auto',
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 700,
     height: '1.25rem',
     justifyContent: 'center',
@@ -178,7 +178,7 @@ export const display = stylex.create({
   dataCardLabel: {
     color: paperlight.inkMuted,
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     minWidth: 0,
     overflowWrap: 'anywhere',
   },
@@ -196,7 +196,7 @@ export const display = stylex.create({
   dataCardValue: {
     color: paperlight.ink,
     fontFamily: paperlight.displayFont,
-    fontSize: '1.75rem',
+    fontSize: paperlight.text2xl,
     fontVariantNumeric: 'tabular-nums',
     lineHeight: 1.1,
   },
@@ -205,7 +205,7 @@ export const display = stylex.create({
     color: paperlight.inkMuted,
     display: 'flex',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     gap: paperlight.space2,
     marginBlockStart: paperlight.space2,
   },
@@ -216,7 +216,7 @@ export const display = stylex.create({
     color: paperlight.danger,
   },
   dataCardArrow: {
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     lineHeight: 1,
   },
 
@@ -309,14 +309,31 @@ export const display = stylex.create({
     '@media (max-width: 43.99rem)': {
       color: paperlight.inkMuted,
       display: 'block',
-      fontSize: '0.875rem',
+      fontSize: paperlight.textSm,
       fontWeight: 600,
     },
   },
   tableLink: {
+    alignItems: 'center',
     color: paperlight.forest,
+    display: 'inline-flex',
     fontWeight: 650,
+    minHeight: paperlight.touchTarget,
     textDecoration: 'underline',
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'color, transform',
+    transitionTimingFunction: paperlight.easeOut,
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
+      },
+    },
   },
 
   goal: {
@@ -337,7 +354,7 @@ export const display = stylex.create({
   goalOverline: {
     color: paperlight.inkFaint,
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 700,
     letterSpacing: '0.06em',
     marginBlockEnd: paperlight.space1,
@@ -360,14 +377,14 @@ export const display = stylex.create({
   },
   goalDescription: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     marginBlockEnd: paperlight.space3,
     marginBlockStart: 0,
   },
   goalMeta: {
     alignItems: 'baseline',
     display: 'flex',
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     gap: paperlight.space4,
     justifyContent: 'space-between',
     marginBlockStart: paperlight.space3,
@@ -386,7 +403,7 @@ export const display = stylex.create({
   },
   goalBasis: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     marginBlockEnd: 0,
     marginBlockStart: paperlight.space2,
   },

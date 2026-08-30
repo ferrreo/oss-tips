@@ -48,7 +48,7 @@
     visibleSupporters.map((supporter) => ({
       name: supporter.displayName,
       cadence: supporter.cadence ? cadenceLabel(supporter.cadence) : '—',
-      amount: supporter.amountMinor ? formatCurrency(supporter.amountMinor, project.currency, $locale) : '—',
+      amount: supporter.amountMinor !== undefined ? formatCurrency(supporter.amountMinor, project.currency, $locale) : '—',
       public: supporter.public ? tx('project.supporters.yes') : tx('project.supporters.private'),
     })),
   );

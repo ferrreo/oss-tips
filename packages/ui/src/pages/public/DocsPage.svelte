@@ -65,7 +65,7 @@
     <section class={heroClass}>
       <div class={containerClass}>
         <p class={stylex.attrs(publicStyles.mono, publicStyles.muted).class}>{t('public.docs.kicker', {}, $locale)}</p>
-        <h1 class={stylex.attrs(publicStyles.pageTitle).class}>{t('public.docs.title', {}, $locale)}</h1>
+        <h1 class={stylex.attrs(publicStyles.pageTitle, publicStyles.docsTitle).class}>{t('public.docs.title', {}, $locale)}</h1>
         <p class={stylex.attrs(publicStyles.lead).class}>{t('public.docs.lead', {}, $locale)}</p>
         <nav class={stylex.attrs(publicStyles.docsNavWrap).class} aria-label={t('public.docs.sections', {}, $locale)}>
           <ul class={stylex.attrs(publicStyles.docsNav).class}>
@@ -78,7 +78,7 @@
     </section>
     <section class={sectionClass}>
       <div class={containerClass}>
-        <div class={stylex.attrs(publicStyles.prose).class}>
+        <div class={stylex.attrs(publicStyles.prose, publicStyles.docsProse).class}>
           {#each displaySections as section (section.id)}
             <h2 id={section.id}>{section.heading}</h2>
             <p>{section.body}</p>
@@ -86,7 +86,7 @@
         </div>
         <ul class={stylex.attrs(publicStyles.apiList).class}>
           {#each displayEndpoints as endpoint (endpoint.path)}
-            <li class={stylex.attrs(publicStyles.mono, publicStyles.surface).class}>
+            <li class={stylex.attrs(publicStyles.mono, publicStyles.surface, publicStyles.docsApiItem).class}>
               <strong>{endpoint.method}</strong> {endpoint.path}
               <span class={stylex.attrs(publicStyles.muted).class}> · {endpoint.note}</span>
             </li>

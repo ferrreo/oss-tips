@@ -28,7 +28,14 @@ export const Processing: Story = { args: { ...realisticData, paymentStatus: 'pro
 export const Failed: Story = { args: { ...realisticData, paymentStatus: 'failed' } };
 export const Compact: Story = { parameters: { viewport: { defaultViewport: 'mobile1' } } };
 export const Dark: Story = { globals: { theme: 'dark' } };
-export const German: Story = { globals: { locale: 'de' } };
+export const German: Story = {
+  args: {
+    ...realisticData,
+    tier: 'Unterstützer',
+    entitlement: 'Unterstützer-Vorteile für 30 Tage',
+  },
+  globals: { locale: 'de' },
+};
 export const LongCopy: Story = {
   args: {
     ...realisticData,

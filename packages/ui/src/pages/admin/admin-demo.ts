@@ -454,7 +454,7 @@ export const auditEvents: AuditEvent[] = [
     actor: 'finance@oss.tips',
     action: 'reconciliation.flag',
     target: 'vitest-run',
-    reason: 'Stripe net £890.00 vs ledger £885.00',
+    reason: 'Stripe net US$890.00 vs ledger US$885.00',
     correlation: 'corr_55e4',
   },
   {

@@ -43,6 +43,10 @@ export const PublicRecognition: Story = {
   },
 };
 export const German: Story = {
+  args: {
+    ...realisticData,
+    lead: 'Wähle Rhythmus und Betrag und fahre mit Stripe fort. Zugang wird erst nach der Zahlungsbestätigung durch Stripe gewährt.',
+  },
   globals: { locale: 'de' },
 };
 export const LongCopy: Story = {

@@ -25,7 +25,7 @@ export const funding = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     fontFamily: paperlight.uiFont,
-    fontSize: '1rem',
+    fontSize: paperlight.textMd,
     lineHeight: 1.5,
     gap: paperlight.space4,
     padding: paperlight.space6,
@@ -46,7 +46,7 @@ export const funding = stylex.create({
   amountCadenceLabel: {
     color: paperlight.ink,
     display: 'block',
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
     marginBottom: paperlight.space2,
   },
@@ -66,7 +66,7 @@ export const funding = stylex.create({
     cursor: 'pointer',
     display: 'inline-flex',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
     justifyContent: 'center',
     minHeight: paperlight.touchTarget,
@@ -74,7 +74,7 @@ export const funding = stylex.create({
     paddingInline: paperlight.space4,
     transitionDuration: {
       default: paperlight.motionFast,
-      '@media (prefers-reduced-motion: reduce)': '0ms',
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
     transitionProperty: 'background-color, border-color, color',
     transitionTimingFunction: paperlight.easeOut,
@@ -92,6 +92,7 @@ export const funding = stylex.create({
   },
   controlDisabled: {
     cursor: 'not-allowed',
+    opacity: 0.58,
     pointerEvents: 'none',
   },
   presets: {
@@ -113,20 +114,28 @@ export const funding = stylex.create({
     cursor: 'pointer',
     display: 'inline-flex',
     fontFamily: paperlight.displayFont,
-    fontSize: '1rem',
+    fontSize: paperlight.textMd,
     fontVariantNumeric: 'tabular-nums',
     justifyContent: 'center',
     minHeight: paperlight.touchTarget,
     paddingInline: paperlight.space2,
     transitionDuration: {
       default: paperlight.motionFast,
-      '@media (prefers-reduced-motion: reduce)': '0ms',
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
-    transitionProperty: 'background-color, border-color',
+    transitionProperty: 'background-color, border-color, transform',
     transitionTimingFunction: paperlight.easeOut,
     '@media (hover: hover)': {
       ':hover': {
         borderColor: paperlight.borderStrong,
+      },
+    },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
       },
     },
   },
@@ -139,7 +148,7 @@ export const funding = stylex.create({
   },
   amountSummary: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     margin: 0,
   },
   amountSummaryValue: {
@@ -147,15 +156,15 @@ export const funding = stylex.create({
     fontWeight: 700,
     animationName: amountChange,
     animationDuration: {
-      default: '140ms',
-      '@media (prefers-reduced-motion: reduce)': '0.01ms',
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
     animationFillMode: 'both',
     animationTimingFunction: paperlight.easeOut,
   },
   feedback: {
     color: paperlight.danger,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     margin: 0,
   },
   busy: {
@@ -170,7 +179,7 @@ export const funding = stylex.create({
     borderWidth: 1,
     display: 'flex',
     flexDirection: 'column',
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     gap: paperlight.space2,
     padding: paperlight.space4,
   },
@@ -198,7 +207,7 @@ export const funding = stylex.create({
   },
   feeMeta: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
   },
   feeTotal: {
     borderTopColor: paperlight.border,
@@ -210,7 +219,7 @@ export const funding = stylex.create({
   },
   feeNote: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     lineHeight: 1.45,
     marginBlockEnd: 0,
     marginBlockStart: paperlight.space2,
@@ -229,7 +238,7 @@ export const funding = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     fontFamily: paperlight.uiFont,
-    fontSize: '1rem',
+    fontSize: paperlight.textMd,
     lineHeight: 1.5,
     minHeight: '100%',
     minWidth: 0,
@@ -237,7 +246,7 @@ export const funding = stylex.create({
     textAlign: 'start',
     transitionDuration: {
       default: paperlight.motionNormal,
-      '@media (prefers-reduced-motion: reduce)': '0ms',
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
     transitionProperty: 'background-color, border-color',
     transitionTimingFunction: paperlight.easeOut,
@@ -271,7 +280,7 @@ export const funding = stylex.create({
     display: 'flex',
     flexWrap: 'wrap',
     fontFamily: paperlight.uiFont,
-    fontSize: '1rem',
+    fontSize: paperlight.textMd,
     gap: paperlight.space3,
     justifyContent: 'space-between',
     lineHeight: 1.4,
@@ -284,13 +293,21 @@ export const funding = stylex.create({
     width: '100%',
     transitionDuration: {
       default: paperlight.motionFast,
-      '@media (prefers-reduced-motion: reduce)': '0ms',
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
-    transitionProperty: 'background-color, border-color, color',
+    transitionProperty: 'background-color, border-color, color, transform',
     transitionTimingFunction: paperlight.easeOut,
     '@media (hover: hover)': {
       ':hover': {
         borderColor: paperlight.borderStrong,
+      },
+    },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
       },
     },
   },
@@ -306,7 +323,8 @@ export const funding = stylex.create({
     marginBottom: paperlight.space2,
   },
   tierName: {
-    fontSize: '1rem',
+    flex: '1 1 8rem',
+    fontSize: paperlight.textMd,
     fontWeight: 700,
     minWidth: 0,
     overflowWrap: 'anywhere',
@@ -327,8 +345,9 @@ export const funding = stylex.create({
     borderStyle: 'solid',
     borderWidth: 1,
     color: paperlight.ink,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 700,
+    whiteSpace: 'nowrap',
     paddingBlock: paperlight.space1,
     paddingInline: paperlight.space2,
   },
@@ -341,15 +360,15 @@ export const funding = stylex.create({
     strokeDashoffset: 20,
     animationName: tierCheckDraw,
     animationDuration: {
-      default: '180ms',
-      '@media (prefers-reduced-motion: reduce)': '0.01ms',
+      default: paperlight.motionNormal,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
     animationFillMode: 'forwards',
     animationTimingFunction: paperlight.easeOut,
   },
   tierDescription: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     lineHeight: 1.45,
     marginBlockEnd: paperlight.space3,
     marginBlockStart: 0,
@@ -364,11 +383,11 @@ export const funding = stylex.create({
   tierCadence: {
     color: paperlight.inkMuted,
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
   },
   tierLimit: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     marginBlockEnd: 0,
     marginBlockStart: paperlight.space2,
     marginInline: 0,
@@ -388,7 +407,7 @@ export const funding = stylex.create({
   },
   tierError: {
     color: paperlight.danger,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     marginBlockEnd: 0,
     marginBlockStart: paperlight.space3,
     marginInline: 0,
@@ -429,13 +448,21 @@ export const funding = stylex.create({
     textAlign: 'start',
     transitionDuration: {
       default: paperlight.motionFast,
-      '@media (prefers-reduced-motion: reduce)': '0ms',
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
-    transitionProperty: 'background-color, border-color',
+    transitionProperty: 'background-color, border-color, transform',
     transitionTimingFunction: paperlight.easeOut,
     '@media (hover: hover)': {
       ':hover': {
         borderColor: paperlight.borderStrong,
+      },
+    },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
       },
     },
   },
@@ -444,7 +471,7 @@ export const funding = stylex.create({
     borderColor: paperlight.forest,
   },
   composerTierName: {
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 700,
   },
   composerTierPrice: {
@@ -457,12 +484,12 @@ export const funding = stylex.create({
     gap: paperlight.space2,
   },
   tipLabel: {
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
   },
   tipHelp: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
   },
   tipPresets: {
     display: 'grid',
@@ -477,7 +504,7 @@ export const funding = stylex.create({
     borderWidth: 1,
     color: paperlight.ink,
     fontFamily: paperlight.uiFont,
-    fontSize: '1rem',
+    fontSize: paperlight.textMd,
     minHeight: paperlight.touchTarget,
     paddingBlock: paperlight.space2,
     paddingInline: paperlight.space3,
@@ -494,7 +521,7 @@ export const funding = stylex.create({
   },
   recognitionHeading: {
     fontFamily: paperlight.displayFont,
-    fontSize: '1.125rem',
+    fontSize: paperlight.textLg,
     fontWeight: 500,
     margin: 0,
   },
@@ -511,7 +538,7 @@ export const funding = stylex.create({
     borderWidth: 1,
     color: paperlight.ink,
     fontFamily: paperlight.uiFont,
-    fontSize: '1rem',
+    fontSize: paperlight.textMd,
     lineHeight: 1.5,
     minHeight: '6rem',
     paddingBlock: paperlight.space2,
@@ -545,7 +572,7 @@ export const funding = stylex.create({
   },
   wallHeading: {
     fontFamily: paperlight.displayFont,
-    fontSize: '1.125rem',
+    fontSize: paperlight.textLg,
     fontWeight: 500,
     margin: 0,
   },
@@ -564,7 +591,7 @@ export const funding = stylex.create({
     borderStyle: 'solid',
     borderWidth: 1,
     color: paperlight.ink,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     paddingBlock: paperlight.space2,
     paddingInline: paperlight.space3,
   },
@@ -574,14 +601,14 @@ export const funding = stylex.create({
   wallMessage: {
     color: paperlight.inkMuted,
     display: 'block',
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     marginTop: paperlight.space1,
     maxWidth: '32rem',
     overflowWrap: 'anywhere',
   },
   wallPrivate: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     margin: 0,
   },
 
@@ -616,12 +643,12 @@ export const funding = stylex.create({
     marginTop: paperlight.space3,
   },
   threadSubject: {
-    fontSize: '1rem',
+    fontSize: paperlight.textMd,
     fontWeight: 700,
   },
   threadMeta: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
   },
   threadMessage: {
     borderBottomColor: paperlight.border,
@@ -646,12 +673,12 @@ export const funding = stylex.create({
     rowGap: paperlight.space2,
   },
   threadAuthor: {
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 700,
   },
   threadTime: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
   },
   threadBody: {
     margin: 0,
@@ -665,7 +692,7 @@ export const funding = stylex.create({
     borderWidth: 1,
     color: paperlight.ink,
     display: 'inline-flex',
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 700,
     marginTop: paperlight.space2,
     paddingBlock: paperlight.space1,
@@ -699,7 +726,7 @@ export const funding = stylex.create({
     borderStyle: 'solid',
     borderWidth: 1,
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     margin: 0,
     paddingBlock: paperlight.space3,
     paddingInline: paperlight.space3,

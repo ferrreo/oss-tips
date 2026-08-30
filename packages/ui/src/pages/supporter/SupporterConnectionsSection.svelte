@@ -38,6 +38,7 @@
   }: SupporterConnectionsSectionProps = $props();
 
   const sectionTitleAttrs = stylex.attrs(supporter.sectionTitle);
+  const sectionAttrs = stylex.attrs(supporter.securitySection);
   const mutedAttrs = stylex.attrs(supporter.muted);
   const statusAttrs = stylex.attrs(supporter.statusLine);
   const securityListAttrs = stylex.attrs(supporter.securityList);
@@ -50,7 +51,7 @@
   }
 </script>
 
-<section aria-labelledby="supporter-connections-title">
+<section {...sectionAttrs} aria-labelledby="supporter-connections-title">
   <h2 id="supporter-connections-title" {...sectionTitleAttrs}>{t('supporter.settings.connectionsTitle', {}, $locale)}</h2>
   <p {...mutedAttrs}>{t('supporter.settings.connectionsDescription', {}, $locale)}</p>
   {#if securityState === 'loading'}

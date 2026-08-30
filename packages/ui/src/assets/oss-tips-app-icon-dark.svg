@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
 <title id="title">oss.tips open seed mark</title>
-<desc id="desc">An open circular form with a small sprout emerging from the opening.</desc>
+<desc id="desc">A split seed with a small code chevron in the centre.</desc>
 <rect width="160" height="160" rx="32" fill="#11130F"/>
-<path d="M113 45 A54 54 0 1 1 83 26" fill="none" stroke="#91A66E" stroke-width="15" stroke-linecap="round"/>
-<path d="M88 30 C98 8 124 10 128 31 C113 40 99 39 88 30 Z" fill="#71834F"/>
-<path d="M103 39 C121 31 139 42 135 60 C119 60 108 52 103 39 Z" fill="#C6A36B"/>
-<circle cx="79" cy="80" r="7" fill="#EDE7D8" opacity="0.92"/>
+<path d="M78 13C54 17 34 33 25 56c-9 24-5 50 12 69 6 7 13 13 21 17l17 11c-1-12 0-23 4-36 5-16 13-30 19-44 7-17 9-32 1-44-4-8-11-13-21-16Z" fill="#91A66E"/>
+<path d="M100 26c21 10 35 32 36 55 2 24-9 46-29 61-6 5-13 9-21 12 4-15 3-28-2-40-7-16-7-31-1-48 5-17 12-30 17-40Z" fill="#71834F"/>
+<path d="M86 36c10 9 15 21 14 36-1 17-9 32-20 44-10-10-14-24-11-39 3-17 8-31 17-41Z" fill="#C6A36B"/>
+<path d="m75 68 14 10-10 12" fill="none" stroke="#11130F" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
 </svg>

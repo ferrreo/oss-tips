@@ -9,7 +9,7 @@ const spanishMessages = {
   'public.checkout.tier': 'Nivel',
   'public.checkout.access': 'Acceso',
   'public.checkout.reference': 'Referencia',
-  'public.checkout.createAccount': 'Crear una cuenta para gestionar este apoyo',
+  'public.checkout.createAccount': 'Crear cuenta',
   'public.checkout.returnTo': 'Volver a {project}',
   'public.cadence.monthly': 'membresía mensual',
   'public.cadence.annual': 'membresía anual',

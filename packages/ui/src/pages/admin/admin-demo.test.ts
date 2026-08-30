@@ -3,6 +3,7 @@ import {
   displayPerson,
   displayProject,
   displayTarget,
+  auditEvents,
   requireItem,
   reconciliationRows,
   reviewQueue,
@@ -31,5 +32,11 @@ describe('admin display helpers', () => {
     expect(new Set(reconciliationRows.map((row) => row.currency))).toEqual(
       new Set(['USD', 'EUR', 'JPY']),
     );
+  });
+
+  it('keeps reconciliation audit amounts in row currency', () => {
+    const event = auditEvents.find((item) => item.action === 'reconciliation.flag');
+    expect(event?.reason).toContain('US$');
+    expect(event?.reason).not.toContain('£');
   });
 });

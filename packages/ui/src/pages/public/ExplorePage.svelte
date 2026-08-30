@@ -141,7 +141,7 @@
         {#if viewState === 'error'}
           <StatusBanner variant="danger" title={t('public.explore.errorTitle', {}, $locale)} message={t('public.explore.errorMessage', {}, $locale)} />
         {:else if viewState === 'empty' || visible.length === 0}
-          <EmptyState title={t('public.explore.emptyTitle', {}, $locale)} description={t('public.explore.emptyDescription', {}, $locale)} />
+          <EmptyState headingLevel={2} title={t('public.explore.emptyTitle', {}, $locale)} description={t('public.explore.emptyDescription', {}, $locale)} />
         {:else}
           <p class={stylex.attrs(publicStyles.small, publicStyles.muted).class}>{t('public.explore.projectCount', { count: visible.length }, $locale)}</p>
           <div class={stylex.attrs(publicStyles.homeProjects).class}>

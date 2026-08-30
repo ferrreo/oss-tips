@@ -3,9 +3,9 @@
 import * as stylex from '@stylexjs/stylex';
 import { paperlight } from '@oss-tips/design-tokens/paperlight.stylex';
 
-const successSproutDraw = stylex.keyframes({
-  from: { strokeDashoffset: 80 },
-  to: { strokeDashoffset: 0 },
+const successFlourishReveal = stylex.keyframes({
+  from: { opacity: 0, transform: 'translateY(4px) scale(0.96)' },
+  to: { opacity: 1, transform: 'translateY(0) scale(1)' },
 });
 
 export const publicStyles = stylex.create({
@@ -74,6 +74,8 @@ export const publicStyles = stylex.create({
     letterSpacing: '-0.045em',
     lineHeight: 0.98,
     marginBlock: paperlight.space4,
+    minWidth: 0,
+    overflowWrap: 'anywhere',
   },
   heroTitleLong: {
     fontSize: 'clamp(2.5rem, 7vw, 5rem)',
@@ -84,7 +86,8 @@ export const publicStyles = stylex.create({
     letterSpacing: '-0.035em',
     lineHeight: 1,
     marginBlock: paperlight.space3,
-    overflowWrap: 'break-word',
+    minWidth: 0,
+    overflowWrap: 'anywhere',
   },
   sectionTitle: {
     fontFamily: paperlight.displayFont,
@@ -92,22 +95,26 @@ export const publicStyles = stylex.create({
     letterSpacing: '-0.02em',
     lineHeight: 1.08,
     marginBottom: paperlight.space4,
+    minWidth: 0,
+    overflowWrap: 'anywhere',
   },
   lead: {
     color: paperlight.inkMuted,
-    fontSize: '1.125rem',
+    fontSize: paperlight.textLg,
     lineHeight: 1.55,
     maxWidth: '42rem',
   },
   small: {
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
   },
   muted: {
     color: paperlight.inkMuted,
   },
   mono: {
     fontFamily: paperlight.monoFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
+    minWidth: 0,
+    overflowWrap: 'anywhere',
   },
   row: {
     alignItems: 'center',
@@ -118,11 +125,13 @@ export const publicStyles = stylex.create({
   stack: {
     display: 'grid',
     gap: paperlight.space6,
+    minWidth: 0,
   },
   grid: {
     display: 'grid',
     gap: paperlight.space4,
-    gridTemplateColumns: 'repeat(auto-fit, minmax(16rem, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 16rem), 1fr))',
+    minWidth: 0,
   },
   twoColumn: {
     display: 'grid',
@@ -138,6 +147,7 @@ export const publicStyles = stylex.create({
     borderRadius: paperlight.radiusLg,
     borderStyle: 'solid',
     borderWidth: 1,
+    minWidth: 0,
     padding: paperlight.space5,
   },
   panel: {
@@ -146,6 +156,7 @@ export const publicStyles = stylex.create({
     borderRadius: paperlight.radiusLg,
     borderStyle: 'solid',
     borderWidth: 1,
+    minWidth: 0,
     padding: paperlight.space6,
   },
   prose: {
@@ -159,7 +170,7 @@ export const publicStyles = stylex.create({
   },
   metaLabel: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     marginBottom: paperlight.space1,
   },
   action: {
@@ -170,13 +181,16 @@ export const publicStyles = stylex.create({
     boxSizing: 'border-box',
     display: 'inline-flex',
     fontFamily: paperlight.uiFont,
-    fontSize: '1rem',
+    fontSize: paperlight.textMd,
     fontWeight: 600,
     justifyContent: 'center',
     minHeight: paperlight.touchTarget,
     paddingInline: paperlight.space5,
     textDecoration: 'none',
-    transitionDuration: paperlight.motionFast,
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
     transitionProperty: 'background-color, border-color, color, transform',
     transitionTimingFunction: paperlight.easeOut,
     ':focus-visible': {
@@ -216,32 +230,160 @@ export const publicStyles = stylex.create({
       },
     },
   },
-  successSprout: {
-    color: paperlight.forest,
+  successFlourish: {
+    animationName: successFlourishReveal,
+    animationDuration: {
+      default: paperlight.motionSlow,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    animationFillMode: 'both',
+    animationTimingFunction: paperlight.easeOut,
     display: 'block',
-    height: '3rem',
-    marginBlockEnd: paperlight.space4,
-    overflow: 'visible',
-    width: '7rem',
+    height: '4.5rem',
+    margin: 0,
+    transformOrigin: 'center',
+    width: '6rem',
   },
-  successSproutPath: {
+  successFlourishStroke: {
     fill: 'none',
-    stroke: 'currentColor',
-    strokeDasharray: 80,
-    strokeDashoffset: 80,
+    stroke: paperlight.forest,
     strokeLinecap: 'round',
     strokeLinejoin: 'round',
-    strokeWidth: 1.75,
-    animationName: successSproutDraw,
-    animationDuration: {
-      default: '500ms',
-      '@media (prefers-reduced-motion: reduce)': '0.01ms',
-    },
-    animationFillMode: 'forwards',
-    animationTimingFunction: paperlight.easeOut,
+    strokeWidth: 2.5,
   },
-  successSproutSeed: {
+  successFlourishLeaf: {
+    fill: paperlight.moss,
+  },
+  successFlourishLeafAccent: {
     fill: paperlight.ochre,
+  },
+  successFlourishSeed: {
+    fill: paperlight.ink,
+  },
+  successFlourishSeedMark: {
+    fill: 'none',
+    stroke: paperlight.canvas,
+    strokeLinecap: 'round',
+    strokeWidth: 3,
+  },
+  checkoutPage: {
+    maxWidth: '64rem',
+    minWidth: 0,
+  },
+  checkoutMain: {
+    paddingBlock: paperlight.space8,
+  },
+  checkoutHeader: {
+    display: 'grid',
+    gap: paperlight.space3,
+    maxWidth: '52rem',
+    minWidth: 0,
+  },
+  checkoutKicker: {
+    margin: 0,
+  },
+  checkoutTitle: {
+    margin: 0,
+  },
+  checkoutStatus: {
+    marginBlockEnd: paperlight.space6,
+    marginBlockStart: paperlight.space6,
+    maxWidth: '52rem',
+    minWidth: 0,
+  },
+  checkoutSuccess: {
+    display: 'grid',
+    gap: paperlight.space4,
+    '@media (min-width: 48rem)': {
+      gap: paperlight.space8,
+      gridTemplateColumns: 'minmax(0, 0.75fr) minmax(0, 1.25fr)',
+    },
+    minWidth: 0,
+  },
+  checkoutIntro: {
+    alignContent: 'start',
+    display: 'grid',
+    gap: paperlight.space4,
+    minWidth: 0,
+  },
+  checkoutLead: {
+    margin: 0,
+  },
+  checkoutMeta: {
+    borderBlockColor: paperlight.border,
+    borderBlockStyle: 'solid',
+    borderBlockWidth: 1,
+    display: 'grid',
+    gap: paperlight.space3,
+    margin: 0,
+    paddingBlock: paperlight.space4,
+  },
+  checkoutMetaItem: {
+    display: 'grid',
+    gap: paperlight.space1,
+    minWidth: 0,
+  },
+  checkoutMetaValue: {
+    lineHeight: 1.45,
+    margin: 0,
+    minWidth: 0,
+    overflowWrap: 'anywhere',
+  },
+  checkoutDetails: {
+    display: 'grid',
+    gap: paperlight.space4,
+    minWidth: 0,
+    '@media (min-width: 48rem)': {
+      gridTemplateColumns: 'minmax(0, 0.9fr) minmax(0, 1.1fr)',
+      alignItems: 'start',
+    },
+  },
+  checkoutPending: {
+    margin: 0,
+  },
+  checkoutActions: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: paperlight.space3,
+    marginTop: paperlight.space6,
+    minWidth: 0,
+    '@media (max-width: 43.99rem)': {
+      display: 'grid',
+      gridTemplateColumns: 'minmax(0, 1fr)',
+    },
+  },
+  checkoutAction: {
+    maxWidth: '100%',
+    minWidth: 0,
+    whiteSpace: 'nowrap',
+    '@media (max-width: 43.99rem)': {
+      width: '100%',
+    },
+  },
+  docsTitle: {
+    overflowWrap: 'anywhere',
+  },
+  docsProse: {
+    minWidth: 0,
+  },
+  docsApiItem: {
+    minWidth: 0,
+    overflowWrap: 'anywhere',
+  },
+  supportContent: {
+    minWidth: 0,
+  },
+  supportIntro: {
+    display: 'grid',
+    gap: paperlight.space3,
+    minWidth: 0,
+  },
+  supportHeading: {
+    margin: 0,
+  },
+  supportComposer: {
+    minWidth: 0,
+    width: '100%',
   },
   link: {
     color: paperlight.forest,
@@ -257,17 +399,36 @@ export const publicStyles = stylex.create({
     borderStyle: 'solid',
     borderWidth: 1,
     color: paperlight.ink,
+    cursor: 'pointer',
     display: 'inline-flex',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     justifyContent: 'center',
     minHeight: paperlight.touchTarget,
     paddingInline: paperlight.space4,
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'background-color, border-color, color, transform',
+    transitionTimingFunction: paperlight.easeOut,
     ':focus-visible': {
       outlineColor: paperlight.focus,
       outlineOffset: 3,
       outlineStyle: 'solid',
       outlineWidth: 2,
+    },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
+      },
+    },
+    ':disabled': {
+      cursor: 'not-allowed',
+      opacity: 0.58,
     },
   },
   chipActive: {
@@ -304,7 +465,8 @@ export const publicStyles = stylex.create({
   homeProjects: {
     display: 'grid',
     gap: paperlight.space4,
-    gridTemplateColumns: 'repeat(auto-fit, minmax(17rem, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 17rem), 1fr))',
+    minWidth: 0,
   },
   cadenceGrid: {
     display: 'grid',
@@ -361,7 +523,7 @@ export const publicStyles = stylex.create({
   },
   legalNote: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     marginTop: paperlight.space8,
   },
   projectTiers: {

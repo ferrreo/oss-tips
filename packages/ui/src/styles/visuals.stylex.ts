@@ -156,15 +156,32 @@ export const visuals = stylex.create({
     minWidth: 0,
   },
   projectLink: {
+    alignItems: 'center',
     color: paperlight.forest,
+    display: 'inline-flex',
     fontFamily: paperlight.monoFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     maxWidth: '100%',
+    minHeight: paperlight.touchTarget,
     overflowWrap: 'anywhere',
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'color, transform',
+    transitionTimingFunction: paperlight.easeOut,
     wordBreak: 'break-word',
     '@media (hover: hover)': {
       ':hover': {
         color: paperlight.forestHover,
+      },
+    },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
       },
     },
   },
@@ -207,7 +224,7 @@ export const visuals = stylex.create({
   },
   chartRange: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     margin: `${paperlight.space1} 0 0`,
   },
   chartLegend: {
@@ -223,7 +240,7 @@ export const visuals = stylex.create({
     alignItems: 'center',
     color: paperlight.ink,
     display: 'inline-flex',
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     gap: paperlight.space2,
   },
   chartLegendSwatch: {
@@ -278,8 +295,22 @@ export const visuals = stylex.create({
     },
     padding: 0,
     position: 'absolute',
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'transform',
+    transitionTimingFunction: paperlight.easeOut,
     width: '100%',
     zIndex: 2,
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
+      },
+    },
   },
   chartSvg: {
     display: 'block',
@@ -295,7 +326,10 @@ export const visuals = stylex.create({
   chartTick: {
     fill: paperlight.inkMuted,
     fontFamily: paperlight.uiFont,
-    fontSize: 10,
+    fontSize: paperlight.textSm,
+    '@media (max-width: 43.99rem)': {
+      display: 'none',
+    },
   },
   chartCursor: {
     stroke: paperlight.borderStrong,
@@ -310,7 +344,7 @@ export const visuals = stylex.create({
     boxShadow: paperlight.shadow,
     display: 'flex',
     flexDirection: 'column',
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontVariantNumeric: 'tabular-nums',
     gap: paperlight.space1,
     left: 0,
@@ -335,7 +369,7 @@ export const visuals = stylex.create({
   },
   chartLive: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontVariantNumeric: 'tabular-nums',
     margin: `${paperlight.space2} 0 0`,
   },
@@ -396,11 +430,17 @@ export const visuals = stylex.create({
     cursor: 'pointer',
     display: 'flex',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
     justifyContent: 'space-between',
     minHeight: paperlight.touchTarget,
     paddingInline: paperlight.space3,
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'background-color, border-color, color, transform',
+    transitionTimingFunction: paperlight.easeOut,
     outlineColor: {
       default: 'transparent',
       ':focus-visible': paperlight.focus,
@@ -416,6 +456,14 @@ export const visuals = stylex.create({
     outlineWidth: {
       default: 0,
       ':focus-visible': 2,
+    },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
+      },
     },
   },
   chartMobileRow: {
@@ -435,7 +483,7 @@ export const visuals = stylex.create({
   },
   chartMobileDate: {
     color: paperlight.ink,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
   },
   chartMobileValues: {
@@ -449,12 +497,12 @@ export const visuals = stylex.create({
   },
   chartMobileLabel: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     margin: 0,
   },
   chartMobileNumber: {
     color: paperlight.ink,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontVariantNumeric: 'tabular-nums',
     fontWeight: 600,
     margin: 0,

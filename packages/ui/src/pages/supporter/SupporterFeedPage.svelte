@@ -78,17 +78,21 @@
   {error}
 >
   {#if status === 'loading'}
-    <EmptyState
-      headingLevel={2}
-      title={t('supporter.feed.loadingTitle', {}, $locale)}
-      description={t('supporter.feed.loadingDescription', {}, $locale)}
-    />
+    <div role="status" aria-live="polite">
+      <EmptyState
+        headingLevel={2}
+        title={t('supporter.feed.loadingTitle', {}, $locale)}
+        description={t('supporter.feed.loadingDescription', {}, $locale)}
+      />
+    </div>
   {:else if status === 'error'}
-    <EmptyState
-      headingLevel={2}
-      title={t('supporter.feed.errorTitle', {}, $locale)}
-      description={t('supporter.feed.errorDescription', {}, $locale)}
-    />
+    <div role="alert">
+      <EmptyState
+        headingLevel={2}
+        title={t('supporter.feed.errorTitle', {}, $locale)}
+        description={t('supporter.feed.errorDescription', {}, $locale)}
+      />
+    </div>
   {:else if posts.length === 0}
     <EmptyState
       headingLevel={2}

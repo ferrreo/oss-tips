@@ -31,6 +31,7 @@
   }: SupporterSessionsSectionProps = $props();
 
   const sectionTitleAttrs = stylex.attrs(supporter.sectionTitle);
+  const sectionAttrs = stylex.attrs(supporter.securitySection);
   const mutedAttrs = stylex.attrs(supporter.muted);
   const statusAttrs = stylex.attrs(supporter.statusLine);
   const actionsAttrs = stylex.attrs(supporter.actions);
@@ -45,7 +46,7 @@
   }
 </script>
 
-<section aria-labelledby="supporter-sessions-title">
+<section {...sectionAttrs} aria-labelledby="supporter-sessions-title">
   <h2 id="supporter-sessions-title" {...sectionTitleAttrs}>{t('supporter.settings.sessionsTitle', {}, $locale)}</h2>
   <p {...mutedAttrs}>{t('supporter.settings.sessionsDescription', {}, $locale)}</p>
   {#if securityState === 'loading'}

@@ -15,6 +15,10 @@
 
   let { state, title, message, actionLabel, onclick }: Props = $props();
 
+  const panelStyle = $derived(
+    state === 'error' ? [admin.state, admin.stateError] : state === 'forbidden' ? [admin.state, admin.stateForbidden] : admin.state,
+  );
+
   const fallback = $derived({
     empty: {
       title: t('shells.adminEmptyTitle', {}, $locale),
@@ -31,7 +35,7 @@
   }[state]);
 </script>
 
-<section {...stylex.attrs(admin.state)} aria-live="polite" role={state === 'error' ? 'alert' : 'status'}>
+<section {...stylex.attrs(panelStyle)} aria-live="polite" role={state === 'error' ? 'alert' : 'status'}>
   <h2 {...stylex.attrs(admin.stateTitle)}>{title ?? fallback.title}</h2>
   <p {...stylex.attrs(admin.stateMessage)}>{message ?? fallback.message}</p>
   {#if actionLabel}

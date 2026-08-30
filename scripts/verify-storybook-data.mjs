@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 
 const root = join(import.meta.dirname, '..');
@@ -42,7 +42,9 @@ const aliasPage =
   /import\s+([A-Z]\w*)\s+from\s+['"](?:\.\.\/project\/|\.\/Admin)[^'"]+\.svelte['"][\s\S]*?<\1\s+\{\.\.\.props/;
 const aliasHits = [];
 for (const rel of ['packages/ui/src/pages/dashboard', 'packages/ui/src/pages/admin']) {
-  for (const file of walk(join(root, rel))) {
+  const dir = join(root, rel);
+  if (!existsSync(dir)) continue;
+  for (const file of walk(dir)) {
     if (file.endsWith('.svelte') && aliasPage.test(readFileSync(file, 'utf8'))) {
       aliasHits.push(relative(root, file));
     }

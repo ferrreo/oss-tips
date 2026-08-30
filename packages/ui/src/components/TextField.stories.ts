@@ -31,6 +31,15 @@ export const Error: Story = {
 export const Disabled: Story = {
   args: { id: 'locked-email', label: 'Email', value: 'alex@example.com', disabled: true },
 };
+export const Compact: Story = {
+  args: {
+    id: 'compact-receipt-email',
+    label: 'Receipt email',
+    value: 'alex@example.com',
+    help: 'Used for payment receipts and support updates.',
+  },
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
+};
 export const Dark: Story = {
   args: { id: 'dark-email', label: 'Email', value: 'you@example.com' },
   globals: { theme: 'dark' },

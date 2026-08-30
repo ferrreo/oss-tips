@@ -42,7 +42,11 @@
   }: Props = $props();
 
   const displayLead = $derived(lead ?? t('public.support.lead', {}, $locale));
-  const contentClass = stylex.attrs(publicStyles.container, publicStyles.projectContent).class;
+  const contentClass = stylex.attrs(
+    publicStyles.container,
+    publicStyles.projectContent,
+    publicStyles.supportContent,
+  ).class;
 </script>
 
 <PublicPageFrame>
@@ -50,28 +54,32 @@
     <HeroLandscape compact />
     <div class={contentClass}>
       <ProjectHero {project} />
-      <p class={stylex.attrs(publicStyles.lead).class}>{displayLead}</p>
-      <h2 class={stylex.attrs(publicStyles.sectionTitle).class}>{t('public.support.choose', {}, $locale)}</h2>
-      <SupportComposer
-        {tiers}
-        currency={project.currency}
-        {...(project.minSupportMinor === undefined
-          ? {}
-          : { minAmountMinor: project.minSupportMinor })}
-        {...(project.maxSupportMinor === undefined
-          ? {}
-          : { maxAmountMinor: project.maxSupportMinor })}
-        disabled={checkoutDisabled}
-        loading={checkoutLoading}
-        error={checkoutError}
-        {initialDisplayName}
-        {initialMessage}
-        {initialReceiptEmail}
-        {initialShowName}
-        {initialShowAmount}
-        {initialShowMessage}
-        {oncontinue}
-      />
+      <div class={stylex.attrs(publicStyles.supportIntro).class}>
+        <p class={stylex.attrs(publicStyles.lead).class}>{displayLead}</p>
+        <h2 class={stylex.attrs(publicStyles.sectionTitle, publicStyles.supportHeading).class}>{t('public.support.choose', {}, $locale)}</h2>
+      </div>
+      <div class={stylex.attrs(publicStyles.supportComposer).class}>
+        <SupportComposer
+          {tiers}
+          currency={project.currency}
+          {...(project.minSupportMinor === undefined
+            ? {}
+            : { minAmountMinor: project.minSupportMinor })}
+          {...(project.maxSupportMinor === undefined
+            ? {}
+            : { maxAmountMinor: project.maxSupportMinor })}
+          disabled={checkoutDisabled}
+          loading={checkoutLoading}
+          error={checkoutError}
+          {initialDisplayName}
+          {initialMessage}
+          {initialReceiptEmail}
+          {initialShowName}
+          {initialShowAmount}
+          {initialShowMessage}
+          {oncontinue}
+        />
+      </div>
     </div>
   {/snippet}
 </PublicPageFrame>

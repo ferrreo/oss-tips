@@ -153,6 +153,35 @@ for (const name of Object.keys(tokenJson.colour.light)) {
   }
 }
 
+const sharedTokenMappings = [
+  ...Object.entries(tokenJson.typography.scale).map(([name, value]) => [
+    value,
+    `--pl-text-${name}`,
+    `text${name[0].toUpperCase()}${name.slice(1)}`,
+  ]),
+  ...Object.entries(tokenJson.motion).map(([name, value]) => [
+    value,
+    name.startsWith('ease') ? `--pl-${cssName(name)}` : `--pl-motion-${cssName(name)}`,
+    name.startsWith('ease') ? name : `motion${name[0].toUpperCase()}${name.slice(1)}`,
+  ]),
+];
+for (const [expected, variable, stylexName] of sharedTokenMappings) {
+  const cssValue = tokenCss.match(new RegExp(`${variable}\\s*:\\s*([^;]+)`))?.[1];
+  if (!cssValue || normaliseToken(cssValue) !== normaliseToken(expected))
+    failures.push(`packages/design-tokens/css/paperlight.css: ${variable} drifts from tokens.json`);
+
+  const stylexValues = [
+    ...tokenStylex.matchAll(new RegExp(`\\b${stylexName}:\\s*(['"])(.*?)\\1`, 'g')),
+  ].map((match) => match[2]);
+  if (
+    stylexValues.length !== 2 ||
+    stylexValues.some((value) => normaliseToken(value) !== normaliseToken(expected))
+  )
+    failures.push(
+      `packages/design-tokens/src/paperlight.stylex.ts: ${stylexName} drifts from tokens.json`,
+    );
+}
+
 for (const page of walk(appPages, '+page.svelte')) {
   const source = readFileSync(page, 'utf8');
   if (!/from\s+['"]@oss-tips\/ui\/pages\//.test(source)) {

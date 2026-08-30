@@ -108,9 +108,25 @@
     sepa_debit_payments: 'project.stripe.capabilitySepaDebit' as MessageKey,
     link_payments: 'project.stripe.capabilityLinkPayments' as MessageKey,
   };
+  const stripeStatusKeys: Record<string, MessageKey> = {
+    active: 'project.stripe.active' as MessageKey,
+    pending: 'project.stripe.pending' as MessageKey,
+    restricted: 'project.stripe.restricted' as MessageKey,
+    enabled: 'project.stripe.enabled' as MessageKey,
+  };
   const stripeCapabilityLabel = (value: string) => {
     const key = stripeCapabilityKeys[value];
     return key ? tx(key) : value;
+  };
+  const stripeStatusLabel = (value: string) => {
+    const key = stripeStatusKeys[value.toLowerCase()];
+    return key ? tx(key) : value;
+  };
+  const stripeCapabilityDetailLabel = (value: string) => {
+    const normalized = value.toLowerCase();
+    if (normalized === 'enabled') return tx('project.stripe.enabled');
+    if (normalized === 'restricted') return tx('project.stripe.restricted');
+    return value;
   };
 
   const handleContinue = () => {
@@ -231,7 +247,7 @@
   {project}
   {navGroups}
   title={tx('project.stripe.title')}
-  lede={tx('project.stripe.lede', { project: project.name })}
+  lede={tx(chargesEnabled === true && payoutsEnabled === true ? 'project.stripe.readyLede' : 'project.stripe.lede', { project: project.name })}
 >
   {#if pageState === 'error'}
     <div class={stylex.attrs(projectStyles.error).class} role="alert">
@@ -244,21 +260,30 @@
       <p class={stylex.attrs(projectStyles.body, projectStyles.small).class}>{tx('project.stripe.permissionBody')}</p>
     </div>
   {:else}
-    <StatusBanner
-      variant="warning"
-      title={tx('project.stripe.identityWarning')}
-      message={tx('project.stripe.identityWarningBody')}
-    />
+    {#if chargesEnabled !== true || payoutsEnabled !== true}
+      <StatusBanner
+        variant="warning"
+        title={tx('project.stripe.identityWarning')}
+        message={tx('project.stripe.identityWarningBody')}
+      />
+    {/if}
     <div class={stylex.attrs(projectStyles.grid3, projectStyles.responsiveGrid3, projectStyles.section).class}>
       <DataCard
         label={tx('project.stripe.charges')}
         value={chargesEnabled === true ? tx('project.stripe.enabled') : tx('project.stripe.restricted')}
       />
-      <DataCard
-        label={tx('project.stripe.payouts')}
-        value={payoutsEnabled === true ? tx('project.stripe.enabled') : tx('project.stripe.restricted')}
-        compare={tx('project.stripe.completeVerification')}
-      />
+      {#if payoutsEnabled === true}
+        <DataCard
+          label={tx('project.stripe.payouts')}
+          value={tx('project.stripe.enabled')}
+        />
+      {:else}
+        <DataCard
+          label={tx('project.stripe.payouts')}
+          value={tx('project.stripe.restricted')}
+          compare={tx('project.stripe.completeVerification')}
+        />
+      {/if}
       <DataCard label={tx('project.stripe.connectAccount')} value={stripeAccountId ?? '—'} />
     </div>
     {#if onboardingState === 'success'}
@@ -333,7 +358,13 @@
     {/if}
     <Button
       variant={embeddedConnect ? 'secondary' : 'primary'}
-      label={embeddedConnect ? tx('project.stripe.openHosted') : onboardingState === 'success' ? tx('project.stripe.startAnother') : tx('project.stripe.continue')}
+      label={embeddedConnect
+          ? tx('project.stripe.openHosted')
+          : chargesEnabled === true && payoutsEnabled === true
+          ? tx('project.stripe.reviewSetup')
+          : onboardingState === 'success'
+            ? tx('project.stripe.startAnother')
+            : tx('project.stripe.continue')}
       loading={onboardingState === 'loading'}
       onclick={handleContinue}
     />
@@ -349,7 +380,12 @@
           { key: 'status', label: tx('project.stripe.status') },
           { key: 'detail', label: tx('project.stripe.detail') },
         ]}
-        rows={capabilities.map((row) => ({ ...row, capability: stripeCapabilityLabel(row.capability) }))}
+        rows={capabilities.map((row) => ({
+          ...row,
+          capability: stripeCapabilityLabel(row.capability),
+          status: stripeStatusLabel(row.status),
+          detail: stripeCapabilityDetailLabel(row.detail),
+        }))}
       />
     {:else}
       <EmptyState title={tx('project.stripe.emptyTitle')} description={tx('project.stripe.emptyBody')} />

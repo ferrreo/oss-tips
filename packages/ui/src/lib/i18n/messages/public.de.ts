@@ -24,7 +24,7 @@ const germanMessages = {
   'public.checkout.waiting': 'Wir warten auf die Bestätigung dieser Zahlung durch Stripe.',
   'public.checkout.keepReference':
     'Bewahre diese Referenz auf, falls du den Support kontaktieren musst: {reference}.',
-  'public.checkout.createAccount': 'Konto zur Verwaltung dieser Unterstützung erstellen',
+  'public.checkout.createAccount': 'Konto erstellen',
   'public.checkout.returnTo': 'Zurück zu {project}',
   'public.cadence.monthly': 'monatliche Mitgliedschaft',
   'public.cadence.annual': 'jährliche Mitgliedschaft',

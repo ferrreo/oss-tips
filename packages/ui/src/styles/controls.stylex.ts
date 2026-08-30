@@ -21,7 +21,7 @@ export const controls = stylex.create({
     paddingInline: paperlight.space5,
     transitionDuration: {
       default: paperlight.motionFast,
-      '@media (prefers-reduced-motion: reduce)': '0ms',
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
     transitionTimingFunction: paperlight.easeOut,
     transitionProperty: 'background-color, border-color, color, transform',
@@ -126,18 +126,18 @@ export const controls = stylex.create({
   fieldLabel: {
     color: paperlight.ink,
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
   },
   fieldHelp: {
     color: paperlight.inkMuted,
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
   },
   fieldError: {
     color: paperlight.danger,
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     minHeight: '1lh',
   },
   input: {
@@ -148,7 +148,7 @@ export const controls = stylex.create({
     borderWidth: 1,
     color: paperlight.ink,
     fontFamily: paperlight.uiFont,
-    fontSize: '1rem',
+    fontSize: paperlight.textMd,
     minHeight: paperlight.touchTarget,
     paddingBlock: paperlight.space2,
     paddingInline: paperlight.space3,
@@ -182,7 +182,7 @@ export const controls = stylex.create({
     borderWidth: 1,
     display: 'flex',
     flexWrap: 'wrap',
-    overflow: 'hidden',
+    overflow: 'visible',
     maxWidth: '100%',
     minWidth: 0,
   },
@@ -194,7 +194,7 @@ export const controls = stylex.create({
     cursor: 'pointer',
     flex: '1 1 auto',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
     minHeight: paperlight.touchTarget,
     minWidth: 0,
@@ -202,7 +202,7 @@ export const controls = stylex.create({
     paddingInline: paperlight.space4,
     transitionDuration: {
       default: paperlight.motionFast,
-      '@media (prefers-reduced-motion: reduce)': '0ms',
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
     transitionProperty: 'background-color, color',
     transitionTimingFunction: paperlight.easeOut,
@@ -235,15 +235,20 @@ export const controls = stylex.create({
     backgroundColor: paperlight.forest,
     borderRadius: paperlight.radiusRound,
     height: '100%',
+    transformOrigin: {
+      default: 'left center',
+      ':dir(rtl)': 'right center',
+    },
     transitionDuration: {
       default: paperlight.motionSlow,
-      '@media (prefers-reduced-motion: reduce)': '0ms',
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
-    transitionProperty: 'width',
+    transitionProperty: 'transform',
     transitionTimingFunction: paperlight.easeOut,
+    width: '100%',
   },
-  progressBarWidth: (width: string) => ({
-    width,
+  progressBarScale: (scale: number) => ({
+    transform: `scaleX(${scale})`,
   }),
   themeToggle: {
     alignItems: 'center',
@@ -256,15 +261,29 @@ export const controls = stylex.create({
     cursor: 'pointer',
     display: 'inline-flex',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     gap: paperlight.space1,
     minHeight: paperlight.touchTarget,
     paddingBlock: paperlight.space1,
     paddingInline: paperlight.space3,
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'border-color, color, transform',
+    transitionTimingFunction: paperlight.easeOut,
     '@media (hover: hover)': {
       ':hover': {
         borderColor: paperlight.borderStrong,
         color: paperlight.ink,
+      },
+    },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
       },
     },
   },
@@ -279,14 +298,28 @@ export const controls = stylex.create({
     cursor: 'pointer',
     display: 'inline-flex',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     minHeight: paperlight.touchTarget,
     minWidth: '4.5rem',
     paddingBlock: paperlight.space1,
     paddingInline: paperlight.space2,
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'border-color, color, transform',
+    transitionTimingFunction: paperlight.easeOut,
     '@media (hover: hover)': {
       ':hover': {
         borderColor: paperlight.borderStrong,
+      },
+    },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
       },
     },
   },

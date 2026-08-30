@@ -13,12 +13,12 @@ export const postEditorStyles = stylex.create({
   label: {
     color: paperlight.ink,
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 650,
   },
   help: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     lineHeight: 1.4,
     margin: 0,
   },
@@ -49,19 +49,27 @@ export const postEditorStyles = stylex.create({
     color: paperlight.ink,
     cursor: 'pointer',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 650,
     minHeight: paperlight.touchTarget,
     paddingInline: paperlight.space3,
     transitionDuration: {
       default: paperlight.motionFast,
-      '@media (prefers-reduced-motion: reduce)': '0ms',
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
-    transitionProperty: 'background-color, border-color, color',
+    transitionProperty: 'background-color, border-color, color, transform',
     transitionTimingFunction: paperlight.easeOut,
     '@media (hover: hover)': {
       ':hover': {
         borderColor: paperlight.forest,
+      },
+    },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
       },
     },
     ':disabled': {
@@ -79,7 +87,7 @@ export const postEditorStyles = stylex.create({
     color: paperlight.inkMuted,
     display: 'inline-flex',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     gap: paperlight.space1,
     marginInlineStart: 'auto',
   },
@@ -91,9 +99,24 @@ export const postEditorStyles = stylex.create({
     borderWidth: 1,
     color: paperlight.ink,
     fontFamily: paperlight.monoFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     minHeight: paperlight.touchTarget,
     paddingInline: paperlight.space2,
+    cursor: 'pointer',
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'border-color, color, transform',
+    transitionTimingFunction: paperlight.easeOut,
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
+      },
+    },
   },
   source: {
     backgroundColor: paperlight.surface,
@@ -128,7 +151,7 @@ export const postEditorStyles = stylex.create({
     display: 'flex',
     flexWrap: 'wrap',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     gap: paperlight.space2,
     justifyContent: 'space-between',
     marginBlockEnd: paperlight.space4,
@@ -140,7 +163,7 @@ export const postEditorStyles = stylex.create({
   },
   previewContent: {
     color: paperlight.ink,
-    fontSize: '1rem',
+    fontSize: paperlight.textMd,
     lineHeight: 1.65,
   },
   previewEmpty: {
@@ -185,7 +208,7 @@ export const postEditorStyles = stylex.create({
     color: paperlight.inkMuted,
     display: 'flex',
     flexWrap: 'wrap',
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     gap: paperlight.space2,
     margin: 0,
   },
@@ -214,7 +237,19 @@ export const postEditorStyles = stylex.create({
     borderWidth: 1,
     color: paperlight.ink,
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
+    maxWidth: '100%',
+    overflowWrap: 'anywhere',
+    paddingBlock: paperlight.space1,
+    paddingInline: paperlight.space3,
+  },
+  attachmentLink: {
+    alignItems: 'center',
+    color: paperlight.forest,
+    display: 'inline-flex',
+    minHeight: paperlight.touchTarget,
+    marginBlock: `-${paperlight.space1}`,
+    marginInline: `-${paperlight.space3}`,
     maxWidth: '100%',
     overflowWrap: 'anywhere',
     paddingBlock: paperlight.space1,

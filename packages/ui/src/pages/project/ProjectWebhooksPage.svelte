@@ -102,7 +102,7 @@
         {#if actionError}
           <p class={stylex.attrs(projectStyles.error, projectStyles.body, projectStyles.small).class} role="alert">{actionError}</p>
         {:else if createdSecret}
-          <TextField label={tx('project.webhooks.events')} value={createdSecret} disabled help={tx('project.webhooks.eventsHelp')} />
+          <TextField label={tx('project.webhooks.secret')} value={createdSecret} disabled help={tx('project.webhooks.secretHelp')} />
         {/if}
       </div>
     </section>

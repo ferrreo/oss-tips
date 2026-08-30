@@ -112,7 +112,7 @@
         }))}
       />
     {:else}
-      <EmptyState title={tx('project.payments.emptyTitle')} description={tx('project.payments.emptyBody')} />
+      <EmptyState headingLevel={2} title={tx('project.payments.emptyTitle')} description={tx('project.payments.emptyBody')} />
     {/if}
   {/if}
 </ProjectDashShell>

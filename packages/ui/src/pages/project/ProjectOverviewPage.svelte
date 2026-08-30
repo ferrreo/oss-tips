@@ -37,6 +37,8 @@
     supporters?: RankedSupporter[];
     tools?: ToolCard[];
     chartSeries?: ChartSeries[];
+    checkoutDisabled?: boolean;
+    pageState?: 'ready' | 'error' | 'permission';
   }
 
   let {
@@ -48,6 +50,8 @@
     supporters = rankedSupporters,
     tools = toolCards,
     chartSeries = supportOverTimeSeries,
+    checkoutDisabled = false,
+    pageState = 'ready',
   }: Props = $props();
 
   const tx = (key: string, values: Record<string, string | number> = {}) =>
@@ -82,22 +86,42 @@
   title={tx('project.overview.title')}
   lede={tx('project.overview.lede', { project: project.name })}
 >
-  <StatusBanner
-    variant="warning"
-    title={tx('project.overview.stripeWarning')}
-    message={tx('project.overview.stripeWarningBody', { project: project.name })}
-  />
-
-  <div class={stylex.attrs(projectStyles.grid3, projectStyles.responsiveGrid3, projectStyles.section).class}>
-    {#each metricRows as metric (metric.label)}
-      <DataCard
-        label={metric.label}
-        value={metric.value}
-        compare={metric.compare}
-        compareDirection={metric.compareDirection}
+  {#if pageState === 'error'}
+    <div class={stylex.attrs(projectStyles.error).class} role="alert">
+      <strong>{tx('project.overview.loadError')}</strong>
+      <p class={stylex.attrs(projectStyles.body, projectStyles.small).class}>{tx('project.overview.loadErrorBody')}</p>
+    </div>
+  {:else if pageState === 'permission'}
+    <div class={stylex.attrs(projectStyles.permission).class} role="status">
+      <strong>{tx('project.overview.permission')}</strong>
+      <p class={stylex.attrs(projectStyles.body, projectStyles.small).class}>{tx('project.overview.permissionBody')}</p>
+    </div>
+  {:else}
+    {#if checkoutDisabled}
+      <StatusBanner
+        variant="warning"
+        title={tx('project.overview.stripeWarning')}
+        message={tx('project.overview.stripeWarningBody', { project: project.name })}
       />
-    {/each}
-  </div>
+    {/if}
+
+    {#if metricRows.length > 0}
+      <div class={stylex.attrs(projectStyles.grid3, projectStyles.responsiveGrid3, projectStyles.section).class}>
+        {#each metricRows as metric (metric.label)}
+          <DataCard
+            label={metric.label}
+            value={metric.value}
+            compare={metric.compare}
+            compareDirection={metric.compareDirection}
+          />
+        {/each}
+      </div>
+    {:else}
+      <div class={stylex.attrs(projectStyles.empty, projectStyles.section).class}>
+        <strong>{tx('project.overview.noMetricsTitle')}</strong>
+        <span class={stylex.attrs(projectStyles.muted, projectStyles.small).class}>{tx('project.overview.noMetricsBody')}</span>
+      </div>
+    {/if}
 
   <div class={stylex.attrs(projectStyles.section).class}>
     <SupportOverTimeChart
@@ -190,4 +214,5 @@
       {/each}
     </div>
   </section>
+  {/if}
 </ProjectDashShell>

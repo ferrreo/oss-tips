@@ -256,7 +256,7 @@
     </div>
   </div>
 
-  <div class={stylex.attrs(funding.tipField, disabled || loading ? funding.controlDisabled : null).class ?? ''}>
+  <div class={stylex.attrs(funding.tipField).class ?? ''}>
     <label class={stylex.attrs(funding.tipLabel).class ?? ''} for={tipId}>{t('common.optionalTip', {}, $locale)}</label>
     <span class={stylex.attrs(funding.tipHelp).class ?? ''} id={tipHelpId}>{t('common.tipDescription', {}, $locale)}</span>
     <div class={stylex.attrs(funding.tipPresets).class ?? ''}>
@@ -266,6 +266,7 @@
           class={stylex.attrs(
             funding.preset,
             tipMinor === preset ? funding.presetSelected : null,
+            disabled || loading ? funding.controlDisabled : null,
             primitives.focusRing,
           ).class ?? ''}
           aria-pressed={tipMinor === preset}
@@ -279,7 +280,7 @@
     </div>
     <input
       id={tipId}
-      class={stylex.attrs(funding.tipInput, primitives.focusRing).class ?? ''}
+      class={stylex.attrs(funding.tipInput, disabled || loading ? funding.controlDisabled : null, primitives.focusRing).class ?? ''}
       type="number"
       name="oss-tips-tip"
       min="0"

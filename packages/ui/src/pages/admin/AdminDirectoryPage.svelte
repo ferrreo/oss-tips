@@ -2,7 +2,7 @@
   import { stylex } from '../../styles/stylex-runtime.js';
   import AdminShell from '../../components/AdminShell.svelte';
   import SegmentedControl from '../../components/SegmentedControl.svelte';
-  import Table from '../../components/Table.svelte';
+  import AdminTable from './AdminTable.svelte';
   import TextField from '../../components/TextField.svelte';
   import { locale, t, type MessageKey, type MessageValues } from '../../lib/i18n.js';
   import { admin } from '../../styles/admin.stylex.js';
@@ -143,7 +143,7 @@
 
       {#if view === 'projects'}
         <div {...stylex.attrs(admin.tableWrap)}>
-          <Table
+          <AdminTable
             caption={tt('admin.directory.projectCaption', { count: projectRows.length })}
             columns={[
               { key: 'name', label: tt('admin.directory.name') },
@@ -159,7 +159,7 @@
         </div>
       {:else}
         <div {...stylex.attrs(admin.tableWrap)}>
-          <Table
+          <AdminTable
             caption={tt('admin.directory.peopleCaption', { count: peopleRows.length })}
             columns={[
               { key: 'name', label: tt('admin.directory.name') },

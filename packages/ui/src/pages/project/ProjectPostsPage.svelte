@@ -86,7 +86,7 @@
       </div>
     {:else}
       <div class={stylex.attrs(projectStyles.section).class}>
-        <EmptyState title={search ? tx('project.posts.noMatchingTitle') : tx('project.posts.emptyTitle')} description={search ? tx('project.posts.noMatchingBody') : tx('project.posts.emptyBody')} />
+        <EmptyState headingLevel={2} title={search ? tx('project.posts.noMatchingTitle') : tx('project.posts.emptyTitle')} description={search ? tx('project.posts.noMatchingBody') : tx('project.posts.emptyBody')} />
       </div>
     {/if}
   {/if}

@@ -143,10 +143,24 @@ export const shells = stylex.create({
     minHeight: paperlight.touchTarget,
     paddingInline: paperlight.space4,
     textDecoration: 'none',
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'background-color, border-color, color, transform',
+    transitionTimingFunction: paperlight.easeOut,
     '@media (hover: hover)': {
       ':hover': {
         backgroundColor: paperlight.canvasSubtle,
         borderColor: paperlight.forest,
+      },
+    },
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
       },
     },
   },
@@ -171,7 +185,7 @@ export const shells = stylex.create({
       '@media (max-width: 63.99rem)': 'inline-flex',
     },
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
     gap: paperlight.space2,
     justifyContent: 'center',
@@ -179,6 +193,20 @@ export const shells = stylex.create({
     minWidth: paperlight.touchTarget,
     marginInlineStart: 'auto',
     paddingInline: paperlight.space3,
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'border-color, color, transform',
+    transitionTimingFunction: paperlight.easeOut,
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
+      },
+    },
   },
   icon: {
     display: 'block',
@@ -197,6 +225,7 @@ export const shells = stylex.create({
     margin: 0,
     maxHeight: 'none',
     maxWidth: '100%',
+    overflow: 'clip',
     padding: 0,
     width: '100%',
     '::backdrop': {
@@ -211,7 +240,10 @@ export const shells = stylex.create({
     boxShadow: paperlight.shadow,
     display: 'flex',
     flexDirection: 'column',
-    minHeight: '100%',
+    boxSizing: 'border-box',
+    height: '100%',
+    maxHeight: '100%',
+    minHeight: 0,
     overflowY: 'auto',
     padding: paperlight.space6,
     width: 'min(22rem, calc(100vw - 2.5rem))',
@@ -219,8 +251,8 @@ export const shells = stylex.create({
   sheetPanelEnter: {
     animationName: sheetPanelEnter,
     animationDuration: {
-      default: '180ms',
-      '@media (prefers-reduced-motion: reduce)': '0.01ms',
+      default: paperlight.motionNormal,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
     animationFillMode: 'both',
     animationTimingFunction: paperlight.easeOut,
@@ -228,11 +260,11 @@ export const shells = stylex.create({
   sheetPanelExit: {
     animationName: sheetPanelExit,
     animationDuration: {
-      default: '180ms',
-      '@media (prefers-reduced-motion: reduce)': '0.01ms',
+      default: paperlight.motionNormal,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
     },
     animationFillMode: 'both',
-    animationTimingFunction: paperlight.easeOut,
+    animationTimingFunction: paperlight.easeIn,
   },
   sheetTop: {
     alignItems: 'center',
@@ -262,6 +294,20 @@ export const shells = stylex.create({
     minHeight: paperlight.touchTarget,
     minWidth: paperlight.touchTarget,
     padding: 0,
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'border-color, color, transform',
+    transitionTimingFunction: paperlight.easeOut,
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
+      },
+    },
   },
   dashboard: {
     backgroundColor: paperlight.canvas,
@@ -305,7 +351,7 @@ export const shells = stylex.create({
   overline: {
     color: paperlight.inkMuted,
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 700,
     letterSpacing: '0.06em',
     margin: 0,
@@ -315,7 +361,7 @@ export const shells = stylex.create({
     color: paperlight.ink,
     display: 'block',
     fontFamily: paperlight.uiFont,
-    fontSize: '1.125rem',
+    fontSize: paperlight.textLg,
     fontWeight: 600,
     marginTop: paperlight.space1,
   },
@@ -326,7 +372,7 @@ export const shells = stylex.create({
   sidebarGroup: {
     color: paperlight.inkMuted,
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 700,
     letterSpacing: '0.06em',
     paddingBlock: paperlight.space2,
@@ -350,6 +396,8 @@ export const shells = stylex.create({
     fontWeight: 500,
     gap: paperlight.space2,
     minHeight: paperlight.touchTarget,
+    minWidth: 0,
+    overflowWrap: 'anywhere',
     paddingBlock: paperlight.space2,
     paddingInline: paperlight.space4,
     textDecoration: 'none',
@@ -372,13 +420,13 @@ export const shells = stylex.create({
   adminAccent: {
     color: paperlight.info,
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
     margin: 0,
   },
   adminSub: {
     color: paperlight.inkMuted,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     marginTop: paperlight.space1,
     marginBottom: 0,
   },
@@ -413,11 +461,25 @@ export const shells = stylex.create({
     cursor: 'pointer',
     display: 'inline-flex',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 600,
     gap: paperlight.space2,
     minHeight: paperlight.touchTarget,
     paddingInline: paperlight.space3,
+    transitionDuration: {
+      default: paperlight.motionFast,
+      '@media (prefers-reduced-motion: reduce)': paperlight.motionReduced,
+    },
+    transitionProperty: 'border-color, color, transform',
+    transitionTimingFunction: paperlight.easeOut,
+    ':active': {
+      transform: 'translateY(1px) scale(0.99)',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      ':active': {
+        transform: 'none',
+      },
+    },
   },
   header: {
     marginBottom: paperlight.space6,
@@ -425,7 +487,7 @@ export const shells = stylex.create({
   title: {
     color: paperlight.ink,
     fontFamily: paperlight.uiFont,
-    fontSize: '1.75rem',
+    fontSize: paperlight.text2xl,
     fontWeight: 600,
     letterSpacing: '-0.01em',
     margin: 0,
@@ -439,7 +501,7 @@ export const shells = stylex.create({
   context: {
     color: paperlight.inkMuted,
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 500,
     marginBottom: paperlight.space2,
   },
@@ -507,7 +569,7 @@ export const shells = stylex.create({
     color: paperlight.ink,
     display: 'block',
     fontFamily: paperlight.uiFont,
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     fontWeight: 700,
     letterSpacing: '0.04em',
     marginBottom: paperlight.space2,
@@ -525,7 +587,7 @@ export const shells = stylex.create({
     alignItems: 'center',
     color: paperlight.inkMuted,
     display: 'inline-flex',
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     minHeight: paperlight.touchTarget,
   },
   footerLegal: {
@@ -535,7 +597,7 @@ export const shells = stylex.create({
     },
     color: paperlight.inkMuted,
     display: 'flex',
-    fontSize: '0.875rem',
+    fontSize: paperlight.textSm,
     gap: {
       default: paperlight.space3,
       '@media (max-width: 43.99rem)': paperlight.space2,

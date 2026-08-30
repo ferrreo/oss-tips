@@ -4,7 +4,7 @@
   import SupportOverTimeChart from '../../components/SupportOverTimeChart.svelte';
   import DataCard from '../../components/DataCard.svelte';
   import StatusBanner from '../../components/StatusBanner.svelte';
-  import Table from '../../components/Table.svelte';
+  import AdminTable from './AdminTable.svelte';
   import { formatCurrency, formatDate, formatNumber, locale, t, type MessageKey, type MessageValues } from '../../lib/i18n.js';
   import { labelCaseStatus, labelRisk } from '../../lib/labels.js';
   import { admin } from '../../styles/admin.stylex.js';
@@ -162,7 +162,7 @@
 
       <section {...stylex.attrs(admin.section)}>
         <h2 {...stylex.attrs(admin.sectionHeading)}>{tt('admin.overview.reviewSnapshot')}</h2>
-        <Table
+        <AdminTable
           caption={tt('admin.overview.oldestFirst')}
           columns={[
             { key: 'project', label: tt('admin.overview.project') },
@@ -184,7 +184,8 @@
       <div {...stylex.attrs(admin.grid2)}>
         <section {...stylex.attrs(admin.section)}>
           <h2 {...stylex.attrs(admin.sectionHeading)}>{tt('admin.overview.openCasesTitle')}</h2>
-          <Table
+          <AdminTable
+            caption={tt('admin.overview.openCasesTitle')}
             columns={[
               { key: 'id', label: tt('admin.overview.case') },
               { key: 'type', label: tt('admin.overview.type') },
@@ -201,7 +202,8 @@
         </section>
         <section {...stylex.attrs(admin.section)}>
           <h2 {...stylex.attrs(admin.sectionHeading)}>{tt('admin.overview.failedJobs')}</h2>
-          <Table
+          <AdminTable
+            caption={tt('admin.overview.failedJobs')}
             columns={[
               { key: 'kind', label: tt('admin.overview.kind') },
               { key: 'target', label: tt('admin.overview.target') },

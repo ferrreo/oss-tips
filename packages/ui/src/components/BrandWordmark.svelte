@@ -1,6 +1,8 @@
 <script lang="ts">
   import { stylex } from '../styles/stylex-runtime.js';
   import { visuals } from '../styles/visuals.stylex.js';
+  import markDark from '../assets/oss-tips-mark-dark.svg';
+  import markLight from '../assets/oss-tips-mark-light.svg';
   import wordmarkDark from '../assets/oss-tips-wordmark-dark.svg';
   import wordmarkLight from '../assets/oss-tips-wordmark-light.svg';
 
@@ -10,6 +12,7 @@
     decorative?: boolean;
     size?: 'default' | 'compact' | 'large';
     theme?: 'light' | 'dark';
+    variant?: 'wordmark' | 'mark';
   }
 
   let {
@@ -18,6 +21,7 @@
     decorative = false,
     size = 'default',
     theme,
+    variant = 'wordmark',
   }: Props = $props();
 
   let observedTheme = $state<'light' | 'dark'>('light');
@@ -53,10 +57,18 @@
   <picture data-theme={resolvedTheme}>
     <img
       class={stylex.attrs(visuals.wordmarkImage).class}
-      src={resolvedTheme === 'dark' ? wordmarkDark : wordmarkLight}
+      src={
+        variant === 'mark'
+          ? resolvedTheme === 'dark'
+            ? markDark
+            : markLight
+          : resolvedTheme === 'dark'
+            ? wordmarkDark
+            : wordmarkLight
+      }
       alt=""
-      width="660"
-      height="180"
+      width={variant === 'mark' ? '160' : '540'}
+      height="160"
       decoding="async"
     />
   </picture>

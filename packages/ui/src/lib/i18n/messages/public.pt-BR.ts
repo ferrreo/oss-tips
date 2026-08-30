@@ -9,7 +9,7 @@ const portugueseMessages = {
   'public.checkout.tier': 'Nível',
   'public.checkout.access': 'Acesso',
   'public.checkout.reference': 'Referência',
-  'public.checkout.createAccount': 'Criar uma conta para gerenciar este apoio',
+  'public.checkout.createAccount': 'Criar conta',
   'public.checkout.returnTo': 'Voltar para {project}',
   'public.cadence.monthly': 'associação mensal',
   'public.cadence.annual': 'associação anual',

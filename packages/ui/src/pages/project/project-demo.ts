@@ -761,11 +761,11 @@ export const webhookDeliveries: DeliveryPreviewRow[] = [
 ];
 
 export const stripeCapabilityRows = [
-  { capability: 'card_payments', status: 'Active', detail: 'Charges enabled' },
-  { capability: 'transfers', status: 'Active', detail: 'Platform application fees' },
-  { capability: 'payouts', status: 'Restricted', detail: 'Identity document requested' },
-  { capability: 'sepa_debit_payments', status: 'Pending', detail: 'Available after payouts' },
-  { capability: 'link_payments', status: 'Active', detail: 'Checkout wallets' },
+  { capability: 'card_payments', status: 'Active', detail: 'Restricted' },
+  { capability: 'transfers', status: 'Active', detail: 'Restricted' },
+  { capability: 'payouts', status: 'Restricted', detail: 'Restricted' },
+  { capability: 'sepa_debit_payments', status: 'Pending', detail: 'Restricted' },
+  { capability: 'link_payments', status: 'Active', detail: 'Restricted' },
 ];
 
 export const settingsLinks = [

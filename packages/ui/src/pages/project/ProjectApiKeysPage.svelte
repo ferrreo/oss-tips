@@ -100,7 +100,7 @@
         {#if actionError}
           <p class={stylex.attrs(projectStyles.error, projectStyles.body, projectStyles.small).class} role="alert">{actionError}</p>
         {:else if createdSecret}
-          <TextField label={tx('project.apiKeys.name')} value={createdSecret} disabled help={tx('project.apiKeys.nameHelp')} />
+          <TextField label={tx('project.apiKeys.secret')} value={createdSecret} disabled help={tx('project.apiKeys.secretHelp')} />
         {/if}
         <Button variant="primary" label={tx('project.apiKeys.createButton')} loading={actionState === 'saving'} disabled={!onCreateKey || actionState !== 'idle'} onclick={() => void createKey()} />
       </div>

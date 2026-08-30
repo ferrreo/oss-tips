@@ -20,7 +20,7 @@
     isCountGoal ? (goal.progressCount ?? goal.raisedMinor) : goal.raisedMinor,
   );
   const target = $derived(isCountGoal ? (goal.targetCount ?? goal.targetMinor) : goal.targetMinor);
-  const percent = $derived(target <= 0 ? 0 : Math.min(100, Math.round((progress / target) * 100)));
+  const percent = $derived(target <= 0 ? 0 : Math.max(0, Math.min(100, Math.round((progress / target) * 100))));
   const cardAttrs = attrs(display.goal);
   const headerAttrs = attrs(display.goalHeader);
   const overlineAttrs = attrs(display.goalOverline);

@@ -17,6 +17,11 @@ export const BrazilianPortugueseDark: Story = {
   globals: { locale: 'pt-BR', theme: 'dark' },
 };
 
+export const Compact: Story = {
+  globals: { locale: 'de' },
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
+};
+
 export const RTLLayoutSmoke: Story = {
   globals: { locale: 'de', direction: 'rtl' },
 };

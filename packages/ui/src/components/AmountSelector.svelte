@@ -115,6 +115,7 @@
   <div
     class={stylex.attrs(funding.presets, disabled || loading ? funding.controlDisabled : null).class ?? ''}
     aria-label={t('common.suggestedAmounts', {}, $locale)}
+    role="group"
   >
     {#each visiblePresets as preset (preset)}
       <button

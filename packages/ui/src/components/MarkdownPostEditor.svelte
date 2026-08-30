@@ -207,19 +207,23 @@
     aria-controls={editorMode === 'source' ? inputId : previewId}
   >
     <div class={stylex.attrs(postEditorStyles.toolbarGroup).class} aria-label={t('editor.textFormatting', {}, $locale)}>
-      <button type="button" class={toolbarAttrs()} disabled={disabled || editorMode !== 'source'} onclick={() => replaceSelection('**', '**', t('editor.boldFallback', {}, $locale))}><bdi>{t('editor.bold', {}, $locale)}</bdi></button>
-      <button type="button" class={toolbarAttrs()} disabled={disabled || editorMode !== 'source'} onclick={() => replaceSelection('*', '*', t('editor.italicFallback', {}, $locale))}><bdi>{t('editor.italic', {}, $locale)}</bdi></button>
-      <button type="button" class={toolbarAttrs()} disabled={disabled || editorMode !== 'source'} onclick={insertLink}><bdi>{t('editor.link', {}, $locale)}</bdi></button>
-      <button type="button" class={toolbarAttrs()} disabled={disabled || editorMode !== 'source'} onclick={() => replaceSelection('`', '`', t('editor.codeFallback', {}, $locale))}><bdi>{t('editor.inlineCode', {}, $locale)}</bdi></button>
-      <button type="button" class={toolbarAttrs()} disabled={disabled || editorMode !== 'source'} onclick={() => prefixSelection('> ')}><bdi>{t('editor.quote', {}, $locale)}</bdi></button>
-      <button type="button" class={toolbarAttrs()} disabled={disabled || editorMode !== 'source'} onclick={() => prefixSelection('- ')}><bdi>{t('editor.list', {}, $locale)}</bdi></button>
-      <button type="button" class={toolbarAttrs()} disabled={disabled || editorMode !== 'source'} onclick={insertCodeBlock}><bdi>{t('editor.codeBlock', {}, $locale)}</bdi></button>
+      <button type="button" class={toolbarAttrs().class} disabled={disabled || editorMode !== 'source'} onclick={() => replaceSelection('**', '**', t('editor.boldFallback', {}, $locale))}><bdi>{t('editor.bold', {}, $locale)}</bdi></button>
+      <button type="button" class={toolbarAttrs().class} disabled={disabled || editorMode !== 'source'} onclick={() => replaceSelection('*', '*', t('editor.italicFallback', {}, $locale))}><bdi>{t('editor.italic', {}, $locale)}</bdi></button>
+      <button type="button" class={toolbarAttrs().class} disabled={disabled || editorMode !== 'source'} onclick={insertLink}><bdi>{t('editor.link', {}, $locale)}</bdi></button>
+      <button type="button" class={toolbarAttrs().class} disabled={disabled || editorMode !== 'source'} onclick={() => replaceSelection('`', '`', t('editor.codeFallback', {}, $locale))}><bdi>{t('editor.inlineCode', {}, $locale)}</bdi></button>
+      <button type="button" class={toolbarAttrs().class} disabled={disabled || editorMode !== 'source'} onclick={() => prefixSelection('> ')}><bdi>{t('editor.quote', {}, $locale)}</bdi></button>
+      <button type="button" class={toolbarAttrs().class} disabled={disabled || editorMode !== 'source'} onclick={() => prefixSelection('- ')}><bdi>{t('editor.list', {}, $locale)}</bdi></button>
+      <button type="button" class={toolbarAttrs().class} disabled={disabled || editorMode !== 'source'} onclick={insertCodeBlock}><bdi>{t('editor.codeBlock', {}, $locale)}</bdi></button>
     </div>
 
     <label class={stylex.attrs(postEditorStyles.languageLabel).class}>
       <bdi>{t('editor.codeLanguage', {}, $locale)}</bdi>
       <select
-        class={stylex.attrs(postEditorStyles.languageSelect, controls.focusRing).class}
+        class={stylex.attrs(
+          postEditorStyles.languageSelect,
+          controls.focusRing,
+          disabled || editorMode !== 'source' ? controls.inputDisabled : null,
+        ).class}
         bind:value={codeLanguage}
         disabled={disabled || editorMode !== 'source'}
         aria-label={t('editor.codeLanguage', {}, $locale)}
@@ -233,7 +237,7 @@
     <div class={stylex.attrs(postEditorStyles.toolbarGroup).class}>
       <button
         type="button"
-        class={toolbarAttrs(embedOpen)}
+        class={toolbarAttrs(embedOpen).class}
         disabled={disabled || editorMode !== 'source'}
         aria-pressed={embedOpen}
         onclick={() => {
@@ -243,14 +247,14 @@
       ><bdi>{t('editor.addEmbed', {}, $locale)}</bdi></button>
       <button
         type="button"
-        class={toolbarAttrs(editorMode === 'source')}
+        class={toolbarAttrs(editorMode === 'source').class}
         disabled={disabled}
         aria-pressed={editorMode === 'source'}
         onclick={() => (editorMode = 'source')}
       ><bdi>{t('editor.source', {}, $locale)}</bdi></button>
       <button
         type="button"
-        class={toolbarAttrs(editorMode === 'preview')}
+        class={toolbarAttrs(editorMode === 'preview').class}
         disabled={disabled}
         aria-pressed={editorMode === 'preview'}
         onclick={() => (editorMode = 'preview')}
@@ -271,17 +275,22 @@
       <div class={stylex.attrs(postEditorStyles.embedRow).class}>
         <input
           id={`${inputId}-embed-url`}
-          class={stylex.attrs(postEditorStyles.embedInput, controls.focusRing).class}
+          class={stylex.attrs(
+            postEditorStyles.embedInput,
+            controls.focusRing,
+            disabled ? controls.inputDisabled : null,
+          ).class}
           type="url"
           bind:value={embedUrl}
           placeholder={t('editor.embedPlaceholder', {}, $locale)}
           dir="auto"
           autocomplete="off"
           required
+          disabled={disabled}
           aria-invalid={embedError ? 'true' : undefined}
         />
-        <button type="submit" class={toolbarAttrs()} disabled={disabled}><bdi>{t('editor.insertEmbed', {}, $locale)}</bdi></button>
-        <button type="button" class={toolbarAttrs()} disabled={disabled} onclick={() => (embedOpen = false)}><bdi>{t('editor.cancel', {}, $locale)}</bdi></button>
+        <button type="submit" class={toolbarAttrs().class} disabled={disabled}><bdi>{t('editor.insertEmbed', {}, $locale)}</bdi></button>
+        <button type="button" class={toolbarAttrs().class} disabled={disabled} onclick={() => (embedOpen = false)}><bdi>{t('editor.cancel', {}, $locale)}</bdi></button>
       </div>
       {#if embedError}
         <p class={stylex.attrs(postEditorStyles.status, postEditorStyles.statusError).class} role="alert"><bdi>{embedError}</bdi></p>
@@ -293,7 +302,11 @@
     <textarea
       id={inputId}
       bind:this={textareaElement}
-      class={stylex.attrs(postEditorStyles.source, controls.focusRing).class}
+      class={stylex.attrs(
+        postEditorStyles.source,
+        controls.focusRing,
+        disabled ? controls.inputDisabled : null,
+      ).class}
       bind:value={value}
       disabled={disabled}
       aria-describedby={describedBy}
@@ -333,7 +346,7 @@
   <div class={stylex.attrs(postEditorStyles.embedRow).class}>
     <button
       type="button"
-      class={toolbarAttrs()}
+      class={toolbarAttrs().class}
       disabled={uploadButtonDisabled}
       aria-busy={uploadState === 'uploading'}
       onclick={openFilePicker}
@@ -369,7 +382,7 @@
       {#each attachments as attachment (attachment.id)}
         <li class={stylex.attrs(postEditorStyles.attachment).class}>
           {#if attachment.url}
-            <a href={attachment.url} class={stylex.attrs(controls.focusRing).class}><bdi>{attachment.name}{attachment.sizeLabel ? ` · ${attachment.sizeLabel}` : ''}</bdi></a>
+            <a href={attachment.url} class={stylex.attrs(postEditorStyles.attachmentLink, controls.focusRing).class}><bdi>{attachment.name}{attachment.sizeLabel ? ` · ${attachment.sizeLabel}` : ''}</bdi></a>
           {:else}
             <bdi>{attachment.name}{attachment.sizeLabel ? ` · ${attachment.sizeLabel}` : ''}</bdi>
           {/if}

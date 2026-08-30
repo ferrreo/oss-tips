@@ -4,7 +4,7 @@
   import Badge from '../../components/Badge.svelte';
   import Button from '../../components/Button.svelte';
   import SegmentedControl from '../../components/SegmentedControl.svelte';
-  import Table from '../../components/Table.svelte';
+  import AdminTable from './AdminTable.svelte';
   import TextField from '../../components/TextField.svelte';
   import { formatDate, formatNumber, locale, t, type MessageKey, type MessageValues } from '../../lib/i18n.js';
   import { labelCaseStatus } from '../../lib/labels.js';
@@ -100,7 +100,7 @@
       />
 
       <div {...stylex.attrs(admin.tableWrap)}>
-        <Table
+        <AdminTable
           caption={tt('admin.cases.caption', { count: formatNumber(visible.length, $locale) })}
           columns={[
             { key: 'id', label: tt('admin.cases.case') },

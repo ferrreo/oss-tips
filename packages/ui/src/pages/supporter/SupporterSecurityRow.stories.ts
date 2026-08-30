@@ -23,4 +23,11 @@ export const Last: Story = {
     last: true,
   },
 };
+export const Compact: Story = {
+  args: {
+    label: 'Chrome on work laptop',
+    meta: 'Last active 29 Aug 2026 · Current session',
+  },
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
+};
 export const Dark: Story = { globals: { theme: 'dark' } };

@@ -211,7 +211,7 @@ export const adminMessages = {
       'Settlement is Stripe net after processing fees. oss.tips revenue this month is {fees} in project fees and {tips} in supporter tips.',
     'admin.reconciliation.mismatchTitle': '{count} settlement mismatches',
     'admin.reconciliation.mismatchMessage':
-      'Stripe net and ledger net differ on {projects}. Combined Stripe-minus-ledger delta is {delta}.',
+      'Stripe net and ledger net differ on {projects}. Differences by currency are {delta}.',
     'admin.reconciliation.alignedMessage': 'Stripe and ledger totals are aligned for this period.',
     'admin.reconciliation.alignedDays': 'Aligned days',
     'admin.reconciliation.zeroDifference': 'Zero difference',
@@ -449,7 +449,7 @@ export const adminMessages = {
       'Die Abwicklung ist Stripe netto nach Bearbeitungsgebühren. Der oss.tips-Umsatz beträgt diesen Monat {fees} an Projektgebühren und {tips} an Unterstützer-Trinkgeldern.',
     'admin.reconciliation.mismatchTitle': '{count} Abweichungen bei der Abwicklung',
     'admin.reconciliation.mismatchMessage':
-      'Stripe netto und Hauptbuch netto weichen bei {projects} ab. Die gemeinsame Differenz Stripe minus Hauptbuch beträgt {delta}.',
+      'Stripe netto und Hauptbuch netto weichen bei {projects} ab. Die Differenzen nach Währung sind {delta}.',
     'admin.reconciliation.alignedMessage':
       'Stripe- und Hauptbuchsummen stimmen für diesen Zeitraum überein.',
     'admin.reconciliation.alignedDays': 'Übereinstimmende Tage',
@@ -689,7 +689,7 @@ export const adminMessages = {
       'Le règlement correspond au net Stripe après frais de traitement. Le revenu oss.tips de ce mois est de {fees} en frais de projet et {tips} en pourboires.',
     'admin.reconciliation.mismatchTitle': '{count} écarts de règlement',
     'admin.reconciliation.mismatchMessage':
-      'Le net Stripe et le net du grand livre diffèrent pour {projects}. L’écart cumulé Stripe moins grand livre est de {delta}.',
+      'Le net Stripe et le net du grand livre diffèrent pour {projects}. Les écarts par devise sont de {delta}.',
     'admin.reconciliation.alignedMessage':
       'Les totaux Stripe et du grand livre correspondent pour cette période.',
     'admin.reconciliation.alignedDays': 'Jours alignés',
@@ -930,7 +930,7 @@ export const adminMessages = {
       'La liquidación es el neto de Stripe tras las comisiones de procesamiento. Los ingresos de oss.tips este mes son {fees} en comisiones de proyecto y {tips} en propinas.',
     'admin.reconciliation.mismatchTitle': '{count} diferencias de liquidación',
     'admin.reconciliation.mismatchMessage':
-      'El neto de Stripe y el del libro difieren en {projects}. La diferencia combinada Stripe menos libro es {delta}.',
+      'El neto de Stripe y el del libro difieren en {projects}. Las diferencias por moneda son {delta}.',
     'admin.reconciliation.alignedMessage':
       'Los totales de Stripe y del libro coinciden en este periodo.',
     'admin.reconciliation.alignedDays': 'Días alineados',
@@ -1167,7 +1167,7 @@ export const adminMessages = {
       'A liquidação é o líquido da Stripe após taxas de processamento. A receita da oss.tips neste mês é {fees} em taxas de projeto e {tips} em gorjetas de apoiadores.',
     'admin.reconciliation.mismatchTitle': '{count} diferenças de liquidação',
     'admin.reconciliation.mismatchMessage':
-      'O líquido da Stripe e o líquido do livro diferem em {projects}. A diferença combinada Stripe menos livro é {delta}.',
+      'O líquido da Stripe e o líquido do livro diferem em {projects}. As diferenças por moeda são {delta}.',
     'admin.reconciliation.alignedMessage':
       'Os totais da Stripe e do livro estão alinhados neste período.',
     'admin.reconciliation.alignedDays': 'Dias alinhados',

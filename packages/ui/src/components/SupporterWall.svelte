@@ -16,7 +16,7 @@
 </script>
 
 <section class={stylex.attrs(funding.wall).class ?? ''} aria-label={t('common.supporterWall', {}, $locale)}>
-  <h3 class={stylex.attrs(funding.wallHeading).class ?? ''}><bdi>{t('common.recentSupporters', {}, $locale)}</bdi></h3>
+  <h2 class={stylex.attrs(funding.wallHeading).class ?? ''}><bdi>{t('common.recentSupporters', {}, $locale)}</bdi></h2>
   {#if visible.length > 0}
     <ul class={stylex.attrs(funding.wallList).class ?? ''}>
     {#each visible as supporter (supporter.id)}

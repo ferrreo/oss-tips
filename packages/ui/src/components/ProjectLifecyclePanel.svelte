@@ -143,7 +143,11 @@
         </p>
         <label class={stylex.attrs(projectStyles.publicDisplayCheck).class}>
           <input
-            class={stylex.attrs(projectStyles.publicDisplayCheckbox, controls.focusRing).class}
+            class={stylex.attrs(
+              projectStyles.publicDisplayCheckbox,
+              controls.focusRing,
+              action !== 'idle' ? controls.inputDisabled : null,
+            ).class}
             type="checkbox"
             bind:checked={confirmClose}
             disabled={action !== 'idle'}

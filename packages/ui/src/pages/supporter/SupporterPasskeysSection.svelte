@@ -36,6 +36,7 @@
   let passkeyName = $state('');
 
   const sectionTitleAttrs = stylex.attrs(supporter.sectionTitle);
+  const sectionAttrs = stylex.attrs(supporter.securitySection);
   const mutedAttrs = stylex.attrs(supporter.muted);
   const statusAttrs = stylex.attrs(supporter.statusLine);
   const securityListAttrs = stylex.attrs(supporter.securityList);
@@ -55,7 +56,7 @@
   }
 </script>
 
-<section aria-labelledby="supporter-passkeys-title">
+<section {...sectionAttrs} aria-labelledby="supporter-passkeys-title">
   <h2 id="supporter-passkeys-title" {...sectionTitleAttrs}>{t('supporter.settings.passkeysTitle', {}, $locale)}</h2>
   <p {...mutedAttrs}>{t('supporter.settings.passkeysDescription', {}, $locale)}</p>
   {#if securityState === 'loading'}

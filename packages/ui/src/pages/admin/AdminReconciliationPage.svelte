@@ -3,7 +3,7 @@
   import AdminShell from '../../components/AdminShell.svelte';
   import DataCard from '../../components/DataCard.svelte';
   import StatusBanner from '../../components/StatusBanner.svelte';
-  import Table from '../../components/Table.svelte';
+  import AdminTable from './AdminTable.svelte';
   import { formatCurrency, formatDate, formatNumber, locale, t, type MessageKey, type MessageValues } from '../../lib/i18n.js';
   import { labelReconciliationStatus } from '../../lib/labels.js';
   import { admin } from '../../styles/admin.stylex.js';
@@ -84,7 +84,7 @@
       </div>
 
       <div {...stylex.attrs(admin.tableWrap)}>
-        <Table
+        <AdminTable
           caption={tt('admin.reconciliation.dailyCaption')}
           columns={[
             { key: 'date', label: tt('admin.reconciliation.date') },
@@ -108,7 +108,7 @@
       <section {...stylex.attrs(admin.section)}>
         <h2 {...stylex.attrs(admin.sectionHeading)}>{tt('admin.reconciliation.openDifferences')}</h2>
         <div {...stylex.attrs(admin.tableWrap)}>
-          <Table
+          <AdminTable
             caption={tt('admin.reconciliation.openCaption')}
             columns={[
               { key: 'date', label: tt('admin.reconciliation.date') },

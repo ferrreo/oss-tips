@@ -1,7 +1,7 @@
 <script lang="ts">
   import { stylex } from '../../styles/stylex-runtime.js';
   import AdminShell from '../../components/AdminShell.svelte';
-  import Table from '../../components/Table.svelte';
+  import AdminTable from './AdminTable.svelte';
   import TextField from '../../components/TextField.svelte';
   import { formatDate, locale, t, type MessageKey, type MessageValues } from '../../lib/i18n.js';
   import { labelAuditAction } from '../../lib/labels.js';
@@ -83,7 +83,7 @@
       />
 
       <div {...stylex.attrs(admin.tableWrap)}>
-        <Table
+        <AdminTable
           caption={tt('admin.audit.eventsShown', { shown: rows.length, total: events.length })}
           columns={[
             { key: 'time', label: tt('admin.audit.time') },

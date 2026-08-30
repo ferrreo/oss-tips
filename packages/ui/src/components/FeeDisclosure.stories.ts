@@ -19,6 +19,9 @@ export const Compact: Story = {
   args: { projectAmountMinor: 2500, tipMinor: 100, cadence: 'monthly' },
   parameters: { viewport: { defaultViewport: 'mobile1' } },
 };
+export const SectionHeading: Story = {
+  args: { projectAmountMinor: 2500, tipMinor: 100, cadence: 'monthly', headingLevel: 2 },
+};
 export const Dark: Story = {
   args: { projectAmountMinor: 2500, tipMinor: 100, cadence: 'monthly' },
   globals: { theme: 'dark' },

@@ -53,4 +53,8 @@ export const Disabled: Story = {
     if (!buttonIn(canvasElement).disabled) throw new Error('Disabled button is enabled');
   },
 };
+export const Compact: Story = {
+  args: { variant: 'primary', label: 'Publish update' },
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
+};
 export const Dark: Story = { args: { label: 'Save changes' }, globals: { theme: 'dark' } };

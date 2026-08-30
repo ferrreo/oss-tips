@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import AdminOperatorBar from './AdminOperatorBar.svelte';
+import { adminViewports } from './admin-story-viewports.js';
 
 const meta = {
   title: 'Pages/Admin/Operator Bar',
@@ -38,6 +39,30 @@ export const Warning: Story = {
     detail: 'Leave this row open until Stripe and the ledger agree or a timing window is recorded.',
     tone: 'warning',
   },
+};
+
+export const Compact320: Story = {
+  args: {
+    context: 'Reviewing Grove',
+    detail: 'github.com/oss-tips/grove. Approve or reject only with a reason.',
+  },
+  parameters: { viewport: adminViewports.compact },
+};
+
+export const Tablet768: Story = {
+  args: {
+    context: 'Reviewing Grove',
+    detail: 'github.com/oss-tips/grove. Approve or reject only with a reason.',
+  },
+  parameters: { viewport: adminViewports.tablet },
+};
+
+export const Wide1280: Story = {
+  args: {
+    context: 'Reviewing Grove',
+    detail: 'github.com/oss-tips/grove. Approve or reject only with a reason.',
+  },
+  parameters: { viewport: adminViewports.wide },
 };
 
 export const RtlSmoke: Story = {

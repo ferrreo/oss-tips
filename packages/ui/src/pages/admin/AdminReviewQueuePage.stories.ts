@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import AdminReviewQueuePage from './AdminReviewQueuePage.svelte';
 import { adminNav, reviewQueue } from './admin-demo.js';
+import { adminViewports } from './admin-story-viewports.js';
 
 const populatedArgs = {
   navGroups: adminNav('/admin/review'),
@@ -25,7 +26,15 @@ export const Error: Story = { args: { ...populatedArgs, state: 'error' } };
 export const Forbidden: Story = { args: { ...populatedArgs, state: 'forbidden' } };
 export const Compact: Story = {
   args: populatedArgs,
-  parameters: { layout: 'fullscreen', viewport: { defaultViewport: 'mobile1' } },
+  parameters: { layout: 'fullscreen', viewport: adminViewports.compact },
+};
+export const Tablet768: Story = {
+  args: populatedArgs,
+  parameters: { layout: 'fullscreen', viewport: adminViewports.tablet },
+};
+export const Wide1280: Story = {
+  args: populatedArgs,
+  parameters: { layout: 'fullscreen', viewport: adminViewports.wide },
 };
 export const Dark: Story = { args: populatedArgs, globals: { theme: 'dark' } };
 export const German: Story = { args: populatedArgs, globals: { locale: 'de' } };

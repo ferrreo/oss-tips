@@ -44,7 +44,7 @@
   );
   const lifetimeCurrencies = $derived(new Set(lifetimeSupport.map((row) => row.currency.toUpperCase())));
   const lifetimeTotalMinor = $derived(
-    lifetimeCurrencies.size > 1
+    lifetimeSupport.length === 0 || lifetimeCurrencies.size > 1
       ? undefined
       : lifetimeSupport.reduce((sum, row) => sum + row.oneOffMinor + row.recurringMinor, 0),
   );
@@ -52,7 +52,7 @@
     new Set(activeMemberships.map((membership) => membership.currency.toUpperCase())),
   );
   const monthlyActiveMinor = $derived(
-    activeMembershipCurrencies.size > 1
+    activeMemberships.length === 0 || activeMembershipCurrencies.size > 1
       ? undefined
       : activeMemberships.reduce(
           (sum, membership) =>
@@ -63,6 +63,18 @@
   const lifetimeCurrency = $derived(lifetimeSupport[0]?.currency ?? memberships[0]?.currency ?? 'GBP');
   const membershipCurrency = $derived(activeMemberships[0]?.currency ?? memberships[0]?.currency ?? 'GBP');
   const unreadThreadCount = $derived(threads.filter((thread) => thread.unread).length);
+  const lifetimeCompare = $derived(
+    lifetimeCurrencies.size > 1
+      ? t('supporter.home.multipleCurrencies', {}, $locale)
+      : t('supporter.home.acrossProjects', { count: lifetimeSupport.length }, $locale),
+  );
+  const monthlyEquivalent = $derived(
+    activeMembershipCurrencies.size > 1
+      ? t('supporter.home.multipleCurrencies', {}, $locale)
+      : monthlyActiveMinor === undefined
+        ? t('common.notAvailable', {}, $locale)
+        : t('supporter.home.monthlyEquivalent', { amount: formatCurrency(monthlyActiveMinor, membershipCurrency, $locale) }, $locale),
+  );
 
   function membershipStatusLabel(status: Membership['status'], currentLocale: Locale): string {
     return t(
@@ -114,16 +126,12 @@
     <DataCard
       label={t('supporter.home.lifetimeSupport', {}, $locale)}
       value={lifetimeTotalMinor === undefined ? t('common.notAvailable', {}, $locale) : formatCurrency(lifetimeTotalMinor, lifetimeCurrency, $locale)}
-      compare={t('supporter.home.acrossProjects', { count: lifetimeSupport.length }, $locale)}
+      compare={lifetimeCompare}
     />
     <DataCard
       label={t('supporter.home.activeMemberships', {}, $locale)}
       value={String(activeMemberships.length)}
-      compare={
-        monthlyActiveMinor === undefined
-          ? t('common.notAvailable', {}, $locale)
-          : t('supporter.home.monthlyEquivalent', { amount: formatCurrency(monthlyActiveMinor, membershipCurrency, $locale) }, $locale)
-      }
+      compare={monthlyEquivalent}
     />
     <DataCard
       label={t('supporter.home.unreadMessages', {}, $locale)}

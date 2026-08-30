@@ -12,3 +12,8 @@ type Story = StoryObj<typeof meta>;
 export const System: Story = { args: { preference: 'system' } };
 export const Light: Story = { args: { preference: 'light' } };
 export const Dark: Story = { args: { preference: 'dark' }, globals: { theme: 'dark' } };
+export const Compact: Story = {
+  args: { preference: 'dark' },
+  globals: { theme: 'dark' },
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
+};

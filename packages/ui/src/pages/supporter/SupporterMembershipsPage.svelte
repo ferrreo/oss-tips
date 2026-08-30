@@ -61,7 +61,7 @@
   const cancelled = $derived(memberships.filter((membership) => membership.status === 'cancelled'));
   const activeCurrencies = $derived(new Set(active.map((membership) => membership.currency.toUpperCase())));
   const monthlyActiveMinor = $derived(
-    activeCurrencies.size > 1
+    active.length === 0 || activeCurrencies.size > 1
       ? undefined
       : active.reduce(
           (sum, membership) =>
@@ -101,6 +101,13 @@
   let tipInputBase = $state(untrack(() => `${platformTipMinor}:${currency}`));
   let tipInputError = $state('');
   const tipInputKey = $derived(`${platformTipMinor}:${currency}`);
+  const monthlyEquivalent = $derived(
+    activeCurrencies.size > 1
+      ? t('supporter.memberships.multipleCurrencies', {}, $locale)
+      : monthlyActiveMinor === undefined
+        ? t('common.notAvailable', {}, $locale)
+        : t('supporter.memberships.monthlyEquivalent', { amount: formatCurrency(monthlyActiveMinor, summaryCurrency, $locale) }, $locale),
+  );
 
   $effect(() => {
     if (tipInputBase === tipInputKey) return;
@@ -176,14 +183,18 @@
     <DataCard
       label={t('supporter.memberships.active', {}, $locale)}
       value={String(active.length)}
-      compare={
-        monthlyActiveMinor === undefined
-          ? t('common.notAvailable', {}, $locale)
-          : t('supporter.memberships.monthlyEquivalent', { amount: formatCurrency(monthlyActiveMinor, summaryCurrency, $locale) }, $locale)
-      }
+      compare={monthlyEquivalent}
     />
     <DataCard label={t('supporter.memberships.pastDue', {}, $locale)} value={String(pastDue.length)} compare={t('supporter.memberships.graceOpen', {}, $locale)} compareDirection="down" />
-    <DataCard label={t('supporter.memberships.platformTip', {}, $locale)} value={t('supporter.memberships.platformTipPerRenewal', { amount: formatCurrency(platformTipMinor, currency, $locale), cadence: platformTipCadence }, $locale)} compare={t('supporter.memberships.separateTip', {}, $locale)} />
+    <DataCard
+      label={t('supporter.memberships.platformTip', {}, $locale)}
+      value={editableTipMembership
+        ? t('supporter.memberships.platformTipPerRenewal', { amount: formatCurrency(platformTipMinor, currency, $locale), cadence: platformTipCadence }, $locale)
+        : t('common.notAvailable', {}, $locale)}
+      compare={editableTipMembership
+        ? t('supporter.memberships.separateTip', {}, $locale)
+        : t('common.notAvailable', {}, $locale)}
+    />
   </div>
 
   {#if memberships.length > 0}
@@ -255,40 +266,42 @@
     </section>
   {/if}
 
-  <section {...surfaceAttrs} aria-labelledby="platform-tip-title">
-    <h2 id="platform-tip-title" {...surfaceTitleAttrs}>{t('supporter.memberships.platformTipTitle', {}, $locale)}</h2>
-    <p>{t('supporter.memberships.platformTipDescription', { amount: formatCurrency(platformTipMinor, currency, $locale) }, $locale)}</p>
-    <div {...actionsAttrs}>
-      <Badge variant="forest">{t('supporter.memberships.platformTipPerRenewal', { amount: formatCurrency(platformTipMinor, currency, $locale), cadence: platformTipCadence }, $locale)}</Badge>
-    </div>
-    <form {...formAttrs} onsubmit={saveTip}>
-      <TextField
-        label={t('supporter.memberships.tipAmount', {}, $locale)}
-        type="text"
-        inputmode="decimal"
-        bind:value={tipAmount}
-        help={t('supporter.memberships.tipAmountHelp', {}, $locale)}
-        error={tipInputError}
-        disabled={!onupdatetip || !editableTipMembershipId || tipState === 'loading'}
-        oninput={() => {
-          tipInputError = '';
-        }}
-      />
+  {#if editableTipMembership}
+    <section {...surfaceAttrs} aria-labelledby="platform-tip-title">
+      <h2 id="platform-tip-title" {...surfaceTitleAttrs}>{t('supporter.memberships.platformTipTitle', {}, $locale)}</h2>
+      <p>{t('supporter.memberships.platformTipDescription', { amount: formatCurrency(platformTipMinor, currency, $locale) }, $locale)}</p>
       <div {...actionsAttrs}>
-        <Button
-          type="submit"
-          label={t('supporter.memberships.saveTip', {}, $locale)}
-          loading={tipState === 'loading'}
-          disabled={!onupdatetip || !editableTipMembershipId}
-        />
+        <Badge variant="forest">{t('supporter.memberships.platformTipPerRenewal', { amount: formatCurrency(platformTipMinor, currency, $locale), cadence: platformTipCadence }, $locale)}</Badge>
       </div>
-      {#if tipState === 'success'}
-        <p {...statusAttrs} role="status">{t('supporter.memberships.tipSuccess', {}, $locale)}</p>
-      {:else if tipState === 'error'}
-        <p {...statusAttrs} role="alert">{tipError || t('supporter.memberships.tipError', {}, $locale)}</p>
-      {/if}
-    </form>
-  </section>
+      <form {...formAttrs} onsubmit={saveTip}>
+        <TextField
+          label={t('supporter.memberships.tipAmount', {}, $locale)}
+          type="text"
+          inputmode="decimal"
+          bind:value={tipAmount}
+          help={t('supporter.memberships.tipAmountHelp', {}, $locale)}
+          error={tipInputError}
+          disabled={!onupdatetip || !editableTipMembershipId || tipState === 'loading'}
+          oninput={() => {
+            tipInputError = '';
+          }}
+        />
+        <div {...actionsAttrs}>
+          <Button
+            type="submit"
+            label={t('supporter.memberships.saveTip', {}, $locale)}
+            loading={tipState === 'loading'}
+            disabled={!onupdatetip || !editableTipMembershipId}
+          />
+        </div>
+        {#if tipState === 'success'}
+          <p {...statusAttrs} role="status">{t('supporter.memberships.tipSuccess', {}, $locale)}</p>
+        {:else if tipState === 'error'}
+          <p {...statusAttrs} role="alert">{tipError || t('supporter.memberships.tipError', {}, $locale)}</p>
+        {/if}
+      </form>
+    </section>
+  {/if}
 
   {#each pastDue as membership (membership.id)}
     <p {...statusAttrs}>

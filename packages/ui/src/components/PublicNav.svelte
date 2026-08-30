@@ -68,7 +68,7 @@
   const panelAttrs = $derived(
     attrs(
       shells.sheetPanel,
-      sheetEntering ? shells.sheetPanelEnter : sheetClosing ? shells.sheetPanelExit : null,
+      sheetClosing ? shells.sheetPanelExit : sheetEntering ? shells.sheetPanelEnter : null,
     ),
   );
   const topAttrs = attrs(shells.sheetTop);
@@ -82,13 +82,22 @@
   }
 
   function closeMenu() {
+    sheetEntering = false;
     if (sheetClosing) return;
     if (!menuSheet?.open) {
       menuOpen = false;
+      sheetClosing = false;
       return;
     }
     menuOpen = false;
     sheetClosing = true;
+    setTimeout(finishSheetClose, 220);
+  }
+
+  function finishSheetClose() {
+    if (!sheetClosing) return;
+    menuSheet?.close();
+    sheetClosing = false;
   }
 
   function handleSheetClose() {
@@ -100,11 +109,16 @@
 
   function handleSheetAnimationEnd(event: AnimationEvent) {
     if (event.target !== event.currentTarget || !sheetClosing) return;
-    menuSheet?.close();
-    sheetClosing = false;
+    finishSheetClose();
   }
 
   function handleSheetCancel(event: Event) {
+    event.preventDefault();
+    closeMenu();
+  }
+
+  function handleSheetKeydown(event: KeyboardEvent) {
+    if (event.key !== 'Escape') return;
     event.preventDefault();
     closeMenu();
   }
@@ -195,6 +209,7 @@
   hidden={!menuOpen && !sheetClosing}
   aria-label={t('nav.publicMenu', {}, $locale)}
   oncancel={handleSheetCancel}
+  onkeydown={handleSheetKeydown}
   onclose={handleSheetClose}
   onclick={handleSheetClick}
 >

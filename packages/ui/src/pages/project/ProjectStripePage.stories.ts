@@ -2,6 +2,14 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import ProjectStripePage from './ProjectStripePage.svelte';
 import { stripeCapabilityRows } from './project-demo.js';
 
+const fullyEnabledCapabilities = [
+  { capability: 'card_payments', status: 'Active', detail: 'Enabled' },
+  { capability: 'transfers', status: 'Active', detail: 'Enabled' },
+  { capability: 'payouts', status: 'Active', detail: 'Enabled' },
+  { capability: 'sepa_debit_payments', status: 'Active', detail: 'Enabled' },
+  { capability: 'link_payments', status: 'Active', detail: 'Enabled' },
+];
+
 const meta = {
   title: 'Pages/ProjectDashboard/Stripe',
   component: ProjectStripePage,
@@ -18,6 +26,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Populated: Story = {};
+export const FullyEnabled: Story = {
+  args: { chargesEnabled: true, payoutsEnabled: true, capabilities: fullyEnabledCapabilities },
+};
 export const Dark: Story = { globals: { theme: 'dark' } };
 export const Empty: Story = { args: { capabilities: [] } };
 export const Error: Story = { args: { pageState: 'error' } };
