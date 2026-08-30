@@ -1,7 +1,7 @@
 <script lang="ts">
-  import AnalyticsPage from '@oss-tips/ui/pages/dashboard/AnalyticsPage.svelte';
+  import ProjectAnalyticsPage from '@oss-tips/ui/pages/project/ProjectAnalyticsPage.svelte';
 
   let { data } = $props();
 </script>
 
-<AnalyticsPage {...data} />
+<ProjectAnalyticsPage {...data} />

@@ -1,6 +1,7 @@
 import { uuidv7 } from '@oss-tips/domain';
 import { isAllowedStripeWebhookEvent } from './webhook-events.js';
-import type { VerifiedStripeEvent } from './webhook-verify.js';
+import { STRIPE_WEBHOOK_MAX_BODY_BYTES, type VerifiedStripeEvent } from './webhook-verify.js';
+import { validateIdentifier } from './validation.js';
 
 export type DurableInboxRow = {
   id: string;
@@ -19,7 +20,7 @@ export type AcceptDurableInboxResult =
   | { kind: 'accepted'; stripeEventId: string; type: string; created: boolean }
   | { kind: 'rejected'; status: number; title: string; detail?: string };
 
-const MAX_BODY_BYTES = 256 * 1024;
+const MAX_BODY_BYTES = STRIPE_WEBHOOK_MAX_BODY_BYTES;
 
 /**
  * Durable Stripe inbox: allowlist + size guard + unique insert.
@@ -30,7 +31,17 @@ export async function acceptStripeEventIntoInbox(args: {
   store: DurableInboxStore;
   rawBodyByteLength: number;
   newId?: () => string;
+  expectedStripeAccountId?: string | undefined;
 }): Promise<AcceptDurableInboxResult> {
+  if (!Number.isSafeInteger(args.rawBodyByteLength) || args.rawBodyByteLength < 0) {
+    return {
+      kind: 'rejected',
+      status: 400,
+      title: 'Invalid webhook payload',
+      detail: 'Webhook body length is invalid',
+    };
+  }
+
   if (args.rawBodyByteLength > MAX_BODY_BYTES) {
     return {
       kind: 'rejected',
@@ -49,7 +60,30 @@ export async function acceptStripeEventIntoInbox(args: {
     };
   }
 
-  if (!args.event.id) {
+  if (args.expectedStripeAccountId !== undefined) {
+    try {
+      validateIdentifier(args.expectedStripeAccountId, 'Stripe account id', 'acct_');
+    } catch (error) {
+      return {
+        kind: 'rejected',
+        status: 400,
+        title: 'Invalid webhook configuration',
+        detail: error instanceof Error ? error.message : 'Stripe account id is invalid',
+      };
+    }
+    if (args.event.account !== args.expectedStripeAccountId) {
+      return {
+        kind: 'rejected',
+        status: 400,
+        title: 'Unexpected Stripe account',
+        detail: 'Webhook account does not match connected account',
+      };
+    }
+  }
+
+  try {
+    validateIdentifier(args.event.id, 'Stripe event id', 'evt_');
+  } catch {
     return {
       kind: 'rejected',
       status: 400,

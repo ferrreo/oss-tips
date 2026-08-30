@@ -94,38 +94,42 @@ Do not:
 
 ### Light theme
 
-| Token | Hex | Role |
-|---|---|---|
-| Paper | `#FBF7EF` | page canvas |
-| Paper raised | `#FFFDF8` | cards/dialogues |
-| Parchment | `#F4EEDF` | secondary panels |
-| Ink | `#1E2A22` | primary text |
-| Muted ink | `#667065` | secondary text |
-| Forest | `#2D5C3A` | primary action/brand |
-| Deep forest | `#244A30` | hover/pressed |
-| Moss | `#7C8A5B` | secondary brand/data |
-| Fern | `#A8B59A` | soft fill/illustration |
-| Ochre | `#B88747` | highlights/rewards |
-| Rule | `#DDD5C6` | borders/dividers |
-| Danger | `#A3463C` | destructive/error |
+| Token        | Hex       | Role                      |
+| ------------ | --------- | ------------------------- |
+| Paper        | `#FBF7EF` | page canvas               |
+| Paper raised | `#FFFDF8` | cards/dialogues           |
+| Parchment    | `#F4EEDF` | secondary panels          |
+| Ink          | `#1E2A22` | primary text              |
+| Muted ink    | `#5C665B` | accessible secondary text |
+| Faint ink    | `#61685F` | accessible metadata text  |
+| Forest       | `#2D5C3A` | primary action/brand      |
+| Deep forest  | `#244A30` | hover/pressed             |
+| Moss         | `#7C8A5B` | secondary brand/data      |
+| Fern         | `#A8B59A` | soft fill/illustration    |
+| Ochre        | `#B88747` | highlights/rewards        |
+| Rule         | `#DDD5C6` | borders/dividers          |
+| Danger       | `#A3463C` | destructive/error         |
 
 ### Dark theme
 
-| Token | Hex | Role |
-|---|---|---|
-| Night | `#11130F` | page canvas |
-| Night raised | `#171A15` | cards |
-| Canopy | `#1D211B` | elevated panels |
-| Paper text | `#EDE7D8` | primary text |
-| Muted paper | `#A8A596` | secondary text |
-| Fern action | `#91A66E` | primary brand/action |
-| Bright fern | `#A5BA82` | hover |
-| Moss | `#71834F` | secondary brand/data |
-| Ochre | `#C6A36B` | highlights/rewards |
-| Rule | `#34382E` | borders/dividers |
-| Danger | `#D47A6E` | destructive/error |
+| Token        | Hex       | Role                      |
+| ------------ | --------- | ------------------------- |
+| Night        | `#11130F` | page canvas               |
+| Night raised | `#171A15` | cards                     |
+| Canopy       | `#1D211B` | elevated panels           |
+| Paper text   | `#EDE7D8` | primary text              |
+| Muted paper  | `#B4B1A3` | accessible secondary text |
+| Faint paper  | `#8E9084` | accessible metadata text  |
+| Fern action  | `#91A66E` | primary brand/action      |
+| Bright fern  | `#A5BA82` | hover                     |
+| Moss         | `#71834F` | secondary brand/data      |
+| Ochre        | `#C6A36B` | highlights/rewards        |
+| Rule         | `#34382E` | borders/dividers          |
+| Danger       | `#D47A6E` | destructive/error         |
 
 Use semantic tokens rather than raw colour names in components. Green is not automatically “success”; ochre is not automatically “warning”. Status colours must include icon/text, never colour alone.
+
+Moss and ochre are decorative/data-series colours, not normal-size text colours. The semantic muted text values above are deliberately darker/lighter than the original swatches so secondary copy meets WCAG AA on Paperlight surfaces.
 
 ## 6. Typography
 

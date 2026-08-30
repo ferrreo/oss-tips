@@ -162,7 +162,7 @@ If Stripe Connect live approval is not ready, launch project pages and test-mode
 
 Pipeline:
 
-1. Format/lint/typecheck.
+1. Format/typecheck, API-contract, Storybook/architecture and performance checks.
 2. Unit/property tests.
 3. Migration validation on temporary Postgres.
 4. Stripe/TigerBeetle/RustFS integration tests.

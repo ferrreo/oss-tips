@@ -1,5 +1,6 @@
 import { adminNavGroups, formatMoney, type NavGroup } from '../../fixtures/demo.js';
 import { humanizeStatus } from '../../lib/labels.js';
+import type { AdminOverviewMetrics } from './admin-types.js';
 
 export { formatMoney, humanizeStatus };
 
@@ -67,7 +68,7 @@ export const reviewQueue: ReviewItem[] = [
     id: 'rev_1047',
     slug: 'ledger-kit',
     name: displayProject('ledger-kit'),
-    repository: 'github.com/acme/ledger-kit',
+    repository: 'github.com/oss-tips/ledger-kit',
     reason: 'Duplicate repository claim',
     risk: 'high',
     submitted: '2026-08-27',
@@ -167,7 +168,7 @@ export const directoryProjects: DirectoryProject[] = [
   {
     name: 'ledger-kit',
     slug: 'ledger-kit',
-    repository: 'github.com/acme/ledger-kit',
+    repository: 'github.com/oss-tips/ledger-kit',
     verified: 'Pending',
     payments: 'Restricted',
     supporters: 98,
@@ -258,19 +259,69 @@ export const directoryPeople: DirectoryPerson[] = [
 export interface ReconRow {
   date: string;
   project: string;
+  currency: string;
   stripeNetMinor: number;
   ledgerNetMinor: number;
   status: 'aligned' | 'mismatch' | 'pending';
 }
 
 export const reconciliationRows: ReconRow[] = [
-  { date: '2026-08-27', project: 'grove', stripeNetMinor: 124500, ledgerNetMinor: 124500, status: 'aligned' },
-  { date: '2026-08-26', project: 'vitest-run', stripeNetMinor: 89000, ledgerNetMinor: 88500, status: 'mismatch' },
-  { date: '2026-08-26', project: 'otel-lite', stripeNetMinor: 21400, ledgerNetMinor: 21400, status: 'aligned' },
-  { date: '2026-08-25', project: 'tiny-sqlite', stripeNetMinor: 6700, ledgerNetMinor: 7200, status: 'mismatch' },
-  { date: '2026-08-25', project: 'ledger-kit', stripeNetMinor: 15400, ledgerNetMinor: 0, status: 'pending' },
-  { date: '2026-08-24', project: 'grove', stripeNetMinor: 33200, ledgerNetMinor: 33100, status: 'mismatch' },
-  { date: '2026-08-23', project: 'vitest-run', stripeNetMinor: 44100, ledgerNetMinor: 44100, status: 'aligned' },
+  {
+    date: '2026-08-27',
+    project: 'grove',
+    currency: 'USD',
+    stripeNetMinor: 124500,
+    ledgerNetMinor: 124500,
+    status: 'aligned',
+  },
+  {
+    date: '2026-08-26',
+    project: 'vitest-run',
+    currency: 'USD',
+    stripeNetMinor: 89000,
+    ledgerNetMinor: 88500,
+    status: 'mismatch',
+  },
+  {
+    date: '2026-08-26',
+    project: 'otel-lite',
+    currency: 'EUR',
+    stripeNetMinor: 21400,
+    ledgerNetMinor: 21400,
+    status: 'aligned',
+  },
+  {
+    date: '2026-08-25',
+    project: 'tiny-sqlite',
+    currency: 'JPY',
+    stripeNetMinor: 6700,
+    ledgerNetMinor: 7200,
+    status: 'mismatch',
+  },
+  {
+    date: '2026-08-25',
+    project: 'ledger-kit',
+    currency: 'JPY',
+    stripeNetMinor: 15400,
+    ledgerNetMinor: 0,
+    status: 'pending',
+  },
+  {
+    date: '2026-08-24',
+    project: 'grove',
+    currency: 'EUR',
+    stripeNetMinor: 33200,
+    ledgerNetMinor: 33100,
+    status: 'mismatch',
+  },
+  {
+    date: '2026-08-23',
+    project: 'vitest-run',
+    currency: 'USD',
+    stripeNetMinor: 44100,
+    ledgerNetMinor: 44100,
+    status: 'aligned',
+  },
 ];
 
 export interface AdminCase {
@@ -434,8 +485,62 @@ export const auditEvents: AuditEvent[] = [
 
 export const failedJobs = [
   { id: 'job_441', kind: 'webhook.deliver', target: 'grove', retries: 3, lastError: '410 Gone' },
-  { id: 'job_438', kind: 'discord.role_sync', target: 'vitest-run', retries: 2, lastError: 'Missing Manage Roles' },
-  { id: 'job_430', kind: 'domain.challenge', target: 'vitest-run', retries: 1, lastError: 'TXT not found' },
-  { id: 'job_419', kind: 'stripe.capability', target: 'ledger-kit', retries: 4, lastError: 'charges_enabled=false' },
-  { id: 'job_401', kind: 'webhook.deliver', target: 'otel-lite', retries: 2, lastError: 'Timeout 15s' },
+  {
+    id: 'job_438',
+    kind: 'discord.role_sync',
+    target: 'vitest-run',
+    retries: 2,
+    lastError: 'Missing Manage Roles',
+  },
+  {
+    id: 'job_430',
+    kind: 'domain.challenge',
+    target: 'vitest-run',
+    retries: 1,
+    lastError: 'TXT not found',
+  },
+  {
+    id: 'job_419',
+    kind: 'stripe.capability',
+    target: 'ledger-kit',
+    retries: 4,
+    lastError: 'charges_enabled=false',
+  },
+  {
+    id: 'job_401',
+    kind: 'webhook.deliver',
+    target: 'otel-lite',
+    retries: 2,
+    lastError: 'Timeout 15s',
+  },
 ];
+
+/** Overview numbers are deliberately fixture-owned; production loads persisted values. */
+export const adminOverviewMetrics: AdminOverviewMetrics = {
+  publishedProjects: 1248,
+  publishedThisMonth: 12,
+  settlementVolume: { amountMinor: 24_000_000, currency: 'GBP' },
+  previousSettlementVolume: { amountMinor: 23_076_923, currency: 'GBP' },
+  fees: { amountMinor: 4_207_000, currency: 'GBP' },
+  tips: { amountMinor: 614_000, currency: 'GBP' },
+  currencyCodes: ['GBP'],
+  settledVolumeSeries: [
+    {
+      id: 'settled-support-gbp',
+      labelKey: 'admin.overview.series.settledSupport',
+      currency: 'GBP',
+      stroke: 'solid',
+      marker: 'circle',
+      points: [
+        { label: '2026-08-04', value: 4200 },
+        { label: '2026-08-08', value: 6800 },
+        { label: '2026-08-12', value: 5100 },
+        { label: '2026-08-16', value: 8900 },
+        { label: '2026-08-20', value: 7600 },
+        { label: '2026-08-24', value: 11200 },
+        { label: '2026-08-28', value: 9400 },
+      ],
+    },
+  ],
+  reconciliationAvailable: true,
+};

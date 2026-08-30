@@ -50,10 +50,7 @@ export function computeFeeAllocation(input: ComputeFeeInput): FeeAllocation {
   const ossFeeMinor = roundPercentOf(projectAmount.amountMinor, rateBps);
   const ossProjectFee = money(ossFeeMinor, currency);
   const stripeApplicationFee = money(ossFeeMinor + platformTip.amountMinor, currency);
-  const customerCharge = money(
-    projectAmount.amountMinor + platformTip.amountMinor,
-    currency,
-  );
+  const customerCharge = money(projectAmount.amountMinor + platformTip.amountMinor, currency);
   const projectBeforeStripe = money(projectAmount.amountMinor - ossFeeMinor, currency);
 
   return {

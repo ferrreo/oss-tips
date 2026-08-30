@@ -1,54 +1,66 @@
 <script lang="ts">
-  import PublicNav from '../../components/PublicNav.svelte';
-  import PublicFooter from '../../components/PublicFooter.svelte';
+  import { stylex } from '../../styles/stylex-runtime.js';
+  import PublicPageFrame from './PublicPageFrame.svelte';
+  import { locale, t } from '../../lib/i18n.js';
+  import { publicStyles } from '../../styles/public.stylex.js';
 
-  const pageDemo = {
-    lead: 'Card numbers never hit oss.tips. Stripe takes payments. Admin actions are logged and cannot be edited quietly.',
-    groups: [
+  interface SecurityGroup {
+    heading: string;
+    items: string[];
+  }
+
+  export interface Props {
+    lead?: string;
+    groups?: SecurityGroup[];
+    report?: string;
+  }
+
+  let {
+    lead,
+    groups,
+    report,
+  }: Props = $props();
+
+  const displayLead = $derived(lead ?? t('public.security.lead', {}, $locale));
+  const displayGroups = $derived(groups ?? [
       {
-        heading: 'Payments',
+        heading: t('public.security.payments', {}, $locale),
         items: [
-          'Stripe stores card details. We do not.',
-          'Each project is the merchant on Stripe Connect.',
-          'Every Stripe webhook is signature-checked.',
-          'A browser redirect alone never grants access.',
+          t('public.security.stripeStores', {}, $locale),
+          t('public.security.merchant', {}, $locale),
+          t('public.security.webhooks', {}, $locale),
+          t('public.security.redirect', {}, $locale),
         ],
       },
       {
-        heading: 'Sign-in',
-        items: [
-          'Email codes or OAuth. No passwords on oss.tips.',
-          'Sessions can be listed and revoked.',
-          'Guest claim and reply links expire after use.',
-        ],
+        heading: t('public.security.signIn', {}, $locale),
+        items: [t('public.security.noPasswords', {}, $locale), t('public.security.sessions', {}, $locale), t('public.security.links', {}, $locale)],
       },
       {
-        heading: 'Operations',
-        items: [
-          'Privileged admin steps write an audit entry.',
-          'API keys are scoped and hashed at rest.',
-          'First payouts and odd ownership claims go through review.',
-        ],
+        heading: t('public.security.operations', {}, $locale),
+        items: [t('public.security.audit', {}, $locale), t('public.security.keys', {}, $locale), t('public.security.review', {}, $locale)],
       },
-    ],
-    report: 'Use Report on any project page. Staff see the report next to that project in the review queue.',
-  };
+    ]);
+  const displayReport = $derived(report ?? t('public.security.report', {}, $locale));
+
+  const heroClass = stylex.attrs(publicStyles.hero).class;
+  const containerClass = stylex.attrs(publicStyles.container, publicStyles.reading).class;
+  const sectionClass = stylex.attrs(publicStyles.sectionTight).class;
 </script>
 
-<div>
-  <PublicNav />
-  <main id="main-content">
-    <section class="pl-public-hero">
-      <div class="pl-container pl-container--reading">
-        <p class="pl-public-hero__brand">oss.tips</p>
-        <h1 class="pl-display pl-public-hero__title">Security</h1>
-        <p class="pl-page-lead">{pageDemo.lead}</p>
+<PublicPageFrame>
+  {#snippet children()}
+    <section class={heroClass}>
+      <div class={containerClass}>
+        <p class={stylex.attrs(publicStyles.mono, publicStyles.muted).class}>{t('public.security.kicker', {}, $locale)}</p>
+        <h1 class={stylex.attrs(publicStyles.heroTitle).class}>{t('public.security.title', {}, $locale)}</h1>
+        <p class={stylex.attrs(publicStyles.lead).class}>{displayLead}</p>
       </div>
     </section>
-    <section class="pl-section" style="padding-top: 0;">
-      <div class="pl-container pl-container--reading">
-        <div class="pl-prose">
-          {#each pageDemo.groups as group (group.heading)}
+    <section class={sectionClass}>
+      <div class={containerClass}>
+        <div class={stylex.attrs(publicStyles.prose).class}>
+          {#each displayGroups as group (group.heading)}
             <h2>{group.heading}</h2>
             <ul>
               {#each group.items as item (item)}
@@ -56,11 +68,10 @@
               {/each}
             </ul>
           {/each}
-          <h2>Report a project</h2>
-          <p>{pageDemo.report}</p>
+          <h2>{t('public.security.reportTitle', {}, $locale)}</h2>
+          <p>{displayReport}</p>
         </div>
       </div>
     </section>
-  </main>
-  <PublicFooter />
-</div>
+  {/snippet}
+</PublicPageFrame>

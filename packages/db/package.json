@@ -17,8 +17,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "migrate": "node --import tsx src/migrate.ts",
-    "seed": "node --import tsx src/seed.ts",
-    "lint": "echo ok"
+    "seed": "node --import tsx src/seed.ts"
   },
   "dependencies": {
     "@oss-tips/domain": "workspace:*",

@@ -1,20 +1,8 @@
-import { layout, moneyLine } from './base.js';
+import { emailUrl, escapeHtml, layout, moneyLine } from './base.js';
+import { emailCopy, interpolate, type MembershipEmailEvent } from '../i18n.js';
 import type { RenderedEmail } from '../types.js';
 
-export type MembershipEvent =
-  | 'started'
-  | 'renewed'
-  | 'cancelled'
-  | 'payment_failed'
-  | 'grace_ending';
-
-const TITLES: Record<MembershipEvent, string> = {
-  started: 'Membership started',
-  renewed: 'Membership renewed',
-  cancelled: 'Membership cancelled',
-  payment_failed: 'Membership payment failed',
-  grace_ending: 'Membership grace period ending',
-};
+export type MembershipEvent = MembershipEmailEvent;
 
 export function renderMembershipEmail(args: {
   event: MembershipEvent;
@@ -23,14 +11,18 @@ export function renderMembershipEmail(args: {
   currency: string;
   platformFees: string;
   manageUrl?: string | undefined;
+  locale?: string | null;
 }): RenderedEmail {
-  const title = TITLES[args.event];
-  const subject = `${title} — ${args.projectName}`;
-  const money = moneyLine(args.projectAmount, args.currency, args.platformFees);
-  const text = `${title} for ${args.projectName}. ${money}${args.manageUrl ? `\nManage: ${args.manageUrl}` : ''}`;
+  const copy = emailCopy(args.locale);
+  const title = copy.membership.titles[args.event];
+  const subject = interpolate(copy.membership.subject, { title, projectName: args.projectName });
+  const money = moneyLine(args.projectAmount, args.currency, args.platformFees, args.locale);
+  const text = `${interpolate(copy.membership.text, { title, projectName: args.projectName })} ${money}${args.manageUrl ? `\n${copy.membership.manage}: ${args.manageUrl}` : ''}`;
+  const projectName = escapeHtml(args.projectName);
+  const manageUrl = args.manageUrl ? emailUrl(args.manageUrl) : null;
   const html = layout(
     subject,
-    `<p><strong>${title}</strong> for ${args.projectName}.</p><p>${money}</p>${args.manageUrl ? `<p><a href="${args.manageUrl}">Manage membership</a></p>` : ''}`,
+    `<p>${interpolate(copy.membership.body, { title: escapeHtml(title), projectName })}</p><p>${escapeHtml(money)}</p>${manageUrl ? `<p><a href="${manageUrl}">${copy.membership.manage}</a></p>` : ''}`,
   );
   return { subject, html, text };
 }

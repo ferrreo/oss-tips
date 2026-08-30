@@ -182,11 +182,13 @@ Passwords remain disabled.
 - Six digits.
 - Five-minute validity.
 - Store only a secure hash, attempt counter and expiry.
-- One active sign-in OTP per email/purpose.
+- Only the newest active sign-in OTP is usable per email/purpose.
 - Per-IP and per-email send/verify limits.
 - Uniform responses to prevent account enumeration.
 - Invalidate after success or too many attempts.
 - High-priority Resend queue.
+- Authentication mail uses an isolated PostgreSQL `otp` queue and a dedicated
+  worker; general workers never claim it.
 
 ### Passkeys
 
@@ -241,6 +243,7 @@ Security:
 - Store bot token in secret manager/env only.
 - Encrypt refresh/access tokens at rest when retained.
 - Request minimum scopes.
+- Enable only Discord `GUILD_MEMBERS` privileged intent (the bot also requests `GUILDS`) so member join/update events can trigger role reconciliation.
 - Verify guild admin capability before mapping roles.
 - Never let a project choose a role at or above the bot’s role.
 - Queue role changes and make them idempotent by `(guild,user,role,desired_state,entitlement_version)`.

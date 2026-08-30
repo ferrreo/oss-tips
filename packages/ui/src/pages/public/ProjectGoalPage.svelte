@@ -1,57 +1,77 @@
 <script lang="ts">
-  import PublicNav from '../../components/PublicNav.svelte';
-  import PublicFooter from '../../components/PublicFooter.svelte';
+  import { stylex } from '../../styles/stylex-runtime.js';
+  import PublicPageFrame from './PublicPageFrame.svelte';
   import GoalProgress from '../../components/GoalProgress.svelte';
-  import { demoProject, demoGoals, formatMoney } from '../../fixtures/demo.js';
+  import { demoProject, demoGoals, type Goal, type Project } from '../../fixtures/demo.js';
+  import { formatCurrency, formatDate, formatNumber, locale, t } from '../../lib/i18n.js';
+  import { primitives } from '../../styles/primitives.stylex.js';
+  import { publicStyles } from '../../styles/public.stylex.js';
 
-  interface Props {
+  export interface Props {
+    project?: Project;
+    goal?: Goal;
+    goals?: Goal[];
     slug?: string;
+    notes?: string[];
   }
 
-  let { slug = 'infrastructure-upgrade' }: Props = $props();
+  const defaultGoal = demoGoals.find((item) => item.slug === 'infrastructure-upgrade');
+  if (!defaultGoal) throw new Error('Grove demo goal infrastructure-upgrade is missing');
 
-  function requireGoal(goalSlug: string) {
-    const found = demoGoals.find((item) => item.slug === goalSlug);
-    if (!found) throw new Error(`Grove demo goal missing: ${goalSlug}`);
-    return found;
-  }
+  let {
+    project = demoProject,
+    goal: providedGoal,
+    goals = demoGoals,
+    slug = 'infrastructure-upgrade',
+    notes,
+  }: Props = $props();
 
-  const goal = $derived(requireGoal(slug));
-  const remainingMinor = $derived(goal.targetMinor - goal.raisedMinor);
-
-  const notes = [
-    'Uses settled project support before Stripe and oss.tips fees.',
-    'Excludes the optional supporter tip to oss.tips.',
-    'Refunds and chargebacks reduce the raised total.',
-  ];
+  const goal = $derived(providedGoal ?? goals.find((item) => item.slug === slug) ?? defaultGoal);
+  const isCountGoal = $derived(
+    goal.type === 'supporter_count' ||
+      goal.type === 'active_supporter_count' ||
+      (!goal.type && goal.basis === 'active supporters'),
+  );
+  const progress = $derived(
+    isCountGoal ? (goal.progressCount ?? goal.raisedMinor) : goal.raisedMinor,
+  );
+  const target = $derived(isCountGoal ? (goal.targetCount ?? goal.targetMinor) : goal.targetMinor);
+  const remaining = $derived(Math.max(0, target - progress));
+  const remainingLabel = $derived(
+    isCountGoal ? formatNumber(remaining, $locale) : formatCurrency(remaining, goal.currency, $locale),
+  );
+  const deadlineLabel = $derived(
+    goal.deadline && !Number.isNaN(Date.parse(goal.deadline))
+      ? formatDate(goal.deadline, $locale)
+      : goal.deadline ?? '',
+  );
+  const summary = $derived(
+    goal.deadline
+      ? t('public.goal.summaryWithDeadline', { amount: remainingLabel, date: deadlineLabel, basis: goal.basis }, $locale)
+      : t('public.goal.summaryWithoutDeadline', { amount: remainingLabel, basis: goal.basis }, $locale),
+  );
+  const displayNotes = $derived(notes ?? [
+    t('public.goal.noteSettled', {}, $locale),
+    t('public.goal.noteTip', {}, $locale),
+    t('public.goal.noteRefunds', {}, $locale),
+  ]);
+  const containerClass = stylex.attrs(publicStyles.container, publicStyles.reading).class;
 </script>
 
-<div>
-  <PublicNav />
-  <main id="main-content" class="pl-section">
-    <div class="pl-container pl-container--reading">
-      <p class="pl-muted" style="margin-bottom: 0.5rem;">
-        <a href="/{demoProject.slug}">{demoProject.name}</a> / Goals
-      </p>
-      <h1 class="pl-page-title">{goal.title}</h1>
-      <p class="pl-page-lead">{goal.description}</p>
-      <div style="margin: 2rem 0;">
-        <GoalProgress {goal} />
+<PublicPageFrame mainClass={stylex.attrs(publicStyles.section).class ?? ''}>
+  {#snippet children()}
+    <div class={containerClass}>
+      <p class={stylex.attrs(publicStyles.small, publicStyles.muted).class}><a class={stylex.attrs(publicStyles.link, primitives.focusRing).class} href="/{project.slug}">{project.name}</a> / {t('public.goal.breadcrumb', {}, $locale)}</p>
+      <h1 class={stylex.attrs(publicStyles.pageTitle).class}>{goal.title}</h1>
+      <p class={stylex.attrs(publicStyles.lead).class}>{goal.description}</p>
+      <div class={stylex.attrs(publicStyles.section).class}>
+        <GoalProgress {goal} headingLevel={2} />
       </div>
-      <p style="margin-bottom: 1rem;">
-        {formatMoney(remainingMinor, goal.currency)} remaining
-        {#if goal.deadline}
-          before {goal.deadline}
-        {/if}
-        · counted {goal.basis}.
-      </p>
-      <ul class="pl-muted" style="padding-left: 1.25rem; margin-bottom: 1.5rem;">
-        {#each notes as note (note)}
-          <li>{note}</li>
-        {/each}
+      <p>{summary}</p>
+      <ul class={stylex.attrs(publicStyles.muted).class}>
+        {#each displayNotes as note (note)}<li>{note}</li>{/each}
       </ul>
-      <a class="pl-btn pl-btn--primary pl-focus-ring" href="/{demoProject.slug}/support">Support this goal</a>
+      <a class={stylex.attrs(publicStyles.action, publicStyles.actionPrimary).class} href="/{project.slug}/support">{t('public.goal.support', {}, $locale)}</a>
     </div>
-  </main>
-  <PublicFooter />
-</div>
+  {/snippet}
+</PublicPageFrame>

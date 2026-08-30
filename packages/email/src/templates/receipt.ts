@@ -1,4 +1,5 @@
-import { layout, moneyLine } from './base.js';
+import { emailUrl, escapeHtml, layout, moneyLine } from './base.js';
+import { emailCopy, interpolate } from '../i18n.js';
 import type { RenderedEmail } from '../types.js';
 
 export function renderReceiptEmail(args: {
@@ -7,13 +8,16 @@ export function renderReceiptEmail(args: {
   currency: string;
   platformFees: string;
   receiptUrl: string;
+  locale?: string | null;
 }): RenderedEmail {
-  const subject = `Receipt for your support of ${args.projectName}`;
-  const money = moneyLine(args.projectAmount, args.currency, args.platformFees);
-  const text = `${money}\nView receipt: ${args.receiptUrl}`;
+  const copy = emailCopy(args.locale);
+  const subject = interpolate(copy.receipt.subject, { projectName: args.projectName });
+  const money = moneyLine(args.projectAmount, args.currency, args.platformFees, args.locale);
+  const text = `${money}\n${copy.receipt.view}: ${args.receiptUrl}`;
+  const receiptUrl = emailUrl(args.receiptUrl);
   const html = layout(
     subject,
-    `<p>Thank you for supporting <strong>${args.projectName}</strong>.</p><p>${money}</p><p><a href="${args.receiptUrl}">View receipt</a></p>`,
+    `<p>${copy.receipt.thanks} <strong>${escapeHtml(args.projectName)}</strong>.</p><p>${escapeHtml(money)}</p><p><a href="${receiptUrl}">${copy.receipt.view}</a></p>`,
   );
   return { subject, html, text };
 }

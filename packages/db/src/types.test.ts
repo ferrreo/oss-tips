@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import type { Database } from './types.js';
+import { expectTypeOf } from 'vitest';
+import type {
+  Database,
+  PaymentDisputeTable,
+  PaymentTable,
+  RefundTable,
+  StripeConnectedAccountTable,
+} from './types.js';
 
 describe('Database types', () => {
   it('includes all documented table groups', () => {
@@ -10,6 +17,8 @@ describe('Database types', () => {
       'verification',
       'passkey',
       'user_security_event',
+      'otp_send_rate_limit',
+      'api_rate_limit',
       'organisation',
       'organisation_member',
       'project',
@@ -36,6 +45,7 @@ describe('Database types', () => {
       'reconciliation_run',
       'reconciliation_difference',
       'checkout_intent',
+      'guest_access_token',
       'tier',
       'tier_price',
       'tier_reward',
@@ -46,8 +56,11 @@ describe('Database types', () => {
       'post_attachment',
       'supporter_public_profile',
       'supporter_message_thread',
+      'message_rate_limit',
+      'message_block',
       'supporter_message',
       'project_goal',
+      'project_team_invite',
       'discord_connection',
       'discord_guild',
       'discord_role_mapping',
@@ -58,6 +71,7 @@ describe('Database types', () => {
       'custom_domain',
       'email_delivery',
       'object_asset',
+      'object_asset_variant',
       'audit_event',
       'admin_case',
       'abuse_report',
@@ -67,11 +81,22 @@ describe('Database types', () => {
       'ledger_posting_intent',
       'ledger_posting_result',
       'metric_event_hourly',
+      'metric_event_dedupe',
       'project_metric_daily',
       'platform_metric_daily',
     ];
 
     const tableSet = new Set<string>(keys);
-    expect(tableSet.size).toBe(65);
+    expect(tableSet.size).toBe(73);
+  });
+
+  it('keeps provider correction identities in database contracts', () => {
+    expectTypeOf<PaymentTable>().toHaveProperty('stripe_application_fee_id');
+    expectTypeOf<RefundTable>().toHaveProperty('idempotency_key');
+    expectTypeOf<RefundTable>().toHaveProperty('stripe_application_fee_refund_id');
+    expectTypeOf<PaymentDisputeTable>().toHaveProperty('last_event_created');
+    expectTypeOf<PaymentDisputeTable>().toHaveProperty('last_event_id');
+    expectTypeOf<StripeConnectedAccountTable>().toHaveProperty('last_event_created');
+    expectTypeOf<StripeConnectedAccountTable>().toHaveProperty('last_event_id');
   });
 });

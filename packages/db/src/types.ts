@@ -5,16 +5,22 @@ export type Uuid = string;
 
 /** Money amounts in minor units — bigint in app, numeric string in DB. */
 export type MoneyMinor = ColumnType<string, string | bigint | number, string | bigint | number>;
+export type NullableMoneyMinor = ColumnType<
+  string | null,
+  string | bigint | number | null,
+  string | bigint | number | null
+>;
 
 export type Timestamp = Date;
 
+export const ACCOUNT_THEME_PREFERENCES = ['system', 'light', 'dark'] as const;
+export type AccountThemePreference = (typeof ACCOUNT_THEME_PREFERENCES)[number];
+
+export const ACCOUNT_LOCALES = ['en-GB', 'de', 'fr', 'es', 'pt-BR'] as const;
+export type AccountLocale = (typeof ACCOUNT_LOCALES)[number];
+
 export type JsonValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JsonValue[]
-  | { [key: string]: JsonValue };
+  string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 
 export type Json = ColumnType<JsonValue, JsonValue, JsonValue>;
 
@@ -28,6 +34,8 @@ export type UserTable = {
   email: string;
   email_verified: boolean;
   image: string | null;
+  theme_preference: Generated<AccountThemePreference>;
+  locale: Generated<AccountLocale>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -48,9 +56,14 @@ export type AccountTable = {
   user_id: Uuid;
   account_id: string;
   provider_id: string;
+  issuer: string;
   access_token: string | null;
   refresh_token: string | null;
-  expires_at: Timestamp | null;
+  id_token: string | null;
+  access_token_expires_at: Timestamp | null;
+  refresh_token_expires_at: Timestamp | null;
+  scope: string | null;
+  password: string | null;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -67,12 +80,15 @@ export type VerificationTable = {
 export type PasskeyTable = {
   id: Uuid;
   user_id: Uuid;
-  name: string;
+  name: string | null;
   credential_id: string;
   public_key: string;
-  counter: bigint;
+  counter: Generated<number>;
+  device_type: string;
+  backed_up: Generated<boolean>;
   transports: string | null;
   created_at: Generated<Timestamp>;
+  aaguid: string | null;
   last_used_at: Timestamp | null;
 };
 
@@ -84,6 +100,37 @@ export type UserSecurityEventTable = {
   user_agent: string | null;
   metadata: Json;
   created_at: Generated<Timestamp>;
+};
+
+export type PlatformMemberTable = {
+  id: Uuid;
+  user_id: Uuid;
+  role: string;
+  created_at: Generated<Timestamp>;
+};
+
+/** Shared-store OTP send counters keyed by HMACs, never raw addresses. */
+export type OtpSendRateLimitTable = {
+  id: Uuid;
+  scope: 'email' | 'ip';
+  key_hash: string;
+  window_started_at: Timestamp;
+  send_count: number;
+  last_sent_at: Timestamp | null;
+  cooldown_level: number;
+  created_at: Generated<Timestamp>;
+  updated_at: Generated<Timestamp>;
+};
+
+/** Shared token buckets for API principals and sensitive route classes. */
+export type ApiRateLimitTable = {
+  id: Uuid;
+  key_hash: string;
+  route_class: string;
+  available_tokens: number;
+  last_refill_at: Timestamp;
+  created_at: Generated<Timestamp>;
+  updated_at: Generated<Timestamp>;
 };
 
 // ---------------------------------------------------------------------------
@@ -113,8 +160,25 @@ export type ProjectTable = {
   name: string;
   slug: string;
   status: string;
+  closed_at: Generated<Timestamp | null>;
   description: string | null;
   default_currency: string;
+  website_url: Generated<string | null>;
+  support_email: Generated<string | null>;
+  support_email_verified_at: Generated<Timestamp | null>;
+  open_source_declared: Generated<boolean>;
+  open_source_license: Generated<string | null>;
+  min_support_minor: Generated<string | null>;
+  max_support_minor: Generated<string | null>;
+  public_show_supporters: Generated<boolean>;
+  public_show_goal: Generated<boolean>;
+  public_show_stats: Generated<boolean>;
+  public_show_gated_post_metadata: Generated<boolean>;
+  logo_asset_id: Generated<Uuid | null>;
+  banner_asset_id: Generated<Uuid | null>;
+  discovery_ecosystems: Generated<string[]>;
+  discovery_languages: Generated<string[]>;
+  discovery_tags: Generated<string[]>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -124,6 +188,7 @@ export type ProjectMemberTable = {
   project_id: Uuid;
   user_id: Uuid;
   role: string;
+  capabilities: Generated<string[]>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -134,6 +199,8 @@ export type ProjectRepositoryTable = {
   provider: string;
   external_id: string;
   url: string;
+  verification_status: Generated<string>;
+  verified_at: Generated<Timestamp | null>;
   created_at: Generated<Timestamp>;
 };
 
@@ -143,6 +210,11 @@ export type ProjectClaimTable = {
   user_id: Uuid | null;
   email: string;
   status: string;
+  method: Generated<string>;
+  proof_reference: Generated<string | null>;
+  reviewed_by: Generated<Uuid | null>;
+  reviewed_at: Generated<Timestamp | null>;
+  failure_reason: Generated<string | null>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -194,6 +266,9 @@ export type StripeConnectedAccountTable = {
   charges_enabled: boolean;
   payouts_enabled: boolean;
   capabilities: Json;
+  /** Stripe event ordering cursor; protects account state from late webhook delivery. */
+  last_event_created: Generated<string>;
+  last_event_id: Generated<string>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -240,6 +315,9 @@ export type StripeEventTable = {
   payload: Json;
   processed_at: Timestamp | null;
   process_error: string | null;
+  processing_at: Generated<Timestamp | null>;
+  processing_by: Generated<string | null>;
+  processing_attempts: Generated<number>;
   received_at: Generated<Timestamp>;
 };
 
@@ -250,6 +328,7 @@ export type PaymentTable = {
   stripe_account_id: string;
   stripe_payment_intent_id: string | null;
   stripe_charge_id: string | null;
+  stripe_application_fee_id: string | null;
   currency: string;
   exponent: number;
   customer_charge_minor: MoneyMinor;
@@ -260,6 +339,12 @@ export type PaymentTable = {
   status: string;
   cadence: string;
   feature_mode: string;
+  receipt_email: Generated<string | null>;
+  public_show_name: Generated<boolean>;
+  public_show_amount: Generated<boolean>;
+  public_show_message: Generated<boolean>;
+  public_display_name: Generated<string | null>;
+  public_message: Generated<string | null>;
   settled_at: Timestamp | null;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
@@ -278,8 +363,10 @@ export type RefundTable = {
   id: Uuid;
   payment_id: Uuid;
   stripe_refund_id: string;
+  idempotency_key: string | null;
   amount_minor: MoneyMinor;
   application_fee_refund_minor: MoneyMinor;
+  stripe_application_fee_refund_id: string | null;
   currency: string;
   status: string;
   reason: string | null;
@@ -294,6 +381,9 @@ export type PaymentDisputeTable = {
   status: string;
   amount_minor: MoneyMinor;
   currency: string;
+  /** Stripe event ordering cursor; prevents stale dispute regressions. */
+  last_event_created: Generated<string>;
+  last_event_id: Generated<string>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -309,6 +399,15 @@ export type SubscriptionTable = {
   current_period_end: Timestamp | null;
   grace_ends_at: Timestamp | null;
   cancel_at_period_end: boolean;
+  /** Snapshot used to verify every invoice against the checkout decision. */
+  project_amount_minor: NullableMoneyMinor;
+  platform_tip_minor: NullableMoneyMinor;
+  currency: Generated<string | null>;
+  feature_mode: Generated<string | null>;
+  cadence: Generated<string | null>;
+  /** Stripe event ordering cursor; protects state from late webhook delivery. */
+  last_event_created: Generated<string>;
+  last_event_id: Generated<string>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -316,6 +415,7 @@ export type SubscriptionTable = {
 export type SubscriptionPeriodTable = {
   id: Uuid;
   subscription_id: Uuid;
+  stripe_invoice_id: Generated<string | null>;
   period_start: Timestamp;
   period_end: Timestamp;
   payment_id: Uuid | null;
@@ -344,6 +444,8 @@ export type ReconciliationRunTable = {
   period_start: string;
   period_end: string;
   status: string;
+  provider_net_minor: MoneyMinor;
+  ledger_net_minor: MoneyMinor;
   started_at: Timestamp;
   completed_at: Timestamp | null;
   created_at: Generated<Timestamp>;
@@ -371,7 +473,23 @@ export type CheckoutIntentTable = {
   platform_tip_minor: MoneyMinor;
   tier_id: Uuid | null;
   cadence: string;
+  public_show_name: Generated<boolean>;
+  public_show_amount: Generated<boolean>;
+  public_show_message: Generated<boolean>;
   expires_at: Timestamp;
+  created_at: Generated<Timestamp>;
+};
+
+export type GuestAccessTokenTable = {
+  id: Uuid;
+  kind: 'claim' | 'reply';
+  token_hash: string;
+  payment_id: Uuid | null;
+  thread_id: Uuid | null;
+  email_hash: string;
+  attempt_count: number;
+  expires_at: Timestamp;
+  used_at: Timestamp | null;
   created_at: Generated<Timestamp>;
 };
 
@@ -388,6 +506,11 @@ export type TierTable = {
   rank: number;
   is_active: boolean;
   one_off_duration: string | null;
+  icon: Generated<string | null>;
+  member_cap: Generated<number | null>;
+  minimum_visibility: Generated<string>;
+  badge: Generated<string | null>;
+  discord_role_ids: Generated<string[]>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -439,6 +562,8 @@ export type PostTable = {
   slug: string;
   status: string;
   published_at: Timestamp | null;
+  scheduled_at: Timestamp | null;
+  notify_supporters: Generated<boolean>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -477,6 +602,7 @@ export type SupporterPublicProfileTable = {
   display_name: string | null;
   show_amount: boolean;
   show_name: boolean;
+  show_message: Generated<boolean>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -491,12 +617,32 @@ export type SupporterMessageThreadTable = {
   updated_at: Generated<Timestamp>;
 };
 
+export type MessageRateLimitTable = {
+  id: Uuid;
+  scope: 'thread' | 'user' | 'project';
+  key_hash: string;
+  window_started_at: Timestamp;
+  message_count: number;
+  created_at: Generated<Timestamp>;
+  updated_at: Generated<Timestamp>;
+};
+
+export type MessageBlockTable = {
+  id: Uuid;
+  project_id: Uuid;
+  thread_id: Uuid;
+  blocker_key_hash: string;
+  blocked_key_hash: string;
+  created_at: Generated<Timestamp>;
+};
+
 export type SupporterMessageTable = {
   id: Uuid;
   thread_id: Uuid;
   author_user_id: Uuid | null;
   author_name: string | null;
   body: string;
+  is_internal: Generated<boolean>;
   created_at: Generated<Timestamp>;
 };
 
@@ -509,6 +655,23 @@ export type ProjectGoalTable = {
   currency: string | null;
   title: string;
   is_active: boolean;
+  status: Generated<string>;
+  deadline: Generated<Timestamp | null>;
+  basis: Generated<string | null>;
+  created_at: Generated<Timestamp>;
+  updated_at: Generated<Timestamp>;
+};
+
+export type ProjectTeamInviteTable = {
+  id: Uuid;
+  project_id: Uuid;
+  email: string;
+  role: string;
+  capabilities: string[];
+  invited_by: Uuid;
+  status: string;
+  expires_at: Timestamp;
+  accepted_at: Timestamp | null;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -603,6 +766,15 @@ export type CustomDomainTable = {
   hostname: string;
   status: string;
   ssl_status: string | null;
+  provider_id: Generated<string | null>;
+  validation_method: Generated<string>;
+  validation_name: Generated<string | null>;
+  validation_value: Generated<string | null>;
+  cname_target: Generated<string | null>;
+  grace_until: Generated<Timestamp | null>;
+  last_error: Generated<string | null>;
+  retry_at: Generated<Timestamp | null>;
+  canonical_enabled: Generated<boolean>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 };
@@ -614,8 +786,29 @@ export type EmailDeliveryTable = {
   status: string;
   provider_id: string | null;
   metadata: Json;
+  dedupe_key: Generated<string | null>;
   sent_at: Timestamp | null;
   created_at: Generated<Timestamp>;
+  updated_at: Generated<Timestamp>;
+};
+
+export type EmailDeliveryEventTable = {
+  id: Uuid;
+  provider_event_id: string;
+  provider_email_id: string | null;
+  email_delivery_id: Uuid | null;
+  event_type: string;
+  status: string;
+  occurred_at: Timestamp;
+  created_at: Generated<Timestamp>;
+};
+
+export type EmailSuppressionTable = {
+  email_address: string;
+  reason: string;
+  provider_event_id: string;
+  created_at: Generated<Timestamp>;
+  updated_at: Generated<Timestamp>;
 };
 
 export type ObjectAssetTable = {
@@ -626,10 +819,28 @@ export type ObjectAssetTable = {
   storage_key: string;
   content_type: string;
   byte_size: bigint;
+  reserved_bytes: Generated<bigint>;
   checksum: string | null;
+  expires_at: Generated<Timestamp | null>;
   soft_deleted_at: Timestamp | null;
+  legal_hold: Generated<boolean>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
+};
+
+export type ObjectAssetVariantTable = {
+  id: Uuid;
+  object_asset_id: Uuid;
+  project_id: Uuid;
+  variant_name: 'sm' | 'md' | 'lg';
+  visibility: 'public' | 'private';
+  storage_key: string;
+  content_type: string;
+  byte_size: bigint;
+  width: number;
+  height: number;
+  checksum: string;
+  created_at: Generated<Timestamp>;
 };
 
 // ---------------------------------------------------------------------------
@@ -638,15 +849,20 @@ export type ObjectAssetTable = {
 
 export type AuditEventTable = {
   id: Uuid;
-  actor_user_id: Uuid | null;
+  actor_id: Uuid | null;
   actor_type: string;
+  session_id: Uuid | null;
   action: string;
   resource_type: string;
   resource_id: Uuid | null;
   project_id: Uuid | null;
-  metadata: Json;
-  ip_address: string | null;
-  created_at: Generated<Timestamp>;
+  reason: string | null;
+  ip_hash: string | null;
+  before_hash: string | null;
+  after_hash: string | null;
+  correlation_id: string;
+  metadata_redacted: Json;
+  occurred_at: Generated<Timestamp>;
 };
 
 export type AdminCaseTable = {
@@ -665,6 +881,7 @@ export type AdminCaseTable = {
 export type AbuseReportTable = {
   id: Uuid;
   reporter_user_id: Uuid | null;
+  reporter_key_hash: Generated<string | null>;
   project_id: Uuid | null;
   resource_type: string;
   resource_id: Uuid | null;
@@ -679,6 +896,8 @@ export type JobTable = {
   queue: string;
   kind: string;
   payload: Json;
+  /** Stable target key used to coalesce concurrent role-sync work. */
+  dedupe_key: Generated<string | null>;
   status: string;
   attempt_count: number;
   max_attempts: number;
@@ -745,6 +964,14 @@ export type MetricEventHourlyTable = {
   created_at: Generated<Timestamp>;
 };
 
+/** Short-lived hashes used only to make public event retries idempotent. */
+export type MetricEventDedupeTable = {
+  id: Uuid;
+  project_id: Uuid;
+  event_key_hash: string;
+  created_at: Generated<Timestamp>;
+};
+
 export type ProjectMetricDailyTable = {
   id: Uuid;
   project_id: Uuid;
@@ -778,6 +1005,9 @@ export interface Database {
   verification: VerificationTable;
   passkey: PasskeyTable;
   user_security_event: UserSecurityEventTable;
+  platform_member: PlatformMemberTable;
+  otp_send_rate_limit: OtpSendRateLimitTable;
+  api_rate_limit: ApiRateLimitTable;
 
   organisation: OrganisationTable;
   organisation_member: OrganisationMemberTable;
@@ -806,6 +1036,7 @@ export interface Database {
   reconciliation_run: ReconciliationRunTable;
   reconciliation_difference: ReconciliationDifferenceTable;
   checkout_intent: CheckoutIntentTable;
+  guest_access_token: GuestAccessTokenTable;
 
   tier: TierTable;
   tier_price: TierPriceTable;
@@ -817,8 +1048,11 @@ export interface Database {
   post_attachment: PostAttachmentTable;
   supporter_public_profile: SupporterPublicProfileTable;
   supporter_message_thread: SupporterMessageThreadTable;
+  message_rate_limit: MessageRateLimitTable;
+  message_block: MessageBlockTable;
   supporter_message: SupporterMessageTable;
   project_goal: ProjectGoalTable;
+  project_team_invite: ProjectTeamInviteTable;
 
   discord_connection: DiscordConnectionTable;
   discord_guild: DiscordGuildTable;
@@ -829,7 +1063,10 @@ export interface Database {
   webhook_delivery: WebhookDeliveryTable;
   custom_domain: CustomDomainTable;
   email_delivery: EmailDeliveryTable;
+  email_delivery_event: EmailDeliveryEventTable;
+  email_suppression: EmailSuppressionTable;
   object_asset: ObjectAssetTable;
+  object_asset_variant: ObjectAssetVariantTable;
 
   audit_event: AuditEventTable;
   admin_case: AdminCaseTable;
@@ -840,6 +1077,7 @@ export interface Database {
   ledger_posting_intent: LedgerPostingIntentTable;
   ledger_posting_result: LedgerPostingResultTable;
   metric_event_hourly: MetricEventHourlyTable;
+  metric_event_dedupe: MetricEventDedupeTable;
   project_metric_daily: ProjectMetricDailyTable;
   platform_metric_daily: PlatformMetricDailyTable;
 }
@@ -849,9 +1087,21 @@ export type User = Selectable<UserTable>;
 export type NewUser = Insertable<UserTable>;
 export type UserUpdate = Updateable<UserTable>;
 
+export type PlatformMember = Selectable<PlatformMemberTable>;
+
+export type OtpSendRateLimit = Selectable<OtpSendRateLimitTable>;
+export type NewOtpSendRateLimit = Insertable<OtpSendRateLimitTable>;
+export type OtpSendRateLimitUpdate = Updateable<OtpSendRateLimitTable>;
+
+export type ApiRateLimit = Selectable<ApiRateLimitTable>;
+export type NewApiRateLimit = Insertable<ApiRateLimitTable>;
+
 export type Project = Selectable<ProjectTable>;
 export type NewProject = Insertable<ProjectTable>;
 export type ProjectUpdate = Updateable<ProjectTable>;
+export type ProjectMember = Selectable<ProjectMemberTable>;
+export type ProjectRepository = Selectable<ProjectRepositoryTable>;
+export type ProjectClaim = Selectable<ProjectClaimTable>;
 
 export type Payment = Selectable<PaymentTable>;
 export type NewPayment = Insertable<PaymentTable>;
@@ -859,11 +1109,36 @@ export type NewPayment = Insertable<PaymentTable>;
 export type Entitlement = Selectable<EntitlementTable>;
 export type NewEntitlement = Insertable<EntitlementTable>;
 
+export type Subscription = Selectable<SubscriptionTable>;
+export type NewSubscription = Insertable<SubscriptionTable>;
+export type SubscriptionUpdate = Updateable<SubscriptionTable>;
+
+export type SubscriptionPeriod = Selectable<SubscriptionPeriodTable>;
+export type NewSubscriptionPeriod = Insertable<SubscriptionPeriodTable>;
+
+export type ProviderBalanceTransaction = Selectable<ProviderBalanceTransactionTable>;
+export type NewProviderBalanceTransaction = Insertable<ProviderBalanceTransactionTable>;
+export type ReconciliationRun = Selectable<ReconciliationRunTable>;
+export type NewReconciliationRun = Insertable<ReconciliationRunTable>;
+export type ReconciliationDifference = Selectable<ReconciliationDifferenceTable>;
+export type NewReconciliationDifference = Insertable<ReconciliationDifferenceTable>;
+
+export type EmailDeliveryEvent = Selectable<EmailDeliveryEventTable>;
+export type NewEmailDeliveryEvent = Insertable<EmailDeliveryEventTable>;
+export type EmailSuppression = Selectable<EmailSuppressionTable>;
+export type NewEmailSuppression = Insertable<EmailSuppressionTable>;
+
+export type MetricEventDedupe = Selectable<MetricEventDedupeTable>;
+export type NewMetricEventDedupe = Insertable<MetricEventDedupeTable>;
+
 export type Post = Selectable<PostTable>;
 export type NewPost = Insertable<PostTable>;
 
 export type ProjectGoal = Selectable<ProjectGoalTable>;
 export type NewProjectGoal = Insertable<ProjectGoalTable>;
+export type ProjectTeamInvite = Selectable<ProjectTeamInviteTable>;
+export type NewProjectTeamInvite = Insertable<ProjectTeamInviteTable>;
+export type ProjectTeamInviteUpdate = Updateable<ProjectTeamInviteTable>;
 
 export type Job = Selectable<JobTable>;
 export type NewJob = Insertable<JobTable>;
@@ -878,7 +1153,21 @@ export type Tier = Selectable<TierTable>;
 export type NewTier = Insertable<TierTable>;
 
 export type CheckoutIntent = Selectable<CheckoutIntentTable>;
+export type GuestAccessToken = Selectable<GuestAccessTokenTable>;
+export type NewGuestAccessToken = Insertable<GuestAccessTokenTable>;
 export type NewCheckoutIntent = Insertable<CheckoutIntentTable>;
+
+export type MessageRateLimit = Selectable<MessageRateLimitTable>;
+export type NewMessageRateLimit = Insertable<MessageRateLimitTable>;
+export type MessageBlock = Selectable<MessageBlockTable>;
+export type NewMessageBlock = Insertable<MessageBlockTable>;
+export type SupporterMessageThread = Selectable<SupporterMessageThreadTable>;
+export type NewSupporterMessageThread = Insertable<SupporterMessageThreadTable>;
+
+export type ObjectAsset = Selectable<ObjectAssetTable>;
+export type NewObjectAsset = Insertable<ObjectAssetTable>;
+export type ObjectAssetVariant = Selectable<ObjectAssetVariantTable>;
+export type NewObjectAssetVariant = Insertable<ObjectAssetVariantTable>;
 
 export type LedgerPostingIntent = Selectable<LedgerPostingIntentTable>;
 export type NewLedgerPostingIntent = Insertable<LedgerPostingIntentTable>;

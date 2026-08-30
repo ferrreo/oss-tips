@@ -1,9 +1,11 @@
 <script lang="ts">
   import HeroLandscape from './HeroLandscape.svelte';
-  import wordmarkLight from '../assets/oss-tips-wordmark-light.svg';
-  import wordmarkDark from '../assets/oss-tips-wordmark-dark.svg';
+  import BrandWordmark from './BrandWordmark.svelte';
+  import { attrs, shells } from '../styles/shells.stylex.js';
+  import { primitives } from '../styles/primitives.stylex.js';
+  import { locale, t } from '../lib/i18n.js';
 
-  interface Props {
+  export interface Props {
     theme?: 'light' | 'dark';
   }
 
@@ -25,42 +27,58 @@
     return () => observer.disconnect();
   });
 
-  const wordmark = $derived(resolved === 'dark' ? wordmarkDark : wordmarkLight);
+  const footerAttrs = attrs(shells.footer);
+  const containerAttrs = attrs(primitives.container);
+  const landscapeAttrs = attrs(shells.footerLandscape);
+  const mastheadAttrs = attrs(shells.footerMasthead);
+  const copyAttrs = attrs(shells.footerCopy);
+  const straplineAttrs = attrs(shells.footerStrapline);
+  const leadAttrs = attrs(shells.footerLead);
+  const navAttrs = attrs(shells.footerNav);
+  const groupAttrs = attrs(shells.footerGroup);
+  const headingAttrs = attrs(shells.footerHeading);
+  const linksAttrs = attrs(shells.footerLinks);
+  const linkAttrs = attrs(shells.footerLink, shells.focus);
+  const legalAttrs = attrs(shells.footerLegal);
+  const legalLinkAttrs = attrs(shells.footerLegalLink, shells.focus);
 </script>
 
-<footer class="pl-public-footer">
-  <div class="pl-public-footer__landscape">
+<footer class={footerAttrs.class} style={footerAttrs.style}>
+  <div class={landscapeAttrs.class} style={landscapeAttrs.style}>
     <HeroLandscape theme={resolved} compact />
   </div>
-  <div class="pl-container">
-    <div class="pl-public-footer__grid">
-      <div>
-        <img class="pl-public-footer__wordmark" src={wordmark} alt="oss.tips" width="128" height="28" />
-        <p class="pl-display pl-public-footer__strapline">Open source thrives with you.</p>
-        <p class="pl-public-footer__lead">
-          Direct support for the tools you rely on. Clear fees. No hidden platform balance.
+  <div class={containerAttrs.class} style={containerAttrs.style}>
+    <div class={mastheadAttrs.class} style={mastheadAttrs.style}>
+      <div class={copyAttrs.class} style={copyAttrs.style}>
+        <BrandWordmark theme={resolved} size="large" />
+        <p class={straplineAttrs.class} style={straplineAttrs.style}>{t('footer.strapline', {}, $locale)}</p>
+        <p class={leadAttrs.class} style={leadAttrs.style}>
+          {t('footer.lead', {}, $locale)}
         </p>
       </div>
-      <div>
-        <strong class="pl-public-footer__heading">Platform</strong>
-        <ul class="pl-public-footer__links">
-          <li><a href="/about">About</a></li>
-          <li><a href="/security">Security</a></li>
-          <li><a href="/transparency">Transparency</a></li>
-          <li><a href="/terms">Terms</a></li>
-        </ul>
-      </div>
-      <div>
-        <strong class="pl-public-footer__heading">Projects</strong>
-        <ul class="pl-public-footer__links">
-          <li><a href="/explore">Explore</a></li>
-          <li><a href="/docs">Documentation</a></li>
-          <li><a href="/pricing">How fees work</a></li>
-        </ul>
-      </div>
+      <nav class={navAttrs.class} style={navAttrs.style} aria-label={t('footer.navigation', {}, $locale)}>
+        <div class={groupAttrs.class} style={groupAttrs.style}>
+          <strong class={headingAttrs.class} style={headingAttrs.style}>{t('footer.platform', {}, $locale)}</strong>
+          <ul class={linksAttrs.class} style={linksAttrs.style}>
+            <li><a class={linkAttrs.class} style={linkAttrs.style} href="/about">{t('footer.about', {}, $locale)}</a></li>
+            <li><a class={linkAttrs.class} style={linkAttrs.style} href="/security">{t('footer.security', {}, $locale)}</a></li>
+            <li><a class={linkAttrs.class} style={linkAttrs.style} href="/transparency">{t('footer.transparency', {}, $locale)}</a></li>
+            <li><a class={linkAttrs.class} style={linkAttrs.style} href="/terms">{t('footer.terms', {}, $locale)}</a></li>
+          </ul>
+        </div>
+        <div class={groupAttrs.class} style={groupAttrs.style}>
+          <strong class={headingAttrs.class} style={headingAttrs.style}>{t('footer.projects', {}, $locale)}</strong>
+          <ul class={linksAttrs.class} style={linksAttrs.style}>
+            <li><a class={linkAttrs.class} style={linkAttrs.style} href="/explore">{t('nav.explore', {}, $locale)}</a></li>
+            <li><a class={linkAttrs.class} style={linkAttrs.style} href="/docs">{t('footer.documentation', {}, $locale)}</a></li>
+            <li><a class={linkAttrs.class} style={linkAttrs.style} href="/pricing">{t('footer.fees', {}, $locale)}</a></li>
+          </ul>
+        </div>
+      </nav>
     </div>
-    <p class="pl-public-footer__legal">
-      Payments run through Stripe. Each project is the merchant of record.
+    <p class={legalAttrs.class} style={legalAttrs.style}>
+      <span>{t('footer.paymentNote', {}, $locale)}</span>
+      <a class={legalLinkAttrs.class} style={legalLinkAttrs.style} href="/terms/privacy">{t('footer.privacy', {}, $locale)}</a>
     </p>
   </div>
 </footer>

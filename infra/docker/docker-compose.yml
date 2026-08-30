@@ -4,7 +4,7 @@ services:
     container_name: oss-tips-postgres
     restart: unless-stopped
     ports:
-      - '5432:5432'
+      - '127.0.0.1:5432:5432'
     environment:
       POSTGRES_USER: oss_tips
       POSTGRES_PASSWORD: oss_tips_dev
@@ -17,30 +17,59 @@ services:
       timeout: 5s
       retries: 10
 
-  # S3-compatible object storage (RustFS / MinIO API)
+  # S3-compatible object storage used by the upload quarantine pipeline.
   rustfs:
-    image: minio/minio:latest
+    image: rustfs/rustfs:1.0.0-beta.12
     container_name: oss-tips-rustfs
     restart: unless-stopped
     profiles: ['storage']
-    command: server /data --console-address ":9001"
+    command: /data
     ports:
-      - '9000:9000'
-      - '9001:9001'
+      - '127.0.0.1:9000:9000'
+      - '127.0.0.1:9001:9001'
     environment:
-      MINIO_ROOT_USER: oss_tips
-      MINIO_ROOT_PASSWORD: oss_tips_dev_secret
+      RUSTFS_ACCESS_KEY: OSS_TIPS_DEV
+      RUSTFS_SECRET_KEY: oss_tips_dev_secret_change_me
+      RUSTFS_RPC_SECRET: oss_tips_dev_rpc_secret_change_me
+      RUSTFS_ADDRESS: ':9000'
+      RUSTFS_CONSOLE_ADDRESS: ':9001'
+      RUSTFS_CONSOLE_ENABLE: 'true'
     volumes:
-      - rustfs_data:/data
+      - rustfs_data_v1:/data
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ['CMD', 'curl', '--fail', 'http://localhost:9000/health']
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
-  # TigerBeetle placeholder — replace image/command when wiring the real replica.
+  # Single-replica development ledger. Production uses six dedicated replicas.
   tigerbeetle:
-    image: alpine:3.21
+    image: ghcr.io/tigerbeetle/tigerbeetle:0.17.9
     container_name: oss-tips-tigerbeetle
     restart: unless-stopped
     profiles: ['ledger']
-    command: ['sh', '-c', 'echo "TigerBeetle placeholder — configure TIGERBEETLE_ADDRESSES for finance worker" && sleep infinity']
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - >-
+        test -f /data/0_0.tigerbeetle ||
+        /tigerbeetle format --cluster=0 --replica=0 --replica-count=1 --development /data/0_0.tigerbeetle;
+        exec /tigerbeetle start --addresses=0.0.0.0:3000 --development /data/0_0.tigerbeetle
+    ports:
+      - '127.0.0.1:3000:3000'
+    volumes:
+      - tigerbeetle_data:/data
+    security_opt:
+      - seccomp:unconfined
+      - no-new-privileges:true
+    healthcheck:
+      test: ['CMD-SHELL', 'nc -z 127.0.0.1 3000']
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
 volumes:
   postgres_data:
-  rustfs_data:
+  rustfs_data_v1:
+  tigerbeetle_data:

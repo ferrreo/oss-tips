@@ -1,0 +1,13 @@
+.git
+.github
+.hallmark
+.env
+.env.*
+node_modules
+**/node_modules
+**/dist
+**/.svelte-kit
+**/storybook-static
+data
+coverage
+*.tsbuildinfo

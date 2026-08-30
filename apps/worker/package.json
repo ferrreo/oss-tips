@@ -8,13 +8,15 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "echo ok",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@oss-tips/api-contracts": "workspace:*",
     "@oss-tips/db": "workspace:*",
     "@oss-tips/domain": "workspace:*",
-    "@oss-tips/observability": "workspace:*"
+    "@oss-tips/email": "workspace:*",
+    "@oss-tips/observability": "workspace:*",
+    "@oss-tips/storage": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",

@@ -7,6 +7,22 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./content": {
+      "types": "./dist/content/markdown.d.ts",
+      "default": "./dist/content/markdown.js"
+    },
+    "./money": {
+      "types": "./dist/money/index.d.ts",
+      "default": "./dist/money/index.js"
+    },
+    "./cloudflare": {
+      "types": "./dist/cloudflare.d.ts",
+      "default": "./dist/cloudflare.js"
+    },
+    "./auth-otp": {
+      "types": "./dist/auth-otp.d.ts",
+      "default": "./dist/auth-otp.js"
     }
   },
   "files": [
@@ -15,10 +31,10 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
-    "lint": "echo ok"
+    "test": "vitest run"
   },
   "devDependencies": {
+    "@types/node": "^22.20.1",
     "typescript": "^5.8.2",
     "vitest": "^4.1.11"
   }

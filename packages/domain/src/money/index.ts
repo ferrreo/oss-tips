@@ -2,6 +2,17 @@
 
 export type CurrencyCode = string & { readonly __brand: 'CurrencyCode' };
 
+/** Currencies currently supported by settlement ledger. */
+export const SUPPORTED_CURRENCIES = ['gbp', 'usd', 'eur', 'jpy'] as const;
+export type SupportedCurrency = (typeof SUPPORTED_CURRENCIES)[number];
+
+export function isSupportedCurrency(value: unknown): value is SupportedCurrency {
+  return (
+    typeof value === 'string' &&
+    SUPPORTED_CURRENCIES.includes(value.toLowerCase() as SupportedCurrency)
+  );
+}
+
 export type Money = {
   readonly amountMinor: bigint;
   readonly currency: CurrencyCode;

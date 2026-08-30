@@ -11,6 +11,9 @@ import {
   verifyWebhookSignature,
   canProject,
   feeRateBps,
+  projectCapabilitiesForRole,
+  paymentReadiness,
+  paymentsEnabled,
 } from './index.js';
 
 describe('fees', () => {
@@ -74,6 +77,40 @@ describe('membership', () => {
     s = reduceMembership(s, { kind: 'invoice_failed', at: new Date('2026-01-01') });
     expect(s.status).toBe('grace');
     expect(hasActiveAccess(s, new Date('2026-01-02'))).toBe(true);
+  });
+});
+
+describe('payment readiness', () => {
+  it('requires connected account, charges, payouts, and card payments capability', () => {
+    expect(
+      paymentsEnabled(
+        paymentReadiness({
+          connectedAccountId: 'acct_1',
+          chargesEnabled: true,
+          payoutsEnabled: true,
+          capabilities: { card_payments: 'active' },
+        }),
+      ),
+    ).toBe(true);
+    expect(
+      paymentsEnabled(
+        paymentReadiness({
+          chargesEnabled: true,
+          payoutsEnabled: true,
+          capabilities: { card_payments: 'active' },
+        }),
+      ),
+    ).toBe(false);
+    expect(
+      paymentsEnabled(
+        paymentReadiness({
+          connectedAccountId: 'acct_1',
+          chargesEnabled: true,
+          payoutsEnabled: true,
+          capabilities: {},
+        }),
+      ),
+    ).toBe(false);
   });
 });
 
@@ -142,5 +179,28 @@ describe('slug + webhooks + permissions', () => {
     };
     expect(canProject(actor, 'project.refund', 'p1').allowed).toBe(true);
     expect(canProject(actor, 'project.refund', 'p2').allowed).toBe(false);
+  });
+
+  it('applies an explicit wildcard role to local demo projects', () => {
+    const actor = {
+      kind: 'user' as const,
+      userId: 'demo-user',
+      projectRoles: new Map([['*', 'owner' as const]]),
+      platformRoles: [],
+    };
+    expect(canProject(actor, 'project.view_analytics', 'grove').allowed).toBe(true);
+  });
+
+  it('uses stored capabilities and fails closed for an explicit empty set', () => {
+    const actor = {
+      kind: 'user' as const,
+      userId: 'u1',
+      projectRoles: new Map([['p1', 'admin' as const]]),
+      projectCapabilities: new Map([['p1', new Set(projectCapabilitiesForRole('admin'))]]),
+      platformRoles: [],
+    };
+    expect(canProject(actor, 'project.manage_tiers', 'p1').allowed).toBe(true);
+    actor.projectCapabilities?.set('p1', new Set());
+    expect(canProject(actor, 'project.manage_tiers', 'p1').allowed).toBe(false);
   });
 });

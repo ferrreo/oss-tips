@@ -64,6 +64,8 @@ Private/gated post metadata may reveal title/date only when the project opts in;
 
 ```text
 GET    /api/v1/me
+GET    /api/v1/me/preferences
+PATCH  /api/v1/me/preferences
 GET    /api/v1/me/support
 GET    /api/v1/me/memberships
 PATCH  /api/v1/me/memberships/{id}
@@ -121,6 +123,14 @@ Use a PostgreSQL-backed coarse limiter for authenticated/project keys and Cloudf
 - Outgoing webhook replay: 20/minute/project.
 
 Rate-limit response includes `Retry-After` and standard headers.
+
+Authenticated buckets are PostgreSQL-backed token buckets keyed by an HMAC of the
+credential or session principal plus route class. The initial route-class policy
+uses 600/minute with burst 60 for API-key reads, 60/minute with burst 10 for
+analytics, 30/minute with burst 5 for exports, 600/minute with burst 60 for
+session reads, 120/minute with burst 30 for session mutations, and the stricter
+20/minute with burst 20 for webhook replay. Idle buckets are removed after 24
+hours.
 
 ## 8. Outgoing event envelope
 
@@ -219,6 +229,8 @@ Launch docs provide:
 - curl examples.
 - TypeScript types/client generated from OpenAPI.
 - Webhook verification examples in TypeScript, Rust, Go and Python.
+- Cross-language signature vector and runnable Node, TypeScript, Rust, Python and Go checks live in `docs/examples/webhooks/`.
+- `pnpm check:contracts` regenerates and validates OpenAPI, then runs every signature check.
 - Test webhook endpoint and sample events.
 - Idempotency/retry guidance.
 - Changelog and deprecation policy.

@@ -1,8 +1,4 @@
-export type GoalType =
-  | 'one_time_money'
-  | 'calendar_month_money'
-  | 'active_supporter_count'
-  | 'mrr';
+export type GoalType = 'one_time_money' | 'calendar_month_money' | 'active_supporter_count' | 'mrr';
 
 export type GoalProgressInput = {
   type: GoalType;

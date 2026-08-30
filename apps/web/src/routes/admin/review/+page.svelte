@@ -1,7 +1,7 @@
 <script lang="ts">
-  import ReviewPage from '@oss-tips/ui/pages/admin/ReviewPage.svelte';
+  import AdminReviewQueuePage from '@oss-tips/ui/pages/admin/AdminReviewQueuePage.svelte';
 
   let { data } = $props();
 </script>
 
-<ReviewPage {...data} />
+<AdminReviewQueuePage {...data} />

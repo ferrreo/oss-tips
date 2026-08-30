@@ -1,9 +1,70 @@
-import { formatMoney, type Entitlement, type Membership, type Thread } from '../../fixtures/demo.js';
+import {
+  formatMoney,
+  type Entitlement,
+  type Membership,
+  type Thread,
+} from '../../fixtures/demo.js';
 
 export { formatMoney };
 
 export const supporterName = 'Ada L.';
 export const supporterEmail = 'ada@example.com';
+
+export const supporterPasskeys = [
+  {
+    id: 'passkey-macbook',
+    name: 'Ada’s MacBook',
+    deviceType: 'multiDevice',
+    backedUp: true,
+    createdAt: '2026-07-14T08:20:00.000Z',
+    lastUsedAt: '2026-08-29T08:10:00.000Z',
+  },
+  {
+    id: 'passkey-pixel',
+    name: 'Pixel 9',
+    deviceType: 'singleDevice',
+    backedUp: false,
+    createdAt: '2026-08-02T18:45:00.000Z',
+    lastUsedAt: '2026-08-27T21:30:00.000Z',
+  },
+];
+
+export const supporterSessions = [
+  {
+    id: 'session-current',
+    createdAt: '2026-08-29T08:12:00.000Z',
+    updatedAt: '2026-08-29T09:40:00.000Z',
+    expiresAt: '2026-09-28T08:12:00.000Z',
+    ipAddress: '203.0.113.18',
+    userAgent: 'Safari on macOS',
+    current: true,
+  },
+  {
+    id: 'session-phone',
+    createdAt: '2026-08-24T20:05:00.000Z',
+    updatedAt: '2026-08-28T21:15:00.000Z',
+    expiresAt: '2026-09-23T20:05:00.000Z',
+    ipAddress: '198.51.100.42',
+    userAgent: 'Chrome on Android',
+    current: false,
+  },
+];
+
+export const supporterLinkedAccounts = [
+  {
+    id: 'account-github',
+    providerId: 'github',
+    createdAt: '2026-06-12T12:30:00.000Z',
+  },
+];
+
+export const supporterOAuthProviders = [
+  { id: 'github', label: 'GitHub' },
+  { id: 'google', label: 'Google' },
+  { id: 'discord', label: 'Discord' },
+  { id: 'gitlab', label: 'GitLab' },
+  { id: 'codeberg', label: 'Codeberg' },
+];
 
 export const supporterMemberships: Membership[] = [
   {
@@ -138,6 +199,41 @@ export const supporterEntitlements: Entitlement[] = [
   },
 ];
 
+export const supporterFeed = [
+  {
+    id: 'feed-grove-release',
+    project_id: 'project-grove',
+    project_slug: 'grove',
+    project_name: 'Grove',
+    slug: 'replica-rollout',
+    title: 'Replica rollout notes',
+    published_at: '2026-08-29T09:30:00.000Z',
+    gated: true,
+    body: '## What changed\n\nThe second-region replica is ready for supporter testing. **Thank you** for helping us exercise failover.',
+    attachments: [
+      {
+        id: 'attachment-grove-1',
+        asset_id: 'asset-grove-1',
+        content_type: 'application/pdf',
+        content_length: 184320,
+        download_url: '/api/v1/assets/asset-grove-1/download?redirect=1',
+      },
+    ],
+  },
+  {
+    id: 'feed-vitest-update',
+    project_id: 'project-vitest-run',
+    project_slug: 'vitest-run',
+    project_name: 'vitest-run',
+    slug: 'august-maintainer-update',
+    title: 'August maintainer update',
+    published_at: '2026-08-24T14:00:00.000Z',
+    gated: false,
+    body: 'The next test runner release is in review.\n\n- Faster watch mode\n- Clearer diagnostics',
+    attachments: [],
+  },
+];
+
 export interface LifetimeSupport {
   projectName: string;
   oneOffMinor: number;
@@ -161,7 +257,10 @@ export const lifetimeTotalMinor = lifetimeSupport.reduce(
 
 export const monthlyActiveMinor = supporterMemberships
   .filter((m) => m.status === 'active')
-  .reduce((sum, m) => sum + (m.cadence === 'annual' ? Math.round(m.amountMinor / 12) : m.amountMinor), 0);
+  .reduce(
+    (sum, m) => sum + (m.cadence === 'annual' ? Math.round(m.amountMinor / 12) : m.amountMinor),
+    0,
+  );
 
 export const supporterThreads: Thread[] = [
   {

@@ -1,0 +1,244 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PNPM_VERSION: 10.33.3
+  NODE_VERSION: 22
+
+jobs:
+  quality:
+    name: Quality and migrations
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: oss_tips
+          POSTGRES_PASSWORD: oss_tips_ci
+          POSTGRES_DB: oss_tips
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U oss_tips -d oss_tips"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@ff378ebe6b225b0680b81c1ad4498ae0d1d3a5e3 # v6.0.10
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Verify API contracts and webhook examples
+        run: pnpm check:contracts
+
+      - name: Test
+        run: pnpm test
+
+      - name: Verify Storybook coverage and fixtures
+        run: pnpm verify:storybook
+
+      - name: Build production packages and apps
+        run: pnpm build
+
+      - name: Check production web performance budgets
+        run: pnpm check:performance
+
+      - name: Verify one-off money path
+        run: node scripts/verify-slice-b-money-path.mjs
+
+      - name: Build static Storybook
+        run: pnpm build-storybook
+
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run route-template E2E and accessibility tests
+        run: pnpm e2e
+
+      - name: Apply migrations
+        env:
+          DATABASE_URL: postgresql://oss_tips:oss_tips_ci@127.0.0.1:5432/oss_tips
+        run: pnpm db:migrate
+
+      - name: Re-run migrations for idempotence
+        env:
+          DATABASE_URL: postgresql://oss_tips:oss_tips_ci@127.0.0.1:5432/oss_tips
+        run: pnpm db:migrate
+
+      - name: Verify disposable database backup and restore
+        env:
+          DATABASE_URL: postgresql://oss_tips:oss_tips_ci@127.0.0.1:5432/oss_tips
+          BACKUP_RESTORE_CONFIRM: disposable
+        run: pnpm check:backup-restore
+
+      - name: Roll migrations back and forward
+        env:
+          DATABASE_URL: postgresql://oss_tips:oss_tips_ci@127.0.0.1:5432/oss_tips
+        run: |
+          pnpm --filter @oss-tips/db exec tsx src/migrate.ts down
+          pnpm db:migrate
+
+  container:
+    name: Production image and smoke test
+    needs: quality
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+
+      - name: Build production web image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: .
+          file: infra/docker/Dockerfile.web
+          tags: oss-tips:web-${{ github.sha }}
+          load: true
+
+      - name: Start production web image
+        run: docker run --detach --name oss-tips-web --publish 3000:3000 --env NODE_ENV=production --env PUBLIC_APP_URL=https://oss.tips --env BETTER_AUTH_SECRET=ci-only-secret --env RESEND_API_KEY=ci-only-resend --env RESEND_WEBHOOK_SECRET=whsec_Y2ktb25seS1yZXNlbmQtd2ViaG9vaw== --env API_RATE_LIMIT_SECRET=ci-only-rate-limit oss-tips:web-${{ github.sha }}
+
+      - name: Smoke test health endpoint
+        run: node scripts/smoke-web.mjs http://127.0.0.1:3000
+
+      - name: Generate image SBOM
+        uses: anchore/sbom-action@006b7ce8314066bdf1765b4500370d40fa6917a3 # v0.24.2
+        with:
+          image: oss-tips:web-${{ github.sha }}
+          artifact-name: oss-tips-web-sbom.spdx.json
+          output-file: oss-tips-web-sbom.spdx.json
+          upload-release-assets: false
+
+      - name: Scan production image
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          image-ref: oss-tips:web-${{ github.sha }}
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: 1
+
+      - name: Upload container scan
+        if: always() && hashFiles('trivy-results.sarif') != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        uses: github/codeql-action/upload-sarif@a35ac6e6798d72df5475948b28efb89edc2e19ca # v4.37.9
+        with:
+          sarif_file: trivy-results.sarif
+
+      - name: Stop production web image
+        if: always()
+        run: docker rm --force oss-tips-web
+
+  infrastructure-smoke:
+    name: RustFS and TigerBeetle smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@ff378ebe6b225b0680b81c1ad4498ae0d1d3a5e3 # v6.0.10
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Start RustFS and TigerBeetle
+        run: >-
+          docker compose -f infra/docker/docker-compose.yml
+          --profile storage --profile ledger up -d rustfs tigerbeetle
+
+      - name: Wait for infrastructure
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:9000/health >/dev/null &&
+              nc -z 127.0.0.1 3000; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker compose -f infra/docker/docker-compose.yml ps
+          exit 1
+
+      - name: Bootstrap RustFS buckets
+        env:
+          S3_ENDPOINT: http://127.0.0.1:9000
+          S3_REGION: auto
+          S3_ACCESS_KEY_ID: OSS_TIPS_DEV
+          S3_SECRET_ACCESS_KEY: oss_tips_dev_secret_change_me
+        run: pnpm storage:bootstrap
+
+      - name: Run RustFS media smoke
+        env:
+          S3_ENDPOINT: http://127.0.0.1:9000
+          S3_REGION: auto
+          S3_ACCESS_KEY_ID: OSS_TIPS_DEV
+          S3_SECRET_ACCESS_KEY: oss_tips_dev_secret_change_me
+        run: pnpm smoke:storage
+
+      - name: Run TigerBeetle smoke
+        env:
+          TIGERBEETLE_ADDRESSES: 127.0.0.1:3000
+          TIGERBEETLE_CLUSTER_ID: '0'
+        run: |
+          pnpm --filter @oss-tips/domain build
+          pnpm --filter @oss-tips/ledger build
+          node scripts/smoke-tigerbeetle.mjs
+
+      - name: Run isolated TigerBeetle replay drill
+        env:
+          TIGERBEETLE_ADDRESSES: 127.0.0.1:3000
+          TIGERBEETLE_CLUSTER_ID: '0'
+          TIGERBEETLE_REPLAY_DRILL_CONFIRM: fresh-isolated-cluster
+        run: pnpm check:tigerbeetle-replay
+
+      - name: Stop infrastructure
+        if: always()
+        run: docker compose -f infra/docker/docker-compose.yml down --volumes --remove-orphans

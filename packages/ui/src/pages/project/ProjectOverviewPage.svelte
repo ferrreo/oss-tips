@@ -1,30 +1,95 @@
 <script lang="ts">
+  import { stylex } from '../../styles/stylex-runtime.js';
+  import Badge from '../../components/Badge.svelte';
   import DataCard from '../../components/DataCard.svelte';
   import GoalProgress from '../../components/GoalProgress.svelte';
   import StatusBanner from '../../components/StatusBanner.svelte';
-  import { labelCadence } from '../../lib/labels.js';
-  import { demoGoals } from '../../fixtures/demo.js';
-  import SupportOverTimeChart from './SupportOverTimeChart.svelte';
+  import type { Goal, NavGroup, Project } from '../../fixtures/demo.js';
+  import { demoGoals, demoProject, projectNavGroups } from '../../fixtures/demo.js';
+  import SupportOverTimeChart from '../../components/SupportOverTimeChart.svelte';
   import ProjectDashShell from './ProjectDashShell.svelte';
+  import type { ChartSeries, InboxPreviewRow, RankedSupporter, ToolCard } from './project-demo.js';
   import {
     inboxPreviewRows,
     overviewMetrics,
     rankedSupporters,
-    supportOverTimeLabels,
     supportOverTimeSeries,
     toolCards,
   } from './project-demo.js';
+  import { projectStyles } from '../../styles/project.stylex';
+  import { primitives } from '../../styles/primitives.stylex.js';
+  import { formatCurrency, formatDate, formatNumber, locale, t, type MessageKey } from '../../lib/i18n.js';
+
+  export interface Props {
+    project?: Project;
+    navGroups?: NavGroup[];
+    metrics?: Array<{
+      label: string;
+      value: string;
+      compare: string;
+      compareDirection: 'up';
+      valueMinor?: number;
+      valueNumber?: number;
+      currency?: string;
+    }>;
+    goals?: Goal[];
+    inbox?: InboxPreviewRow[];
+    supporters?: RankedSupporter[];
+    tools?: ToolCard[];
+    chartSeries?: ChartSeries[];
+  }
+
+  let {
+    project = demoProject,
+    navGroups = projectNavGroups,
+    metrics = overviewMetrics,
+    goals = demoGoals,
+    inbox = inboxPreviewRows,
+    supporters = rankedSupporters,
+    tools = toolCards,
+    chartSeries = supportOverTimeSeries,
+  }: Props = $props();
+
+  const tx = (key: string, values: Record<string, string | number> = {}) =>
+    t(key as MessageKey, values, $locale);
+  const cadenceLabel = (value: string) =>
+    value === 'one-off' || value === 'one_off'
+      ? tx('common.oneOff')
+      : value === 'annual' || value === 'yearly'
+        ? tx('common.annual')
+        : tx('common.monthly');
+  const metricRows = $derived(
+    metrics.map((metric, index) => ({
+      ...metric,
+      label: [
+        tx('project.analytics.totalSupport'),
+        tx('project.analytics.newSupporters'),
+        tx('project.analytics.monthlyRecurring'),
+      ][index] ?? metric.label,
+      value:
+        metric.valueMinor !== undefined
+          ? formatCurrency(metric.valueMinor, metric.currency ?? project.currency, $locale)
+          : metric.valueNumber !== undefined
+            ? formatNumber(metric.valueNumber, $locale)
+            : metric.value,
+    })),
+  );
 </script>
 
-<ProjectDashShell title="Overview" lede="Support, inbox, and goals for Grove.">
+<ProjectDashShell
+  {project}
+  {navGroups}
+  title={tx('project.overview.title')}
+  lede={tx('project.overview.lede', { project: project.name })}
+>
   <StatusBanner
     variant="warning"
-    title="Stripe verification incomplete"
-    message="Stripe still needs identity documents. Grove cannot take payments until that finishes."
+    title={tx('project.overview.stripeWarning')}
+    message={tx('project.overview.stripeWarningBody', { project: project.name })}
   />
 
-  <div class="pl-grid-3" style="margin: 1.5rem 0;">
-    {#each overviewMetrics as metric (metric.label)}
+  <div class={stylex.attrs(projectStyles.grid3, projectStyles.responsiveGrid3, projectStyles.section).class}>
+    {#each metricRows as metric (metric.label)}
       <DataCard
         label={metric.label}
         value={metric.value}
@@ -34,93 +99,94 @@
     {/each}
   </div>
 
-  <SupportOverTimeChart
-    title="Support over time"
-    range="Last 12 months · America/Los_Angeles"
-    labels={supportOverTimeLabels}
-    series={supportOverTimeSeries}
-    valuePrefix="$"
-  />
+  <div class={stylex.attrs(projectStyles.section).class}>
+    <SupportOverTimeChart
+      label={tx('project.analytics.supportOverTime')}
+      range={tx('project.overview.supportRange')}
+      series={chartSeries}
+      currency={project.currency}
+    />
+  </div>
 
-  <div class="pl-grid-2" style="margin-top: 1.5rem;">
-    <section class="pl-surface" style="padding: 1.25rem;">
-      <div class="pl-row pl-row--between" style="margin-bottom: 0.75rem;">
-        <h2 style="font-size: 1.125rem;">Supporter inbox</h2>
-        <span class="pl-badge pl-badge--forest">3 unread</span>
+  <div class={stylex.attrs(projectStyles.grid2, projectStyles.responsiveStack, projectStyles.section).class}>
+    <section class={stylex.attrs(projectStyles.surface).class}>
+      <div class={stylex.attrs(projectStyles.between).class}>
+        <h2 class={stylex.attrs(projectStyles.cardHeading).class}>{tx('project.overview.inboxHeading')}</h2>
+        <Badge variant="forest" label={tx('project.overview.unread', { count: inbox.filter((row) => row.unread).length })} />
       </div>
-      <ul style="list-style: none; margin: 0; padding: 0;">
-        {#each inboxPreviewRows.slice(0, 6) as row (row.id)}
-          <li
-            style="display: grid; grid-template-columns: 2.25rem 1fr auto auto; gap: 0.75rem; align-items: center; padding: 0.7rem 0; border-bottom: 1px solid var(--pl-border);"
-          >
-            <span
-              aria-hidden="true"
-              style="width: 2.25rem; height: 2.25rem; border-radius: 999px; background: var(--pl-canvas-subtle); border: 1px solid var(--pl-border); display: flex; align-items: center; justify-content: center; font-family: var(--pl-font-ui); font-weight: 600; color: var(--pl-forest);"
-            >
-              {row.initial}
-            </span>
-            <div style="min-width: 0;">
-              <div class="pl-row" style="gap: 0.4rem;">
-                <strong style="font-size: 0.875rem;">{row.name}</strong>
+      <ul class={stylex.attrs(projectStyles.inboxList).class}>
+        {#each inbox.slice(0, 6) as row (row.id)}
+          <li class={stylex.attrs(projectStyles.inboxRow).class}>
+            <span class={stylex.attrs(projectStyles.avatar).class} aria-hidden="true">{row.initial}</span>
+            <div class={stylex.attrs(projectStyles.truncate).class}>
+              <div class={stylex.attrs(projectStyles.row).class}>
+                <strong class={stylex.attrs(projectStyles.small).class}>{row.name}</strong>
                 {#if row.unread}
-                  <span class="pl-badge pl-badge--forest">new</span>
+                  <Badge variant="forest" label={tx('project.overview.new')} />
                 {/if}
               </div>
-              <p class="pl-muted" style="margin: 0.15rem 0 0; font-size: 0.8125rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              <p class={stylex.attrs(projectStyles.muted, projectStyles.small, projectStyles.truncate).class}>
                 {row.snippet}
               </p>
             </div>
-            <span style="font-variant-numeric: tabular-nums; font-weight: 600; font-size: 0.875rem; color: var(--pl-ink);">{row.amount}</span>
-            <time class="pl-muted" style="font-size: 0.75rem;">{row.time}</time>
+            <span class={stylex.attrs(projectStyles.numeric, projectStyles.small).class}>{row.amountMinor !== undefined ? formatCurrency(row.amountMinor, row.currency ?? project.currency, $locale) : row.amount}</span>
+            <time class={stylex.attrs(projectStyles.muted, projectStyles.micro, projectStyles.compactHide).class} datetime={row.timeAt}>{row.timeAt ? formatDate(row.timeAt, $locale) : row.time}</time>
           </li>
+        {:else}
+          <li class={stylex.attrs(projectStyles.empty).class}>{tx('project.overview.inboxEmpty')}</li>
         {/each}
       </ul>
     </section>
 
-    <section class="pl-stack">
-      <h2 style="font-size: 1.125rem;">Goal progress</h2>
-      {#each demoGoals as goal (goal.id)}
+    <section class={stylex.attrs(projectStyles.stack).class}>
+      <h2 class={stylex.attrs(projectStyles.cardHeading).class}>{tx('project.overview.goalsHeading')}</h2>
+      {#each goals as goal (goal.id)}
         <GoalProgress {goal} />
+      {:else}
+        <div class={stylex.attrs(projectStyles.empty).class}>
+          <strong>{tx('project.overview.noGoalsTitle')}</strong>
+          <span class={stylex.attrs(projectStyles.muted, projectStyles.small).class}>
+            {tx('project.overview.noGoalsBody')}
+          </span>
+        </div>
       {/each}
     </section>
   </div>
 
-  <section class="pl-surface" style="padding: 1.25rem; margin-top: 1.5rem;">
-    <h2 style="font-size: 1.125rem; margin-bottom: 0.75rem;">Top supporters</h2>
-    <ol style="list-style: none; margin: 0; padding: 0;">
-      {#each rankedSupporters as supporter (supporter.rank)}
-        <li
-          class="pl-row pl-row--between"
-          style="padding: 0.65rem 0; border-bottom: 1px solid var(--pl-border);"
-        >
-          <div class="pl-row">
-            <span style="width: 1.5rem; font-variant-numeric: tabular-nums; color: var(--pl-ink); font-weight: 600;">{supporter.rank}</span>
-            <span
-              aria-hidden="true"
-              style="width: 2rem; height: 2rem; border-radius: 999px; background: var(--pl-canvas-subtle); border: 1px solid var(--pl-border); display: flex; align-items: center; justify-content: center; font-family: var(--pl-font-ui); font-weight: 600; color: var(--pl-forest);"
-            >
+  <section class={stylex.attrs(projectStyles.surface, projectStyles.section).class}>
+    <h2 class={stylex.attrs(projectStyles.cardHeading).class}>{tx('project.overview.topSupporters')}</h2>
+    <ol class={stylex.attrs(projectStyles.inboxList).class}>
+      {#each supporters as supporter (supporter.rank)}
+        <li class={stylex.attrs(projectStyles.topSupporter).class}>
+          <div class={stylex.attrs(projectStyles.row).class}>
+            <span class={stylex.attrs(projectStyles.rank, projectStyles.numeric).class}>{supporter.rank}</span>
+            <span class={stylex.attrs(projectStyles.avatar, projectStyles.avatarSmall).class} aria-hidden="true">
               {supporter.initial}
             </span>
             <div>
-              <strong style="font-size: 0.875rem;">{supporter.name}</strong>
-              <div style="font-size: 0.75rem; color: var(--pl-ink);">{labelCadence(supporter.cadence)}</div>
+              <strong class={stylex.attrs(projectStyles.small).class}>{supporter.name}</strong>
+              <div class={stylex.attrs(projectStyles.muted, projectStyles.micro).class}>{cadenceLabel(supporter.cadence)}</div>
             </div>
           </div>
-          <span style="font-variant-numeric: tabular-nums; font-weight: 600; color: var(--pl-ink);">{supporter.amount}</span>
+          <span class={stylex.attrs(projectStyles.numeric).class}>{supporter.amountMinor !== undefined ? formatCurrency(supporter.amountMinor, supporter.currency ?? project.currency, $locale) : supporter.amount}</span>
         </li>
+      {:else}
+        <li class={stylex.attrs(projectStyles.empty).class}>{tx('project.overview.noSupporters')}</li>
       {/each}
     </ol>
   </section>
 
-  <section style="margin-top: 1.5rem;">
-    <h2 style="font-size: 1.125rem; margin-bottom: 0.75rem;">Tools</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr)); gap: 1rem;">
-      {#each toolCards as tool (tool.title)}
-        <article class="pl-surface" style="padding: 1.15rem; display: flex; flex-direction: column; gap: 0.6rem;">
-          <h3 style="font-size: 1.05rem;">{tool.title}</h3>
-          <p style="margin: 0; font-size: 0.8125rem; flex: 1; color: var(--pl-ink);">{tool.blurb}</p>
-          <a class="pl-btn pl-btn--secondary pl-focus-ring" href={tool.href}>{tool.cta}</a>
+  <section class={stylex.attrs(projectStyles.section).class}>
+    <h2 class={stylex.attrs(projectStyles.cardHeading).class}>{tx('project.overview.tools')}</h2>
+    <div class={stylex.attrs(projectStyles.autoGrid).class}>
+      {#each tools as tool (tool.title)}
+        <article class={stylex.attrs(projectStyles.surface, projectStyles.toolCard).class}>
+          <h3 class={stylex.attrs(projectStyles.cardHeading).class}>{tool.title}</h3>
+          <p class={stylex.attrs(projectStyles.body, projectStyles.toolBlurb).class}>{tool.blurb}</p>
+          <a class={stylex.attrs(projectStyles.actionLink, primitives.focusRing).class} href={tool.href}>{tool.cta}</a>
         </article>
+      {:else}
+        <div class={stylex.attrs(projectStyles.empty).class}>{tx('project.overview.noTools')}</div>
       {/each}
     </div>
   </section>

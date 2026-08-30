@@ -1,3 +1,5 @@
+import { isSupportedCurrency, type SupportedCurrency } from '@oss-tips/domain';
+
 /** TigerBeetle account code registry (docs/03 §5). */
 export const AccountCode = {
   StripeExternalClearing: 100,
@@ -32,18 +34,19 @@ export const TransferCode = {
 export type TransferCode = (typeof TransferCode)[keyof typeof TransferCode];
 
 /** Static ledger number per ISO 4217 currency. */
-const LEDGER_BY_CURRENCY: Record<string, number> = {
+const LEDGER_BY_CURRENCY: Record<SupportedCurrency, number> = {
   gbp: 826,
   usd: 840,
   eur: 978,
+  jpy: 392,
 };
 
 export function ledgerForCurrency(currency: string): number {
-  const ledger = LEDGER_BY_CURRENCY[currency.toLowerCase()];
-  if (ledger === undefined) {
+  const normalized = currency.toLowerCase();
+  if (!isSupportedCurrency(normalized)) {
     throw new Error(`Unsupported currency for ledger: ${currency}`);
   }
-  return ledger;
+  return LEDGER_BY_CURRENCY[normalized];
 }
 
 export const ACCOUNT_CODE_LABELS: Record<AccountCode, string> = {

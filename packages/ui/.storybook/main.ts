@@ -1,6 +1,7 @@
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import type { StorybookConfig } from '@storybook/svelte-vite';
+import stylex from '@stylexjs/unplugin';
 
 const require = createRequire(import.meta.url);
 
@@ -21,6 +22,15 @@ const config: StorybookConfig = {
     options: {},
   },
   staticDirs: ['../static'],
+  async viteFinal(config) {
+    config.plugins = [
+      ...(config.plugins ?? []),
+      stylex.vite({
+        useCSSLayers: true,
+      }),
+    ];
+    return config;
+  },
 };
 
 export default config;

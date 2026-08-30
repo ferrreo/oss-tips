@@ -8,6 +8,14 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./security": {
+      "types": "./dist/security.d.ts",
+      "default": "./dist/security.js"
+    },
+    "./webhook-destination": {
+      "types": "./dist/webhook-destination.d.ts",
+      "default": "./dist/webhook-destination.js"
+    },
     "./openapi.json": "./dist/openapi.json"
   },
   "files": [
@@ -16,8 +24,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json && node dist/generate-openapi.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
-    "lint": "echo ok"
+    "test": "vitest run"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.3.0",
@@ -25,6 +32,9 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@apidevtools/openapi-schemas": "^2.1.0",
+    "@cfworker/json-schema": "^4.1.1",
+    "@types/node": "^22.20.1",
     "openapi3-ts": "^4.6.1",
     "typescript": "^5.8.2",
     "vitest": "^4.1.11"

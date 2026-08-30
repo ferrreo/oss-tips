@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { displayPerson, displayProject, displayTarget, requireItem, reviewQueue } from './admin-demo.js';
+import {
+  displayPerson,
+  displayProject,
+  displayTarget,
+  requireItem,
+  reconciliationRows,
+  reviewQueue,
+} from './admin-demo.js';
 
 describe('admin display helpers', () => {
   it('prefers Grove over the grove slug', () => {
@@ -18,5 +25,11 @@ describe('admin display helpers', () => {
     expect(first.name.length).toBeGreaterThan(0);
     expect(first.repository).toContain('/');
     expect(first.reason.length).toBeGreaterThan(0);
+  });
+
+  it('keeps reconciliation rows currency-scoped', () => {
+    expect(new Set(reconciliationRows.map((row) => row.currency))).toEqual(
+      new Set(['USD', 'EUR', 'JPY']),
+    );
   });
 });

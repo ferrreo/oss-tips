@@ -15,22 +15,34 @@
     "dev:worker": "pnpm --filter @oss-tips/worker dev",
     "dev:finance": "pnpm --filter @oss-tips/finance-worker dev",
     "dev:discord": "pnpm --filter @oss-tips/discord-bot dev",
+    "storage:bootstrap": "pnpm --filter @oss-tips/storage bootstrap-buckets",
+    "smoke:storage": "pnpm --filter @oss-tips/storage build && node --env-file-if-exists=.env scripts/smoke-media.mjs",
     "dev:storybook": "pnpm --filter @oss-tips/ui storybook",
     "build:storybook": "pnpm --filter @oss-tips/ui build-storybook",
-    "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
-    "test": "pnpm -r test",
+    "test": "pnpm -r --filter=./packages/* build && pnpm -r test",
     "db:migrate": "pnpm --filter @oss-tips/db migrate",
     "db:seed": "pnpm --filter @oss-tips/db seed",
+    "check:backup-restore": "node scripts/verify-backup-restore.mjs",
+    "check:tigerbeetle-replay": "node scripts/verify-tigerbeetle-replay.mjs",
+    "check:contracts": "pnpm --filter @oss-tips/api-contracts build && node docs/examples/webhooks/verify-node.mjs && node --experimental-strip-types docs/examples/webhooks/verify-typescript.ts && python3 docs/examples/webhooks/verify-python.py && go run docs/examples/webhooks/verify-go.go && cargo run --manifest-path docs/examples/webhooks/Cargo.toml --locked --target-dir /tmp/oss-tips-webhook-target --quiet",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "storybook": "pnpm --filter @oss-tips/ui storybook",
     "build-storybook": "pnpm --filter @oss-tips/ui build-storybook",
-    "verify:storybook": "node scripts/verify-storybook-data.mjs"
+    "e2e": "playwright test",
+    "verify:storybook": "node scripts/verify-storybook-data.mjs && node scripts/verify-ui-architecture.mjs",
+    "check:performance": "node scripts/check-web-performance.mjs"
   },
   "devDependencies": {
+    "@playwright/test": "1.55.0",
+    "axe-core": "4.13.0",
     "prettier": "^3.9.6",
     "typescript": "^5.8.2",
     "vitest": "^4.1.11"
-  }
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

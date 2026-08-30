@@ -4,19 +4,11 @@ import type { NewProject, Project, ProjectUpdate } from '../types.js';
 export function createProjectsRepository(db: Db) {
   return {
     async findById(id: string): Promise<Project | undefined> {
-      return db
-        .selectFrom('project')
-        .selectAll()
-        .where('id', '=', id)
-        .executeTakeFirst();
+      return db.selectFrom('project').selectAll().where('id', '=', id).executeTakeFirst();
     },
 
     async findBySlug(slug: string): Promise<Project | undefined> {
-      return db
-        .selectFrom('project')
-        .selectAll()
-        .where('slug', '=', slug)
-        .executeTakeFirst();
+      return db.selectFrom('project').selectAll().where('slug', '=', slug).executeTakeFirst();
     },
 
     async listByOrganisation(organisationId: string): Promise<Project[]> {
@@ -44,11 +36,7 @@ export function createProjectsRepository(db: Db) {
     },
 
     async create(project: NewProject): Promise<Project> {
-      return db
-        .insertInto('project')
-        .values(project)
-        .returningAll()
-        .executeTakeFirstOrThrow();
+      return db.insertInto('project').values(project).returningAll().executeTakeFirstOrThrow();
     },
 
     async update(id: string, patch: ProjectUpdate): Promise<Project | undefined> {

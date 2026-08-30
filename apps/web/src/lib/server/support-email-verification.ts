@@ -1,0 +1,2 @@
+export const SUPPORT_EMAIL_CODE_TTL_MS = 10 * 60 * 1000;
+export const SUPPORT_EMAIL_RESEND_COOLDOWN_MS = 30 * 1000;

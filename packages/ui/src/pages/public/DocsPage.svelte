@@ -1,107 +1,99 @@
 <script lang="ts">
-  import PublicNav from '../../components/PublicNav.svelte';
-  import PublicFooter from '../../components/PublicFooter.svelte';
+  import { stylex } from '../../styles/stylex-runtime.js';
+  import PublicPageFrame from './PublicPageFrame.svelte';
+  import { locale, t } from '../../lib/i18n.js';
+  import { primitives } from '../../styles/primitives.stylex.js';
+  import { publicStyles } from '../../styles/public.stylex.js';
 
-  const pageDemo = {
-    nav: [
-      { href: '#getting-started', label: 'Getting started' },
-      { href: '#projects', label: 'Projects' },
-      { href: '#supporters', label: 'Supporters' },
-      { href: '#api', label: 'API' },
-    ],
-    sections: [
-      {
-        id: 'getting-started',
-        heading: 'Getting started',
-        body: 'Create a project, connect Stripe, add membership tiers, then publish. Payments stay off until Stripe says the account can charge and pay out.',
-      },
-      {
-        id: 'projects',
-        heading: 'For project owners',
-        body: 'Use the dashboard for payments, posts, goals, Discord roles, and team access. Inbox threads stay tied to a payment. Goals count settled project support before fees, and never the tip to oss.tips.',
-      },
-      {
-        id: 'supporters',
-        heading: 'For supporters',
-        body: 'Sign in with an email code or OAuth to manage memberships and replies. One-off support works as a guest. You can claim the receipt later with a link.',
-      },
-      {
-        id: 'api',
-        heading: 'API and webhooks',
-        body: 'Checkout sessions are created on the server. Access is granted only after a verified Stripe event. Outgoing webhooks are signed.',
-      },
-    ],
-    endpoints: [
-      { method: 'POST', path: '/v1/checkout/sessions', note: 'Start Checkout' },
-      { method: 'GET', path: '/v1/projects/:slug', note: 'Public project' },
-      { method: 'POST', path: '/v1/webhooks/stripe', note: 'Stripe events in' },
-    ],
-    events: 'payment.succeeded · membership.updated · entitlement.revoked',
-  };
+  interface DocsNavItem {
+    href: string;
+    label: string;
+  }
+
+  interface DocsSection {
+    id: string;
+    heading: string;
+    body: string;
+  }
+
+  interface Endpoint {
+    method: string;
+    path: string;
+    note: string;
+  }
+
+  export interface Props {
+    nav?: DocsNavItem[];
+    sections?: DocsSection[];
+    endpoints?: Endpoint[];
+    events?: string;
+  }
+
+  let {
+    nav,
+    sections,
+    endpoints,
+    events,
+  }: Props = $props();
+
+  const displayNav = $derived(nav ?? [
+    { href: '#getting-started', label: t('public.docs.gettingStarted', {}, $locale) },
+    { href: '#projects', label: t('public.docs.projects', {}, $locale) },
+    { href: '#supporters', label: t('public.docs.supporters', {}, $locale) },
+    { href: '#api', label: t('public.docs.api', {}, $locale) },
+  ]);
+  const displaySections = $derived(sections ?? [
+    { id: 'getting-started', heading: t('public.docs.gettingStarted', {}, $locale), body: t('public.docs.gettingStartedBody', {}, $locale) },
+    { id: 'projects', heading: t('public.docs.projects', {}, $locale), body: t('public.docs.projectsBody', {}, $locale) },
+    { id: 'supporters', heading: t('public.docs.supporters', {}, $locale), body: t('public.docs.supportersBody', {}, $locale) },
+    { id: 'api', heading: t('public.docs.api', {}, $locale), body: t('public.docs.apiBody', {}, $locale) },
+  ]);
+  const displayEndpoints = $derived(endpoints ?? [
+    { method: 'POST', path: '/v1/checkout/sessions', note: t('public.docs.startCheckout', {}, $locale) },
+    { method: 'GET', path: '/v1/projects/:slug', note: t('public.docs.publicProject', {}, $locale) },
+    { method: 'POST', path: '/v1/webhooks/stripe', note: t('public.docs.stripeEvents', {}, $locale) },
+  ]);
+  const displayEvents = $derived(events ?? t('public.docs.events', {}, $locale));
+
+  const heroClass = stylex.attrs(publicStyles.hero).class;
+  const containerClass = stylex.attrs(publicStyles.container, publicStyles.reading).class;
+  const sectionClass = stylex.attrs(publicStyles.sectionTight).class;
 </script>
 
-<div>
-  <PublicNav />
-  <main id="main-content">
-    <section class="pl-public-hero">
-      <div class="pl-container pl-container--reading">
-        <p class="pl-public-hero__brand">oss.tips</p>
-        <h1 class="pl-display pl-public-hero__title">Documentation</h1>
-        <p class="pl-page-lead">
-          How projects publish, how supporters pay, and how access is granted after Stripe confirms a payment.
-        </p>
-        <nav aria-label="Docs sections" style="margin-top: 1.5rem;">
-          <ul class="docs-nav">
-            {#each pageDemo.nav as item (item.href)}
-              <li><a href={item.href}>{item.label}</a></li>
+<PublicPageFrame>
+  {#snippet children()}
+    <section class={heroClass}>
+      <div class={containerClass}>
+        <p class={stylex.attrs(publicStyles.mono, publicStyles.muted).class}>{t('public.docs.kicker', {}, $locale)}</p>
+        <h1 class={stylex.attrs(publicStyles.pageTitle).class}>{t('public.docs.title', {}, $locale)}</h1>
+        <p class={stylex.attrs(publicStyles.lead).class}>{t('public.docs.lead', {}, $locale)}</p>
+        <nav class={stylex.attrs(publicStyles.docsNavWrap).class} aria-label={t('public.docs.sections', {}, $locale)}>
+          <ul class={stylex.attrs(publicStyles.docsNav).class}>
+            {#each displayNav as item (item.href)}
+              <li><a class={stylex.attrs(publicStyles.link, primitives.focusRing).class} href={item.href}>{item.label}</a></li>
             {/each}
           </ul>
         </nav>
       </div>
     </section>
-    <section class="pl-section" style="padding-top: 0;">
-      <div class="pl-container pl-container--reading">
-        <div class="pl-prose">
-          {#each pageDemo.sections as section (section.id)}
+    <section class={sectionClass}>
+      <div class={containerClass}>
+        <div class={stylex.attrs(publicStyles.prose).class}>
+          {#each displaySections as section (section.id)}
             <h2 id={section.id}>{section.heading}</h2>
             <p>{section.body}</p>
           {/each}
         </div>
-        <ul class="docs-api">
-          {#each pageDemo.endpoints as endpoint (endpoint.path)}
-            <li class="pl-mono">
-              <strong>{endpoint.method}</strong>
-              {endpoint.path}
-              <span class="pl-muted"> · {endpoint.note}</span>
+        <ul class={stylex.attrs(publicStyles.apiList).class}>
+          {#each displayEndpoints as endpoint (endpoint.path)}
+            <li class={stylex.attrs(publicStyles.mono, publicStyles.surface).class}>
+              <strong>{endpoint.method}</strong> {endpoint.path}
+              <span class={stylex.attrs(publicStyles.muted).class}> · {endpoint.note}</span>
             </li>
           {/each}
         </ul>
-        <p class="pl-mono pl-muted" style="font-size: 0.875rem;">{pageDemo.events}</p>
+        <p class={stylex.attrs(publicStyles.mono, publicStyles.muted, publicStyles.small).class}>{displayEvents}</p>
       </div>
     </section>
-  </main>
-  <PublicFooter />
-</div>
-
-<style>
-  .docs-nav {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin: 0;
-  }
-
-  .docs-nav a {
-    font-weight: 600;
-  }
-
-  .docs-api {
-    list-style: none;
-    padding: 0;
-    margin: 2rem 0 1rem;
-    display: grid;
-    gap: 0.75rem;
-  }
-</style>
+  {/snippet}
+</PublicPageFrame>

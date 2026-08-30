@@ -1,33 +1,26 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import { stylex } from '../../styles/stylex-runtime.js';
   import DashboardShell from '../../components/DashboardShell.svelte';
+  import type { NavGroup, Project } from '../../fixtures/demo.js';
   import { demoProject, projectNavGroups } from '../../fixtures/demo.js';
+  import { projectStyles } from '../../styles/project.stylex';
 
-  interface Props {
+  export interface Props {
+    project?: Project;
+    navGroups?: NavGroup[];
     title?: string;
     lede?: string;
     children?: Snippet;
   }
 
-  let { title, lede, children }: Props = $props();
+  export type ProjectShellProps = Pick<Props, 'project' | 'navGroups'>;
+
+  let { project = demoProject, navGroups = projectNavGroups, title = '', lede = '', children }: Props = $props();
 </script>
 
-<div class="project-dash">
-  <DashboardShell projectName={demoProject.name} navGroups={projectNavGroups} {title} {lede}>
+<div class={stylex.attrs(projectStyles.page).class}>
+  <DashboardShell projectName={project.name} {navGroups} {title} {lede}>
     {@render children?.()}
   </DashboardShell>
 </div>
-
-<style>
-  /* Local only: dashboard titles stay UI sans. W1 owns global tokens. */
-  .project-dash :global(.pl-dashboard__title),
-  .project-dash :global(.pl-dashboard__main h2),
-  .project-dash :global(.pl-dashboard__main h3) {
-    font-family: var(--pl-font-ui);
-    font-weight: 600;
-  }
-
-  .project-dash :global(.pl-dashboard__lede) {
-    color: var(--pl-ink);
-  }
-</style>

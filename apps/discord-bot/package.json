@@ -8,7 +8,6 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "echo ok",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {

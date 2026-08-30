@@ -15,21 +15,21 @@ Core controls:
 
 ## 2. Primary threats and mitigations
 
-| Threat | Controls |
-|---|---|
-| Account takeover | OTP limits, optional passkeys, OAuth security, session rotation/revocation, security notices |
-| Project ownership theft | repository/site proof, manual recovery, cooling-off on ownership change, immutable audit |
-| Payout theft | oss.tips never stores/edits bank details; changes occur in Stripe |
-| Webhook forgery/replay | raw-body signature verification, timestamp checks, unique event IDs |
-| Double payment/entitlement | Stripe idempotency keys, unique intents/events, deterministic ledger transfers |
-| SSRF | allowlisted OAuth config; webhook/domain URL/IP validation and revalidation |
-| Stored XSS | Markdown AST sanitisation, no arbitrary HTML/iframe, CSP, safe embed providers |
-| Malicious uploads | quarantine, MIME sniff, decode/re-encode, sanitise SVG, reject executables, quota |
-| Cross-project data leak | mandatory project scope in repositories, policy tests and database constraints |
-| Admin misuse | least privilege, no silent impersonation, audit trail, reason, future dual control |
-| Supply-chain compromise | lockfile, provenance/SBOM, dependency review, minimal container, secret scanning |
-| Telemetry leak | on-host OTel redaction, no bodies/tokens/email/payment identity exported |
-| Abuse/spam | Cloudflare limits, OTP throttles, message bounds, report/block, review queue |
+| Threat                     | Controls                                                                                       |
+| -------------------------- | ---------------------------------------------------------------------------------------------- |
+| Account takeover           | OTP limits, optional passkeys, OAuth security, session rotation/revocation, security notices   |
+| Project ownership theft    | repository/site proof, manual recovery, cooling-off on ownership change, immutable audit       |
+| Payout theft               | oss.tips never stores/edits bank details; changes occur in Stripe                              |
+| Webhook forgery/replay     | raw-body signature verification, timestamp checks, unique event IDs                            |
+| Double payment/entitlement | Stripe idempotency keys, unique intents/events, deterministic ledger transfers                 |
+| SSRF                       | allowlisted OAuth config; webhook/domain URL/IP validation and revalidation                    |
+| Stored XSS                 | Markdown AST sanitisation, no arbitrary HTML/iframe, CSP, safe embed providers                 |
+| Malicious uploads          | quarantine, MIME sniff, ClamAV scan, decode/re-encode, sanitise SVG, reject executables, quota |
+| Cross-project data leak    | mandatory project scope in repositories, policy tests and database constraints                 |
+| Admin misuse               | least privilege, no silent impersonation, audit trail, reason, future dual control             |
+| Supply-chain compromise    | lockfile, provenance/SBOM, dependency review, minimal container, secret scanning               |
+| Telemetry leak             | on-host OTel redaction, no bodies/tokens/email/payment identity exported                       |
+| Abuse/spam                 | Cloudflare limits, OTP throttles, message bounds, report/block, review queue                   |
 
 ## 3. Web security baseline
 
@@ -43,6 +43,7 @@ Core controls:
 - Signed, short-lived private asset URLs.
 - Constant-time token/hash comparisons.
 - Request body and multipart limits at Cloudflare, reverse proxy and application.
+- JSON mutation bodies are capped at 256 KiB in-app; uploads and webhooks keep route-specific caps.
 
 ## 4. Secrets and encryption
 
@@ -96,7 +97,7 @@ No update/delete API. Corrections are new audit events.
 - Decode raster images with memory/pixel limits; reject decompression bombs.
 - Strip EXIF/GPS.
 - Sanitize SVG with an allowlist or rasterise.
-- Scan attachments; reject executables, scripts, HTML, package formats and password-protected archives in beta.
+- Scan PDF/plain-text attachments with the configured ClamAV daemon before promotion; reject executables, scripts, HTML, package formats and password-protected archives in beta. A missing or unreachable scanner fails closed.
 - User-facing filename is metadata, not storage path or response header without escaping.
 
 ## 8. Privacy and data residency
@@ -266,6 +267,27 @@ As sole operator, alerts must be sparse and actionable. Alert on user impact or 
 - Project refund and admin exceptional refund.
 - Custom-domain public page to oss.tips checkout.
 - Keyboard/screen reader/reduced motion.
+
+The local demo journey suite in `e2e/journeys.spec.ts` covers checkout-intent
+requests for one-off/monthly/annual support, explicit supporter-wall choices,
+next-renewal cancellation, grace/refund display records, gated public-post
+denial, signed-in reply success/failure, immutable admin refund history, and a
+custom-host checkout redirect. Stripe, storage, and database calls are mocked
+or kept in their honest unavailable state.
+
+Current demo exclusions:
+
+- Stripe-confirmed payment and entitlement issuance; demo checkout stops at
+  `processing` because no webhook/database state exists.
+- Private attachment entitlement/download; no demo attachment or storage
+  fixture is exposed, so the route is asserted as database-unavailable.
+- Guest claim/reply send states; guest links remain unavailable without the
+  database, while signed-in supporter/project reply controls are exercised.
+- Admin refund submission; admin cases has no refund control, so the suite
+  checks the existing immutable refund audit row instead.
+- Real custom-domain DNS/hostname resolution; local `grove.localhost` host
+  exercises the public-page-to-Stripe boundary, while resolver lifecycle
+  coverage remains integration scope.
 
 ### Financial golden tests
 

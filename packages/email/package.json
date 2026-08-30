@@ -15,13 +15,13 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
-    "lint": "echo ok"
+    "test": "vitest run"
   },
   "dependencies": {
     "resend": "^6.25.0"
   },
   "devDependencies": {
+    "@types/node": "^22.20.1",
     "typescript": "^5.8.2",
     "vitest": "^4.1.11"
   }

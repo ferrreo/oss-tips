@@ -1,20 +1,15 @@
 import { uuidv7 } from '@oss-tips/domain';
+import { sql } from 'kysely';
 import type { Db } from '../client.js';
 import type { NewPayment, Payment } from '../types.js';
 
 export function createPaymentsRepository(db: Db) {
   return {
     async findById(id: string): Promise<Payment | undefined> {
-      return db
-        .selectFrom('payment')
-        .selectAll()
-        .where('id', '=', id)
-        .executeTakeFirst();
+      return db.selectFrom('payment').selectAll().where('id', '=', id).executeTakeFirst();
     },
 
-    async findByStripePaymentIntentId(
-      stripePaymentIntentId: string,
-    ): Promise<Payment | undefined> {
+    async findByStripePaymentIntentId(stripePaymentIntentId: string): Promise<Payment | undefined> {
       return db
         .selectFrom('payment')
         .selectAll()
@@ -33,17 +28,41 @@ export function createPaymentsRepository(db: Db) {
     },
 
     async create(payment: NewPayment): Promise<Payment> {
+      return db.insertInto('payment').values(payment).returningAll().executeTakeFirstOrThrow();
+    },
+
+    async updateProviderDetails(
+      id: string,
+      details: {
+        stripe_payment_intent_id?: string | null | undefined;
+        stripe_charge_id?: string | null | undefined;
+      },
+    ): Promise<Payment | undefined> {
+      const patch = {
+        ...(details.stripe_payment_intent_id !== undefined
+          ? { stripe_payment_intent_id: details.stripe_payment_intent_id }
+          : {}),
+        ...(details.stripe_charge_id !== undefined
+          ? { stripe_charge_id: details.stripe_charge_id }
+          : {}),
+      };
+      if (Object.keys(patch).length === 0) return this.findById(id);
       return db
-        .insertInto('payment')
-        .values(payment)
+        .updateTable('payment')
+        .set({ ...patch, updated_at: new Date() })
+        .where('id', '=', id)
         .returningAll()
-        .executeTakeFirstOrThrow();
+        .executeTakeFirst();
     },
 
     async markSettled(id: string, settledAt = new Date()): Promise<Payment | undefined> {
       return db
         .updateTable('payment')
-        .set({ status: 'succeeded', settled_at: settledAt, updated_at: new Date() })
+        .set({
+          status: sql<string>`CASE WHEN status IN ('refunded', 'disputed') THEN status ELSE 'succeeded' END`,
+          settled_at: sql<Date>`COALESCE(settled_at, ${settledAt})`,
+          updated_at: new Date(),
+        })
         .where('id', '=', id)
         .returningAll()
         .executeTakeFirst();

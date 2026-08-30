@@ -1,109 +1,136 @@
 <script lang="ts">
+  import { stylex } from '../../styles/stylex-runtime.js';
   import AdminShell from '../../components/AdminShell.svelte';
-  import Table from '../../components/Table.svelte';
-  import StatusBanner from '../../components/StatusBanner.svelte';
   import DataCard from '../../components/DataCard.svelte';
-  import AdminOperatorBar from './AdminOperatorBar.svelte';
+  import StatusBanner from '../../components/StatusBanner.svelte';
+  import Table from '../../components/Table.svelte';
+  import { formatCurrency, formatDate, formatNumber, locale, t, type MessageKey, type MessageValues } from '../../lib/i18n.js';
   import { labelReconciliationStatus } from '../../lib/labels.js';
-  import { adminNav, displayProject, formatMoney, reconciliationRows } from './admin-demo.js';
+  import { admin } from '../../styles/admin.stylex.js';
+  import AdminOperatorBar from './AdminOperatorBar.svelte';
+  import AdminStatePanel from './AdminStatePanel.svelte';
+  import { adminNav, displayProject, reconciliationRows as defaultRows } from './admin-demo.js';
+  import type { AdminReconciliationPageProps } from './admin-types.js';
 
-  const mismatches = reconciliationRows.filter((r) => r.status === 'mismatch');
-  const pending = reconciliationRows.filter((r) => r.status === 'pending');
-  const aligned = reconciliationRows.filter((r) => r.status === 'aligned');
+  let {
+    navGroups = adminNav('/admin/reconciliation'),
+    rows = defaultRows,
+    state: pageState = 'ready',
+  }: AdminReconciliationPageProps = $props();
 
-  const mismatchDeltaMinor = mismatches.reduce((sum, r) => sum + (r.stripeNetMinor - r.ledgerNetMinor), 0);
+  const tt = (key: string, values: MessageValues = {}) => t(key as MessageKey, values, $locale);
+  const reconciliationStatusLabels: Record<string, string> = {
+    aligned: 'admin.status.aligned',
+    mismatch: 'admin.status.mismatch',
+    pending: 'admin.status.pending',
+  };
+  const statusLabel = (value: string) => reconciliationStatusLabels[value] ? tt(reconciliationStatusLabels[value]!) : labelReconciliationStatus(value);
 
-  function deltaLabel(stripe: number, ledger: number): string {
+  const mismatches = $derived(rows.filter((row) => row.status === 'mismatch'));
+  const pending = $derived(rows.filter((row) => row.status === 'pending'));
+  const aligned = $derived(rows.filter((row) => row.status === 'aligned'));
+
+  function deltaLabel(stripe: number, ledger: number, currency: string): string {
     const delta = stripe - ledger;
-    if (delta === 0) return '£0.00';
+    if (delta === 0) return formatCurrency(0, currency, $locale);
     const sign = delta > 0 ? '+' : '−';
-    return `${sign}${formatMoney(Math.abs(delta))}`;
+    return `${sign}${formatCurrency(Math.abs(delta), currency, $locale)}`;
   }
+
+  const mismatchDeltaLabel = $derived.by(() => {
+    if (mismatches.length === 0) return tt('admin.reconciliation.zeroDifference');
+    const totals = new Map<string, number>();
+    for (const row of mismatches) {
+      const currency = row.currency.toUpperCase();
+      totals.set(currency, (totals.get(currency) ?? 0) + row.stripeNetMinor - row.ledgerNetMinor);
+    }
+    return [...totals.entries()]
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([currency, delta]) => deltaLabel(delta, 0, currency))
+      .join(', ');
+  });
 </script>
 
-<AdminShell navGroups={adminNav('/admin/reconciliation')} title="Reconciliation">
-  <AdminOperatorBar
-    context="Stripe balance transactions against the oss.tips ledger"
-    detail="Leave a difference open until there is a posting or a written timing window. Do not force a match without a reason."
-  />
+<AdminShell navGroups={navGroups} title={tt('admin.title.reconciliation')}>
+  {#if pageState !== 'ready'}
+    <AdminStatePanel state={pageState} />
+  {:else}
+    <div {...stylex.attrs(admin.page)}>
+      <AdminOperatorBar
+        context={tt('admin.operator.reconciliationContext')}
+        detail={tt('admin.operator.reconciliationDetail')}
+        tone={mismatches.length > 0 ? 'warning' : 'neutral'}
+      />
 
-  <StatusBanner
-    variant="warning"
-    title="{mismatches.length} settlement mismatches"
-    message="Stripe net and ledger net differ on {mismatches.map((r) => displayProject(r.project)).join(', ')}. Combined Stripe-minus-ledger delta is {deltaLabel(mismatchDeltaMinor, 0)}."
-  />
+      <StatusBanner
+        variant={mismatches.length > 0 ? 'warning' : 'info'}
+        title={tt('admin.reconciliation.mismatchTitle', { count: mismatches.length })}
+        message={
+          mismatches.length > 0
+            ? tt('admin.reconciliation.mismatchMessage', { projects: mismatches.map((row) => displayProject(row.project)).join(', '), delta: mismatchDeltaLabel })
+            : tt('admin.reconciliation.alignedMessage')
+        }
+      />
 
-  <div class="pl-grid-3" style="margin: 1.5rem 0;">
-    <DataCard label="Aligned days" value={String(aligned.length)} compare="Zero difference" />
-    <DataCard
-      label="Mismatches"
-      value={String(mismatches.length)}
-      compare={deltaLabel(mismatchDeltaMinor, 0)}
-      compareDirection="down"
-    />
-    <DataCard label="Pending ledger" value={String(pending.length)} compare="Stripe seen, not posted" />
-  </div>
+      <div {...stylex.attrs(admin.grid3)}>
+        <DataCard label={tt('admin.reconciliation.alignedDays')} value={formatNumber(aligned.length, $locale)} compare={tt('admin.reconciliation.zeroDifference')} />
+        <DataCard
+          label={tt('admin.reconciliation.mismatches')}
+          value={formatNumber(mismatches.length, $locale)}
+          compare={mismatchDeltaLabel}
+          compareDirection="down"
+        />
+        <DataCard label={tt('admin.reconciliation.pendingLedger')} value={formatNumber(pending.length, $locale)} compare={tt('admin.reconciliation.stripeSeen')} />
+      </div>
 
-  <Table
-    caption="Daily net by project. Difference is Stripe net minus ledger net."
-    columns={[
-      { key: 'date', label: 'Date' },
-      { key: 'project', label: 'Project' },
-      { key: 'stripe', label: 'Stripe net' },
-      { key: 'ledger', label: 'Ledger net' },
-      { key: 'delta', label: 'Difference' },
-      { key: 'status', label: 'Status' },
-    ]}
-    rows={reconciliationRows.map((r) => ({
-      date: r.date,
-      project: displayProject(r.project),
-      stripe: formatMoney(r.stripeNetMinor),
-      ledger: r.status === 'pending' ? 'Not posted' : formatMoney(r.ledgerNetMinor),
-      delta: r.status === 'pending' ? labelReconciliationStatus('pending') : deltaLabel(r.stripeNetMinor, r.ledgerNetMinor),
-      status: labelReconciliationStatus(r.status),
-    }))}
-  />
+      <div {...stylex.attrs(admin.tableWrap)}>
+        <Table
+          caption={tt('admin.reconciliation.dailyCaption')}
+          columns={[
+            { key: 'date', label: tt('admin.reconciliation.date') },
+            { key: 'project', label: tt('admin.reconciliation.project') },
+            { key: 'stripe', label: tt('admin.reconciliation.stripeNet') },
+            { key: 'ledger', label: tt('admin.reconciliation.ledgerNet') },
+            { key: 'delta', label: tt('admin.reconciliation.difference') },
+            { key: 'status', label: tt('admin.reconciliation.status') },
+          ]}
+          rows={rows.map((row) => ({
+            date: formatDate(row.date, $locale, { dateStyle: 'medium' }),
+            project: displayProject(row.project),
+            stripe: formatCurrency(row.stripeNetMinor, row.currency, $locale),
+            ledger: row.status === 'pending' ? tt('admin.reconciliation.notPosted') : formatCurrency(row.ledgerNetMinor, row.currency, $locale),
+            delta: row.status === 'pending' ? statusLabel('pending') : deltaLabel(row.stripeNetMinor, row.ledgerNetMinor, row.currency),
+            status: statusLabel(row.status),
+          }))}
+        />
+      </div>
 
-  <h2 style="font-size: 1.125rem; margin: 2rem 0 0.75rem;">Open differences</h2>
-  <Table
-    caption="Only rows where Stripe and ledger disagree or the ledger is still waiting."
-    columns={[
-      { key: 'date', label: 'Date' },
-      { key: 'project', label: 'Project' },
-      { key: 'difference', label: 'What differs' },
-      { key: 'next', label: 'Next step' },
-    ]}
-    rows={[
-      {
-        date: '2026-08-26',
-        project: displayProject('vitest-run'),
-        difference: `Stripe ${formatMoney(89000)} vs ledger ${formatMoney(88500)} (${deltaLabel(89000, 88500)})`,
-        next: 'Refund application-fee remainder not posted',
-      },
-      {
-        date: '2026-08-25',
-        project: displayProject('tiny-sqlite'),
-        difference: `Stripe ${formatMoney(6700)} vs ledger ${formatMoney(7200)} (${deltaLabel(6700, 7200)})`,
-        next: 'One-off tip posted twice. Reverse 1030.',
-      },
-      {
-        date: '2026-08-25',
-        project: displayProject('ledger-kit'),
-        difference: `Stripe ${formatMoney(15400)} on file. Ledger still empty.`,
-        next: 'Wait for the capability job. Do not mark aligned.',
-      },
-      {
-        date: '2026-08-24',
-        project: displayProject('grove'),
-        difference: `Stripe ${formatMoney(33200)} vs ledger ${formatMoney(33100)} (${deltaLabel(33200, 33100)})`,
-        next: 'FX presentment rounding. Confirm the Adaptive Pricing window.',
-      },
-      {
-        date: '2026-08-22',
-        project: displayProject('otel-lite'),
-        difference: 'Stripe payout arrival and posting date off by one day',
-        next: 'Timing only if both sides settle 2026-08-23',
-      },
-    ]}
-  />
+      <section {...stylex.attrs(admin.section)}>
+        <h2 {...stylex.attrs(admin.sectionHeading)}>{tt('admin.reconciliation.openDifferences')}</h2>
+        <div {...stylex.attrs(admin.tableWrap)}>
+          <Table
+            caption={tt('admin.reconciliation.openCaption')}
+            columns={[
+              { key: 'date', label: tt('admin.reconciliation.date') },
+              { key: 'project', label: tt('admin.reconciliation.project') },
+              { key: 'difference', label: tt('admin.reconciliation.whatDiffers') },
+              { key: 'next', label: tt('admin.reconciliation.nextStep') },
+            ]}
+            rows={mismatches.concat(pending).map((row) => ({
+              date: formatDate(row.date, $locale, { dateStyle: 'medium' }),
+              project: displayProject(row.project),
+              difference:
+                row.status === 'pending'
+                  ? tt('admin.reconciliation.pendingDifference', { stripe: formatCurrency(row.stripeNetMinor, row.currency, $locale) })
+                  : tt('admin.reconciliation.mismatchDifference', { stripe: formatCurrency(row.stripeNetMinor, row.currency, $locale), ledger: formatCurrency(row.ledgerNetMinor, row.currency, $locale), delta: deltaLabel(row.stripeNetMinor, row.ledgerNetMinor, row.currency) }),
+              next:
+                row.status === 'pending'
+                  ? tt('admin.reconciliation.pendingNext')
+                  : tt('admin.reconciliation.mismatchNext'),
+            }))}
+          />
+        </div>
+      </section>
+    </div>
+  {/if}
 </AdminShell>

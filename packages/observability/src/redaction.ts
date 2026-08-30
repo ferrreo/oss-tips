@@ -17,7 +17,9 @@ export function redactString(value: string): string {
   return out;
 }
 
-export function redactHeaders(headers: Record<string, string | string[] | undefined>): Record<string, string> {
+export function redactHeaders(
+  headers: Record<string, string | string[] | undefined>,
+): Record<string, string> {
   const out: Record<string, string> = {};
   for (const [key, raw] of Object.entries(headers)) {
     const lower = key.toLowerCase();
@@ -40,7 +42,12 @@ export function redactBody(body: unknown): unknown {
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(body as Record<string, unknown>)) {
     const lower = k.toLowerCase();
-    if (lower.includes('password') || lower.includes('secret') || lower.includes('token') || lower === 'email') {
+    if (
+      lower.includes('password') ||
+      lower.includes('secret') ||
+      lower.includes('token') ||
+      lower === 'email'
+    ) {
       out[k] = '[REDACTED]';
     } else {
       out[k] = redactBody(v);

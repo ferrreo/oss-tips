@@ -1,68 +1,59 @@
 <script lang="ts">
-  interface Props {
-    current: 'home' | 'memberships' | 'entitlements' | 'inbox' | 'settings';
+  import { stylex } from '../../styles/stylex-runtime.js';
+  import { supporter } from '../../styles/supporter.stylex';
+  import { locale, t, type MessageKey } from '../../lib/i18n.js';
+
+  export type SupporterRoute =
+    | 'home'
+    | 'feed'
+    | 'memberships'
+    | 'entitlements'
+    | 'inbox'
+    | 'settings';
+
+  export interface SupporterAccountNavProps {
+    current: SupporterRoute;
   }
 
-  let { current }: Props = $props();
+  let { current }: SupporterAccountNavProps = $props();
 
-  const links = [
-    { id: 'home', href: '/me', label: 'Home' },
-    { id: 'memberships', href: '/me/memberships', label: 'Memberships' },
-    { id: 'entitlements', href: '/me/entitlements', label: 'Entitlements' },
-    { id: 'inbox', href: '/me/inbox', label: 'Inbox' },
-    { id: 'settings', href: '/me/settings', label: 'Settings' },
-  ] as const;
+  const links: ReadonlyArray<{ id: SupporterRoute; href: string }> = [
+    { id: 'home', href: '/me' },
+    { id: 'feed', href: '/me/feed' },
+    { id: 'memberships', href: '/me/memberships' },
+    { id: 'entitlements', href: '/me/entitlements' },
+    { id: 'inbox', href: '/me/inbox' },
+    { id: 'settings', href: '/me/settings' },
+  ];
+  const routeKeys: Record<SupporterRoute, MessageKey> = {
+    home: 'shells.home',
+    feed: 'shells.feed',
+    memberships: 'shells.memberships',
+    entitlements: 'shells.entitlements',
+    inbox: 'shells.inbox',
+    settings: 'shells.settings',
+  };
+
+  function labelFor(route: SupporterRoute): string {
+    return t(routeKeys[route], {}, $locale);
+  }
+
+  const navAttrs = stylex.attrs(supporter.accountNav);
+  const listAttrs = stylex.attrs(supporter.accountNavList);
 </script>
 
-<nav class="acct-nav" aria-label="Supporter account">
-  <ul>
+<nav {...navAttrs} aria-label={t('shells.supporterAccount', {}, $locale)}>
+  <ul {...listAttrs}>
     {#each links as link (link.id)}
       <li>
         <a
+          {...stylex.attrs([supporter.accountLink, current === link.id && supporter.accountLinkActive])}
           href={link.href}
-          class:acct-nav__link--active={current === link.id}
           aria-current={current === link.id ? 'page' : undefined}
         >
-          {link.label}
+          {labelFor(link.id)}
         </a>
       </li>
     {/each}
   </ul>
 </nav>
-
-<style>
-  .acct-nav {
-    margin: 1.25rem 0 1.75rem;
-    border-bottom: 1px solid var(--pl-border);
-  }
-
-  .acct-nav ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 0.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .acct-nav a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 2.75rem;
-    padding: 0 0.75rem;
-    color: var(--pl-ink-muted);
-    font-weight: 600;
-    text-decoration: none;
-    border-bottom: 2px solid transparent;
-  }
-
-  .acct-nav a:hover {
-    color: var(--pl-ink);
-    text-decoration: none;
-  }
-
-  .acct-nav__link--active {
-    color: var(--pl-ink);
-    border-bottom-color: var(--pl-forest);
-  }
-</style>

@@ -1,0 +1,102 @@
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.136.0
+    restart: unless-stopped
+    command: ['--config=/etc/otelcol-contrib/config.yaml']
+    environment:
+      MAPLE_OTLP_ENDPOINT: ${MAPLE_OTLP_ENDPOINT:?MAPLE_OTLP_ENDPOINT must be set}
+      MAPLE_OTLP_TOKEN: ${MAPLE_OTLP_TOKEN:?MAPLE_OTLP_TOKEN must be set}
+    volumes:
+      - ../otel/collector.yaml:/etc/otelcol-contrib/config.yaml:ro
+    ports:
+      - '127.0.0.1:4317:4317'
+      - '127.0.0.1:4318:4318'
+      - '127.0.0.1:13133:13133'
+
+  web:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.web
+    restart: unless-stopped
+    env_file:
+      - ../../.env
+    environment:
+      MALWARE_SCANNER_HOST: ${MALWARE_SCANNER_HOST:?MALWARE_SCANNER_HOST must be set}
+      MALWARE_SCANNER_PORT: ${MALWARE_SCANNER_PORT:-3310}
+      MALWARE_SCANNER_TIMEOUT_MS: ${MALWARE_SCANNER_TIMEOUT_MS:-15000}
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_SERVICE_NAME: '@oss-tips/web'
+    depends_on:
+      - otel-collector
+    ports:
+      - '3000:3000'
+
+  worker:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.worker
+      args:
+        APP_FILTER: '@oss-tips/worker'
+    restart: unless-stopped
+    env_file:
+      - ../../.env
+    environment:
+      MALWARE_SCANNER_HOST: ${MALWARE_SCANNER_HOST:?MALWARE_SCANNER_HOST must be set}
+      MALWARE_SCANNER_PORT: ${MALWARE_SCANNER_PORT:-3310}
+      MALWARE_SCANNER_TIMEOUT_MS: ${MALWARE_SCANNER_TIMEOUT_MS:-15000}
+      WORKER_QUEUE: default,exports,domains
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_SERVICE_NAME: '@oss-tips/worker'
+    depends_on:
+      - otel-collector
+
+  otp-worker:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.worker
+      args:
+        APP_FILTER: '@oss-tips/worker'
+    restart: unless-stopped
+    env_file:
+      - ../../.env
+    environment:
+      WORKER_QUEUE: otp
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_SERVICE_NAME: '@oss-tips/otp-worker'
+    depends_on:
+      - otel-collector
+
+  finance-worker:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.worker
+      args:
+        APP_FILTER: '@oss-tips/finance-worker'
+    restart: unless-stopped
+    env_file:
+      - ../../.env
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_SERVICE_NAME: '@oss-tips/finance-worker'
+    depends_on:
+      - otel-collector
+
+  discord-bot:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.worker
+      args:
+        APP_FILTER: '@oss-tips/discord-bot'
+    restart: unless-stopped
+    env_file:
+      - ../../.env
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_SERVICE_NAME: '@oss-tips/discord-bot'
+    depends_on:
+      - otel-collector

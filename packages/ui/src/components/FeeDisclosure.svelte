@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { formatMoney } from '../fixtures/demo.js';
+  import { stylex } from '../styles/stylex-runtime.js';
+  import { formatCadence, formatCurrency, locale, t } from '../lib/i18n.js';
+  import { funding } from '../styles/funding.stylex.js';
 
-  interface Props {
+  export interface Props {
     projectAmountMinor: number;
     projectFeePercent?: number;
     tipMinor?: number;
@@ -17,35 +19,37 @@
     cadence = 'one-off',
   }: Props = $props();
 
-  const projectFeeMinor = $derived(Math.round(projectAmountMinor * (projectFeePercent / 100)));
-  const totalMinor = $derived(projectAmountMinor + projectFeeMinor + tipMinor);
+  const projectFeeMinor = $derived(Math.max(0, Math.round(projectAmountMinor * (projectFeePercent / 100))));
+  const totalMinor = $derived(Math.max(0, projectAmountMinor + projectFeeMinor + tipMinor));
 </script>
 
-<div class="pl-fee-disclosure" aria-label="Fee breakdown">
-  <strong style="display: block; margin-bottom: 0.5rem;">Before you confirm</strong>
-  <div class="pl-fee-disclosure__row">
-    <span>Project receives</span>
-    <span>{formatMoney(projectAmountMinor, currency)}</span>
-  </div>
-  <div class="pl-fee-disclosure__row">
-    <span>oss.tips project fee ({projectFeePercent}%)</span>
-    <span>{formatMoney(projectFeeMinor, currency)}</span>
-  </div>
+<aside class={stylex.attrs(funding.feeDisclosure).class ?? ''} aria-label={t('common.feeBreakdown', {}, $locale)}>
+  <h3 class={stylex.attrs(funding.feeHeading).class ?? ''}>{t('common.beforeConfirm', {}, $locale)}</h3>
+  <dl class={stylex.attrs(funding.feeList).class ?? ''}>
+    <div class={stylex.attrs(funding.feeRow).class ?? ''}>
+      <dt class={stylex.attrs(funding.feeRowLabel).class ?? ''}>{t('common.projectReceives', {}, $locale)}</dt>
+      <dd class={stylex.attrs(funding.feeRowValue).class ?? ''}>{formatCurrency(projectAmountMinor, currency, $locale)}</dd>
+    </div>
+    <div class={stylex.attrs(funding.feeRow).class ?? ''}>
+      <dt class={stylex.attrs(funding.feeRowLabel).class ?? ''}>{t('common.projectFee', { percent: projectFeePercent }, $locale)}</dt>
+      <dd class={stylex.attrs(funding.feeRowValue).class ?? ''}>{formatCurrency(projectFeeMinor, currency, $locale)}</dd>
+    </div>
   {#if tipMinor > 0}
-    <div class="pl-fee-disclosure__row">
-      <span>Your oss.tips tip</span>
-      <span>{formatMoney(tipMinor, currency)}</span>
+    <div class={stylex.attrs(funding.feeRow).class ?? ''}>
+      <dt class={stylex.attrs(funding.feeRowLabel).class ?? ''}>{t('common.platformTip', {}, $locale)}</dt>
+      <dd class={stylex.attrs(funding.feeRowValue).class ?? ''}>{formatCurrency(tipMinor, currency, $locale)}</dd>
     </div>
   {/if}
-  <div class="pl-fee-disclosure__row pl-muted" style="font-size: 0.8125rem;">
-    <span>Cadence</span>
-    <span>{cadence}</span>
-  </div>
-  <div class="pl-fee-disclosure__row pl-fee-disclosure__total">
-    <span>You pay today</span>
-    <span>{formatMoney(totalMinor, currency)}</span>
-  </div>
-  <p class="pl-muted" style="font-size: 0.75rem; margin: 0.75rem 0 0;">
-    Payment method and localised pricing shown in Stripe Checkout. The project is the merchant of record.
+    <div class={stylex.attrs(funding.feeRow, funding.feeMeta).class ?? ''}>
+      <dt>{t('common.cadence', {}, $locale)}</dt>
+      <dd class={stylex.attrs(funding.feeRowValue).class ?? ''}>{formatCadence(cadence, $locale)}</dd>
+    </div>
+    <div class={stylex.attrs(funding.feeRow, funding.feeTotal).class ?? ''}>
+      <dt>{t('common.youPayToday', {}, $locale)}</dt>
+      <dd class={stylex.attrs(funding.feeRowValue).class ?? ''}>{formatCurrency(totalMinor, currency, $locale)}</dd>
+    </div>
+  </dl>
+  <p class={stylex.attrs(funding.feeNote).class ?? ''}>
+    {t('common.paymentNote', {}, $locale)}
   </p>
-</div>
+</aside>

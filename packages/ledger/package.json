@@ -15,11 +15,11 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
-    "lint": "echo ok"
+    "test": "vitest run"
   },
   "dependencies": {
-    "@oss-tips/domain": "workspace:*"
+    "@oss-tips/domain": "workspace:*",
+    "tigerbeetle-node": "0.17.9"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import AuditPage from '@oss-tips/ui/pages/admin/AuditPage.svelte';
+  import AdminAuditPage from '@oss-tips/ui/pages/admin/AdminAuditPage.svelte';
 
   let { data } = $props();
 </script>
 
-<AuditPage {...data} />
+<AdminAuditPage {...data} />

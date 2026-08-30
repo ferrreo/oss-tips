@@ -4,11 +4,7 @@ import type { NewPost, Post } from '../types.js';
 export function createPostsRepository(db: Db) {
   return {
     async findById(id: string): Promise<Post | undefined> {
-      return db
-        .selectFrom('post')
-        .selectAll()
-        .where('id', '=', id)
-        .executeTakeFirst();
+      return db.selectFrom('post').selectAll().where('id', '=', id).executeTakeFirst();
     },
 
     async findBySlug(projectId: string, slug: string): Promise<Post | undefined> {
@@ -32,11 +28,7 @@ export function createPostsRepository(db: Db) {
     },
 
     async create(post: NewPost): Promise<Post> {
-      return db
-        .insertInto('post')
-        .values(post)
-        .returningAll()
-        .executeTakeFirstOrThrow();
+      return db.insertInto('post').values(post).returningAll().executeTakeFirstOrThrow();
     },
 
     async getLatestRevision(postId: string) {

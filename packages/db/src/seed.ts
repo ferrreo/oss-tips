@@ -1,4 +1,4 @@
-import { uuidv7 } from '@oss-tips/domain';
+import { projectCapabilitiesForRole, uuidv7 } from '@oss-tips/domain';
 import { createDb, destroyDb } from './client.js';
 
 async function main(): Promise<void> {
@@ -14,6 +14,8 @@ async function main(): Promise<void> {
   const orgId = uuidv7();
   const userId = uuidv7();
   const projectId = uuidv7();
+  const repositoryId = uuidv7();
+  const claimId = uuidv7();
   const featureModeId = uuidv7();
   const supporterTierId = uuidv7();
   const memberTierId = uuidv7();
@@ -66,6 +68,19 @@ async function main(): Promise<void> {
         status: 'published',
         description: 'Demo open-source project for local development.',
         default_currency: 'gbp',
+        website_url: 'https://grove.dev',
+        support_email: 'maintainers@grove.dev',
+        support_email_verified_at: now,
+        open_source_declared: true,
+        open_source_license: 'MIT',
+        min_support_minor: '200',
+        max_support_minor: '500000',
+        public_show_supporters: true,
+        public_show_goal: true,
+        public_show_stats: true,
+        discovery_ecosystems: ['javascript', 'typescript'],
+        discovery_languages: ['typescript'],
+        discovery_tags: ['developer-tools', 'open-source'],
       })
       .execute();
 
@@ -76,6 +91,36 @@ async function main(): Promise<void> {
         project_id: projectId,
         user_id: userId,
         role: 'owner',
+        capabilities: [...projectCapabilitiesForRole('owner')],
+      })
+      .execute();
+
+    await trx
+      .insertInto('project_repository')
+      .values({
+        id: repositoryId,
+        project_id: projectId,
+        provider: 'github',
+        external_id: 'oss-tips/grove',
+        url: 'https://github.com/oss-tips/grove',
+        verification_status: 'verified',
+        verified_at: now,
+      })
+      .execute();
+
+    await trx
+      .insertInto('project_claim')
+      .values({
+        id: claimId,
+        project_id: projectId,
+        user_id: userId,
+        email: 'maintainers@grove.dev',
+        status: 'verified',
+        method: 'repository_file',
+        proof_reference: 'seed:oss-tips/grove',
+        reviewed_by: userId,
+        reviewed_at: now,
+        failure_reason: null,
       })
       .execute();
 

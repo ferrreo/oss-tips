@@ -1,5 +1,7 @@
 import tokens from '../tokens.json' with { type: 'json' };
 
+export { paperlight, paperlightDark } from './paperlight.stylex.js';
+
 export { tokens };
 
 export const colour = tokens.colour;

@@ -16,10 +16,17 @@ export {
 } from './ids.js';
 export {
   buildOneOffSettlementIntent,
+  buildOneOffRefundIntent,
+  buildRefundIntent,
+  buildDisputeIntent,
   netBalancesFromTransfers,
   transitBalance,
+  type DisputeIntentInput,
+  type LedgerAccountDefinition,
   type LedgerTransfer,
+  type OneOffRefundInput,
   type PostingIntent,
+  type PostingMetadata,
   type OneOffSettlementInput,
 } from './intents.js';
 export {
@@ -27,6 +34,8 @@ export {
   MockLedgerClient,
   TigerBeetleLedgerClient,
   parseTigerBeetleAddresses,
+  parseTigerBeetleClusterId,
+  type TigerBeetleModule,
   type LedgerClient,
   type PostedTransfer,
 } from './client/index.js';

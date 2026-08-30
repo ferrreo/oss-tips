@@ -1,4 +1,7 @@
-/* Paperlight design tokens — light default, dark via [data-theme="dark"] */
+/* Hallmark · macrostructure: Ecosystem Index / Workbench / Long Document · tone: warm editorial, botanical, technically precise · anchor hue: chromatic green 151° · theme: custom Paperlight · nav: N1b · footer: Ft1 · contrast: pass (40–41) · slop: pass (42–45) · honest: pass (46) · chrome: pass (47) · tokens: pass (48) · responsive: pass (49) · icons: pass (30) · mobile: pass (34, 49, 50–57)
+ * Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4
+ * Paperlight fallback variables · StyleX themes are the component source
+ */
 
 :root,
 [data-theme='light'] {
@@ -16,7 +19,7 @@
   --pl-fern: #a8b59a;
   --pl-ochre: #b88747;
   --pl-border: #ddd5c6;
-  --pl-border-strong: #bdb4a4;
+  --pl-border-strong: #918878;
   --pl-success: #2f6a41;
   --pl-warning: #9a651f;
   --pl-danger: #a3463c;
@@ -42,20 +45,20 @@
   --pl-fern: #4d5e3c;
   --pl-ochre: #c6a36b;
   --pl-border: #34382e;
-  --pl-border-strong: #555a4b;
+  --pl-border-strong: #626858;
   --pl-success: #a5c87d;
   --pl-warning: #d8b06c;
   --pl-danger: #d47a6e;
   --pl-info: #8aada6;
   --pl-focus: #b5cf8d;
   --pl-overlay: rgba(0, 0, 0, 0.64);
-  --pl-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 16px rgba(0, 0, 0, 0.18);
+  --pl-shadow: 0 1px 2px rgba(0, 0, 0, 0.32), 0 16px 40px rgba(0, 0, 0, 0.22);
   --pl-on-forest: #11130f;
 }
 
 :root {
   --pl-font-display: Newsreader, 'EB Garamond', Georgia, serif;
-  --pl-font-ui: 'Source Sans 3', system-ui, sans-serif;
+  --pl-font-ui: 'Source Sans 3', Inter, system-ui, sans-serif;
   --pl-font-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
   --pl-radius-sm: 0.375rem;
   --pl-radius-md: 0.625rem;
@@ -65,8 +68,20 @@
   --pl-motion-normal: 220ms;
   --pl-motion-slow: 360ms;
   --pl-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --pl-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --pl-space-1: 0.25rem;
+  --pl-space-2: 0.5rem;
+  --pl-space-3: 0.75rem;
+  --pl-space-4: 1rem;
+  --pl-space-5: 1.25rem;
+  --pl-space-6: 1.5rem;
+  --pl-space-8: 2rem;
+  --pl-space-10: 2.5rem;
+  --pl-space-12: 3rem;
+  --pl-space-16: 4rem;
+  --pl-space-20: 5rem;
   --pl-content-max: 80rem;
-  --pl-reading-max: 46rem;
+  --pl-reading-max: 70ch;
   --pl-dashboard-max: 96rem;
   --pl-sidebar: 16rem;
   --pl-touch: 2.75rem;

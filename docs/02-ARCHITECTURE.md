@@ -4,7 +4,7 @@
 
 Use a **modular monolith with explicit workers**, not microservices.
 
-The payment, membership and content domains live in one TypeScript codebase with hard package boundaries. Runtime separation exists where failure modes differ: HTTP, financial worker, general jobs and Discord bot.
+The payment, membership and content domains live in one TypeScript codebase with hard package boundaries. Runtime separation exists where failure modes differ: HTTP, financial worker, general jobs, OTP delivery and Discord bot.
 
 ```mermaid
 flowchart LR
@@ -26,6 +26,9 @@ flowchart LR
   JW --> RF
   JW --> RS
   JW --> CF
+
+  PG --> OTP[OTP worker]
+  OTP --> RS
 
   PG --> DBOT[Discord bot/worker]
   DBOT --> DC[Discord]
@@ -112,11 +115,18 @@ Only process allowed to post TigerBeetle transfers.
 - custom-domain provisioning/polling.
 - cleanup and retention jobs.
 
+The production OTP worker runs the same worker binary with `WORKER_QUEUE=otp`.
+It claims only the `otp` queue and does not process outbox or webhook work first, so
+authentication mail is not delayed by general work. General workers ignore
+`otp`; both workers retain the same PostgreSQL lease, heartbeat and recovery
+semantics.
+
 ### Discord bot
 
-- Gateway connection isolated from HTTP restarts.
+- Gateway connection isolated from HTTP restarts. Enable Discord's **Server Members Intent** (`GUILD_MEMBERS`) for the bot application; the bot requests only `GUILDS | GUILD_MEMBERS` gateway intents.
+- `GUILD_MEMBER_ADD` and `GUILD_MEMBER_UPDATE` events enqueue ID-only role jobs for linked supporters, keeping rejoin/grant latency event-driven without polling every guild member.
 - Role grant/revoke commands from PostgreSQL jobs.
-- Periodic desired-state reconciliation.
+- Periodic desired-state reconciliation remains the recovery path for missed events.
 - One active process at launch, protected by a database lease.
 
 ## 5. PostgreSQL: PlanetScale PS-5 assessment
@@ -141,6 +151,7 @@ The workload target averages one successful transaction roughly every four minut
 - Migrations/admin tasks: direct port `5432`, one connection, never from request handling.
 - Do not use session advisory locks, session variables, temporary tables or named prepared statements that assume session affinity.
 - Use row locks and `FOR UPDATE SKIP LOCKED`; if advisory locking is required, use transaction-scoped locks only.
+- Email delivery keeps its transaction-scoped recipient lock through provider I/O and reconciliation; this pins one database connection per active send and bounds concurrency by the worker pool size. Split claim/send only with an idempotent outbox protocol.
 - Retry serialisation errors and failover disconnects with bounded exponential backoff and jitter.
 
 ### Upgrade triggers
@@ -203,12 +214,13 @@ Rules:
 
 - Browser uploads directly with short-lived presigned PUT URLs.
 - Object key is server generated; never trust user filename as path.
-- Upload completes into quarantine, then worker validates MIME by content, decodes images, strips metadata and moves to final bucket.
+- Upload completes into quarantine, then the server validates MIME by content, sends PDF/plain-text attachments through the configured ClamAV daemon, decodes images, strips metadata and moves safe bytes to the final bucket. Scanner errors fail closed.
 - Public objects are immutable and content-addressed; replace creates a new object key.
 - Private objects are never public-bucket objects and require short-lived signed GET URLs after entitlement checks.
 - Store object metadata and ownership in PostgreSQL.
 - Use the common S3 subset only; RustFS documents a tested subset rather than perfect S3 compatibility.
 - Nightly inventory verifies PostgreSQL references against objects.
+- Nightly maintenance reclaims stale unreferenced content-addressed final/export objects and quarantine uploads after the recovery window, with locked PostgreSQL reference checks.
 
 ## 8. Cloudflare edge and caching
 
@@ -241,9 +253,10 @@ Cloudflare currently includes 100 custom hostnames on non-enterprise plans and c
 - Send from the Ireland region for latency.
 - Resend stores account metadata/logs in the US even when mail is sent from Ireland; this is covered by the narrowed data-residency policy and processor documentation rather than described as EU-only storage.
 - Avoid placing private post bodies or unnecessary payment details in email.
+- Receive `/api/webhooks/resend` with Resend/Svix raw-body verification and a five-minute timestamp window.
 - Process delivered, bounced and complained webhooks into the email-delivery table.
 - Suppress repeated delivery to hard bounces/complaints.
-- OTP mail has the highest priority queue and a separate rate limit.
+- OTP mail uses the highest-priority queue and has a separate rate limit.
 
 ## 10. Observability with Maple
 
@@ -285,18 +298,18 @@ Workers claim with `FOR UPDATE SKIP LOCKED`, commit a lease, execute idempotentl
 
 ## 12. Performance budgets
 
-| Surface | Budget |
-|---|---:|
-| Cached public page TTFB p75 | < 150 ms UK/EU |
-| Uncached SSR TTFB p95 | < 500 ms |
-| Dashboard API p95 | < 400 ms |
-| Checkout-session creation p95 excluding Stripe | < 300 ms |
-| Stripe event receipt | durable response < 500 ms |
-| Payment event to dashboard/ledger p95 | < 30 s |
-| Entitlement/Discord p95 | < 60 s |
-| Initial public JS | < 170 kB compressed |
-| Dashboard initial JS | < 320 kB compressed |
-| Public LCP p75 | < 2.0 s |
+| Surface                                        |                    Budget |
+| ---------------------------------------------- | ------------------------: |
+| Cached public page TTFB p75                    |            < 150 ms UK/EU |
+| Uncached SSR TTFB p95                          |                  < 500 ms |
+| Dashboard API p95                              |                  < 400 ms |
+| Checkout-session creation p95 excluding Stripe |                  < 300 ms |
+| Stripe event receipt                           | durable response < 500 ms |
+| Payment event to dashboard/ledger p95          |                    < 30 s |
+| Entitlement/Discord p95                        |                    < 60 s |
+| Initial public JS                              |       < 170 kB compressed |
+| Dashboard initial JS                           |       < 320 kB compressed |
+| Public LCP p75                                 |                   < 2.0 s |
 
 Use route-level code splitting, server rendering, progressive enhancement and minimal client state. Charts load only on dashboard analytics routes.
 

@@ -35,12 +35,17 @@ export async function up(db: Kysely<unknown>): Promise<void> {
       user_id uuid NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
       account_id text NOT NULL,
       provider_id text NOT NULL,
+      issuer text NOT NULL,
       access_token text,
       refresh_token text,
-      expires_at timestamptz,
+      id_token text,
+      access_token_expires_at timestamptz,
+      refresh_token_expires_at timestamptz,
+      scope text,
+      password text,
       created_at timestamptz NOT NULL DEFAULT now(),
       updated_at timestamptz NOT NULL DEFAULT now(),
-      UNIQUE (provider_id, account_id)
+      UNIQUE (issuer, account_id)
     )
   `.execute(db);
 
@@ -59,13 +64,26 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     CREATE TABLE passkey (
       id uuid PRIMARY KEY,
       user_id uuid NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-      name text NOT NULL,
+      name text,
       credential_id text NOT NULL UNIQUE,
       public_key text NOT NULL,
-      counter bigint NOT NULL DEFAULT 0,
+      counter integer NOT NULL DEFAULT 0,
+      device_type text NOT NULL,
+      backed_up boolean NOT NULL DEFAULT false,
       transports text,
       created_at timestamptz NOT NULL DEFAULT now(),
+      aaguid text,
       last_used_at timestamptz
+    )
+  `.execute(db);
+
+  await sql`
+    CREATE TABLE platform_member (
+      id uuid PRIMARY KEY,
+      user_id uuid NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+      role text NOT NULL,
+      created_at timestamptz NOT NULL DEFAULT now(),
+      UNIQUE (user_id, role)
     )
   `.execute(db);
 
@@ -957,6 +975,7 @@ export async function down(db: Kysely<unknown>): Promise<void> {
     'organisation_member',
     'organisation',
     'user_security_event',
+    'platform_member',
     'passkey',
     'verification',
     'account',

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import SupportersPage from '@oss-tips/ui/pages/dashboard/SupportersPage.svelte';
+  import ProjectSupportersPage from '@oss-tips/ui/pages/project/ProjectSupportersPage.svelte';
 
   let { data } = $props();
 </script>
 
-<SupportersPage {...data} />
+<ProjectSupportersPage {...data} />

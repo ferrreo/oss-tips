@@ -62,7 +62,11 @@ const defaultStorySources = {
   analyticsRetention: demoAnalytics.retention,
 };
 
-function collectStrings(value: unknown, path: string, found: Array<{ path: string; value: string }>): void {
+function collectStrings(
+  value: unknown,
+  path: string,
+  found: Array<{ path: string; value: string }>,
+): void {
   if (typeof value === 'string') {
     found.push({ path, value });
     return;
@@ -106,12 +110,19 @@ describe('branded demo fixtures', () => {
   });
 
   it('uses branded tiers with reward lists', () => {
-    expect(demoTiers.map((tier) => tier.name)).toEqual(['Coffee', 'Supporter', 'Backer', 'Champion']);
+    expect(demoTiers.map((tier) => tier.name)).toEqual([
+      'Coffee',
+      'Supporter',
+      'Backer',
+      'Champion',
+    ]);
     expect(demoTiers[0]?.monthlyMinor).toBe(500);
     expect(demoTiers[1]?.monthlyMinor).toBe(1000);
     expect(demoTiers[1]?.popular).toBe(true);
     expect(demoTiers[2]?.monthlyMinor).toBe(2500);
     expect(demoTiers[3]?.monthlyMinor).toBe(10000);
+    expect(demoTiers[2]?.oneOffDuration).toBe('year');
+    expect(demoTiers[3]?.memberLimit).toBe(25);
     for (const tier of demoTiers) {
       expect(tier.rewards.length).toBeGreaterThan(0);
       expect(tier.description.length).toBeGreaterThan(0);
@@ -122,7 +133,9 @@ describe('branded demo fixtures', () => {
     const publicWall = demoSupporters.filter((supporter) => supporter.public);
     expect(publicWall.length).toBeGreaterThanOrEqual(8);
     const handles = publicWall.map((supporter) => supporter.handle);
-    expect(handles).toEqual(expect.arrayContaining(['alex_dev', 'lara_code', 'jane_dev', 'opensourcefan']));
+    expect(handles).toEqual(
+      expect.arrayContaining(['alex_dev', 'lara_code', 'jane_dev', 'opensourcefan']),
+    );
     for (const supporter of publicWall) {
       expect(supporter.message.length).toBeGreaterThan(0);
       expect(supporter.displayName.length).toBeGreaterThan(0);
@@ -138,6 +151,9 @@ describe('branded demo fixtures', () => {
     expect(demoActivity.length).toBeGreaterThanOrEqual(5);
     expect(demoAdminQueue.length).toBeGreaterThanOrEqual(5);
     expect(demoReconciliationDiffs.length).toBeGreaterThanOrEqual(5);
+    expect(new Set(demoReconciliationDiffs.map((row) => row.currency))).toEqual(
+      new Set(['USD', 'EUR', 'JPY']),
+    );
     expect(demoAuditEvents.length).toBeGreaterThanOrEqual(5);
     expect(demoReviewQueue).toBe(demoAdminQueue);
     for (const thread of demoThreads) {
@@ -203,5 +219,6 @@ describe('branded demo fixtures', () => {
     expect(formatMoney(642100, 'USD')).toBe('$6,421.00');
     expect(formatMoney(4523000, 'USD')).toBe('$45,230.00');
     expect(formatMoney(7500000, 'USD')).toBe('$75,000.00');
+    expect(formatMoney(1500, 'JPY')).toBe('JP¥1,500');
   });
 });

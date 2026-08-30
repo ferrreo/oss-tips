@@ -1,31 +1,49 @@
 <script lang="ts">
+  import { stylex } from '../styles/stylex-runtime.js';
   import Badge from './Badge.svelte';
+  import ProjectLogo from './ProjectLogo.svelte';
   import type { Project } from '../fixtures/demo.js';
+  import { locale, t } from '../lib/i18n.js';
+  import { primitives } from '../styles/primitives.stylex.js';
+  import { visuals } from '../styles/visuals.stylex.js';
 
-  interface Props {
+  export interface Props {
+    class?: string;
     project: Project;
   }
 
-  let { project }: Props = $props();
+  let { class: className = '', project }: Props = $props();
+
+  function repositoryHref(repository: string): string {
+    return /^https?:\/\//.test(repository) ? repository : `https://${repository}`;
+  }
+
+  const rootClass = $derived(`${stylex.attrs(visuals.projectHero).class ?? ''} ${className}`.trim());
 </script>
 
-<section class="pl-project-hero">
-  <div class="pl-project-hero__identity">
-    <div class="pl-project-hero__logo" aria-hidden="true">{project.logoLetter}</div>
-    <div>
-      <div class="pl-row" style="margin-bottom: 0.5rem;">
-        <h1 class="pl-project-hero__name">{project.name}</h1>
+<section class={rootClass}>
+  <div class={stylex.attrs(visuals.projectIdentity).class}>
+    <ProjectLogo {project} />
+    <div class={stylex.attrs(visuals.projectBody).class}>
+      <div class={stylex.attrs(visuals.projectHeading).class}>
+        <h1 class={stylex.attrs(visuals.projectName).class}>{project.name}</h1>
         {#if project.verified}
-          <Badge variant="forest">Verified</Badge>
+          <Badge variant="forest" label={t('common.verified', {}, $locale)} />
         {/if}
       </div>
-      <p class="pl-muted" style="max-width: 40rem; margin-bottom: 0.75rem;">{project.description}</p>
-      <div class="pl-row pl-mono" style="font-size: 0.875rem;">
-        <a href={project.website}>{project.website}</a>
-        <span class="pl-muted">·</span>
-        <a href="https://{project.repository}">{project.repository}</a>
+      <p class={stylex.attrs(visuals.projectDescription).class}>{project.description}</p>
+      <div class={stylex.attrs(visuals.projectLinks).class}>
+        {#if project.website}
+          <a class={stylex.attrs(visuals.projectLink, primitives.focusRing).class} href={project.website}>{project.website}</a>
+        {/if}
+        {#if project.website && project.repository}
+          <span class={stylex.attrs(visuals.projectLinkSeparator).class} aria-hidden="true">·</span>
+        {/if}
+        {#if project.repository}
+          <a class={stylex.attrs(visuals.projectLink, primitives.focusRing).class} href={repositoryHref(project.repository)}>{project.repository}</a>
+        {/if}
       </div>
-      <div class="pl-row" style="margin-top: 0.75rem; flex-wrap: wrap;">
+      <div class={stylex.attrs(visuals.projectTags).class}>
         {#each project.tags as tag (tag)}
           <Badge>{tag}</Badge>
         {/each}

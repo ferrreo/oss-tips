@@ -4,11 +4,7 @@ import type { AuditEvent, NewAuditEvent } from '../types.js';
 export function createAuditRepository(db: Db) {
   return {
     async record(event: NewAuditEvent): Promise<AuditEvent> {
-      return db
-        .insertInto('audit_event')
-        .values(event)
-        .returningAll()
-        .executeTakeFirstOrThrow();
+      return db.insertInto('audit_event').values(event).returningAll().executeTakeFirstOrThrow();
     },
 
     async listByProject(projectId: string, limit = 100): Promise<AuditEvent[]> {
@@ -16,7 +12,7 @@ export function createAuditRepository(db: Db) {
         .selectFrom('audit_event')
         .selectAll()
         .where('project_id', '=', projectId)
-        .orderBy('created_at', 'desc')
+        .orderBy('occurred_at', 'desc')
         .limit(limit)
         .execute();
     },
@@ -31,7 +27,7 @@ export function createAuditRepository(db: Db) {
         .selectAll()
         .where('resource_type', '=', resourceType)
         .where('resource_id', '=', resourceId)
-        .orderBy('created_at', 'desc')
+        .orderBy('occurred_at', 'desc')
         .limit(limit)
         .execute();
     },

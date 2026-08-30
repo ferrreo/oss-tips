@@ -1,9 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
 <title id="title">oss.tips open seed mark</title>
 <desc id="desc">An open circular form with a small sprout emerging from the opening.</desc>
-<rect width="160" height="160" rx="32" fill="#FBF7EF"/>
-<path d="M113 45 A54 54 0 1 1 83 26" fill="none" stroke="#2D5C3A" stroke-width="15" stroke-linecap="round"/>
+<style>
+  .paper { fill: #FBF7EF; }
+  .ring { stroke: #2D5C3A; }
+  .seed { fill: #1E2A22; }
+  @media (prefers-color-scheme: dark) {
+    .paper { fill: #11130F; }
+    .ring { stroke: #91A66E; }
+    .seed { fill: #EDE7D8; }
+  }
+</style>
+<rect class="paper" width="160" height="160" rx="32"/>
+<path class="ring" d="M113 45 A54 54 0 1 1 83 26" fill="none" stroke-width="15" stroke-linecap="round"/>
 <path d="M88 30 C98 8 124 10 128 31 C113 40 99 39 88 30 Z" fill="#7C8A5B"/>
 <path d="M103 39 C121 31 139 42 135 60 C119 60 108 52 103 39 Z" fill="#B88747"/>
-<circle cx="79" cy="80" r="7" fill="#1E2A22" opacity="0.92"/>
+<circle class="seed" cx="79" cy="80" r="7" opacity="0.92"/>
 </svg>

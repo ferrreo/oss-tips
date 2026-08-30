@@ -1,7 +1,7 @@
 <script lang="ts">
-  import AdminHomePage from '@oss-tips/ui/pages/admin/AdminHomePage.svelte';
+  import AdminOverviewPage from '@oss-tips/ui/pages/admin/AdminOverviewPage.svelte';
 
   let { data } = $props();
 </script>
 
-<AdminHomePage {...data} />
+<AdminOverviewPage {...data} />

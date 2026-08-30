@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import StatusBanner from './StatusBanner.svelte';
 
-const meta: Meta<StatusBanner> = {
+const meta = {
   title: 'Components/StatusBanner',
   component: StatusBanner,
-};
+} satisfies Meta<typeof StatusBanner>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -40,4 +40,13 @@ export const Dark: Story = {
     message: 'Grove cannot take payouts until verification finishes.',
   },
   globals: { theme: 'dark' },
+};
+
+export const Compact: Story = {
+  args: {
+    variant: 'danger',
+    title: 'Export needs attention',
+    message: 'The May ledger contains two records that need review before you download it.',
+  },
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
 };

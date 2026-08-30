@@ -1,6 +1,7 @@
 <script lang="ts">
-  import PublicNav from '../../components/PublicNav.svelte';
-  import PublicFooter from '../../components/PublicFooter.svelte';
+  import { untrack } from 'svelte';
+  import { stylex } from '../../styles/stylex-runtime.js';
+  import PublicPageFrame from './PublicPageFrame.svelte';
   import HeroLandscape from '../../components/HeroLandscape.svelte';
   import ProjectHero from '../../components/ProjectHero.svelte';
   import SupportComposer from '../../components/SupportComposer.svelte';
@@ -9,228 +10,187 @@
   import SupporterWall from '../../components/SupporterWall.svelte';
   import DataCard from '../../components/DataCard.svelte';
   import Badge from '../../components/Badge.svelte';
-  import {
-    demoProject,
-    demoTiers,
-    demoGoals,
-    demoSupporters,
-    demoPosts,
-    formatMoney,
-  } from '../../fixtures/demo.js';
+  import type { SupportCheckoutRequest } from '../../components/SupportComposer.svelte';
+  import type { Goal, Post, Project, Supporter, Tier } from '../../fixtures/demo.js';
+  import { formatCurrency, formatDate, formatNumber, locale, t } from '../../lib/i18n.js';
+  import { primitives } from '../../styles/primitives.stylex.js';
+  import { publicStyles } from '../../styles/public.stylex.js';
 
-  function requireGoal() {
-    const goal = demoGoals.find((item) => item.slug === 'infrastructure-upgrade');
-    if (!goal) throw new Error('Grove demo goal infrastructure-upgrade is missing');
-    return goal;
+  interface CommunityLink {
+    label: string;
+    href: string;
   }
 
-  const pageDemo = {
-    community: [
-      { label: 'Discord', href: 'https://discord.gg/grove' },
-      { label: 'Docs', href: 'https://grove.dev/docs' },
-      { label: 'Mastodon', href: 'https://fosstodon.org/@grove' },
-    ],
-    stats: [
-      {
-        label: 'Active supporters',
-        value: String(demoProject.stats.supporters),
-        compare: 'Public count',
-        sparkline: [210, 228, 241, 255, 268, 284],
-      },
-      {
-        label: 'Monthly recurring',
-        value: formatMoney(demoProject.stats.monthlyRecurringMinor, demoProject.currency),
-        compare: 'Settled, before fees',
-        sparkline: [4100, 4550, 5020, 5480, 6010, 6421],
-      },
-      {
-        label: 'One-off this month',
-        value: formatMoney(demoProject.stats.oneOffThisMonthMinor, demoProject.currency),
-        compare: 'Project-selected stat',
-        sparkline: [1800, 2400, 3100, 4200, 5100, 6420],
-      },
-    ],
-    thanks: demoSupporters.filter((supporter) => supporter.public && supporter.message),
-    embed: '<script async src="https://oss.tips/widgets/grove/thanks.js"><\/script>',
-    goal: requireGoal(),
-  };
+  interface ProjectStat {
+    label: string;
+    value: string;
+    compare: string;
+    sparkline: number[];
+  }
 
-  let selectedTier = $state('supporter');
+  export interface Props {
+    project: Project;
+    tiers: Tier[];
+    goal?: Goal | null;
+    supporters: Supporter[];
+    posts: Post[];
+    community?: CommunityLink[];
+    stats?: ProjectStat[];
+    embed?: string;
+    initialTier?: string;
+    checkoutDisabled?: boolean;
+    checkoutLoading?: boolean;
+    checkoutError?: string;
+    oncontinue?: ((request: SupportCheckoutRequest) => void | Promise<void>) | undefined;
+  }
+
+  let {
+    project,
+    tiers,
+    goal = null,
+    supporters,
+    posts,
+    community = [],
+    stats,
+    embed = `<script async src="https://oss.tips/widgets/${project.slug}/thanks.js"><\/script>`,
+    initialTier = 'supporter',
+    checkoutDisabled = false,
+    checkoutLoading = false,
+    checkoutError = '',
+    oncontinue,
+  }: Props = $props();
+
+  let selectedTier = $state(untrack(() => initialTier));
+  const visibleThanks = $derived(supporters.filter((supporter) => supporter.public && supporter.message));
+  const displayStats = $derived(stats ?? [
+    { label: t('public.project.activeSupporters', {}, $locale), value: formatNumber(project.stats.supporters, $locale), compare: t('public.project.publicCount', {}, $locale), sparkline: [210, 228, 241, 255, 268, 284] },
+    { label: t('public.project.monthlyRecurring', {}, $locale), value: formatCurrency(project.stats.monthlyRecurringMinor, project.currency, $locale), compare: t('public.project.settledBeforeFees', {}, $locale), sparkline: [4100, 4550, 5020, 5480, 6010, 6421] },
+    { label: t('public.project.oneOffThisMonth', {}, $locale), value: formatCurrency(project.stats.oneOffThisMonthMinor, project.currency, $locale), compare: t('public.project.settledThisMonth', {}, $locale), sparkline: [1800, 2400, 3100, 4200, 5100, 6420] },
+  ]);
+
+  const contentClass = stylex.attrs(publicStyles.container, publicStyles.projectContent).class;
+  const sectionTitleClass = stylex.attrs(publicStyles.sectionTitle).class;
 </script>
 
-<div>
-  <PublicNav />
-  <main id="main-content">
-    <HeroLandscape />
-    <div class="pl-container" style="padding-top: 0.5rem; padding-bottom: 3rem;">
-      <div class="pp-identity">
-        <ProjectHero project={demoProject} />
-        <div class="pl-row" style="flex-wrap: wrap; margin-top: 0.25rem;">
-          {#each pageDemo.community as link (link.href)}
-            <a href={link.href}>{link.label}</a>
+<PublicPageFrame>
+  {#snippet children()}
+    <HeroLandscape
+      {...(project.bannerAssetId ? { bannerAssetId: project.bannerAssetId } : {})}
+      {...(project.bannerUrl ? { imageUrl: project.bannerUrl } : {})}
+    />
+    <div class={contentClass}>
+      <div class={stylex.attrs(publicStyles.projectIdentity).class}>
+        <ProjectHero {project} />
+        <div class={stylex.attrs(publicStyles.row).class}>
+          {#each community as link (link.href)}
+            <a class={stylex.attrs(publicStyles.link, primitives.focusRing).class} href={link.href}>{link.label}</a>
           {/each}
         </div>
-        <div class="pl-row" style="margin-top: 1.25rem; flex-wrap: wrap;">
-          <a class="pl-btn pl-btn--primary pl-focus-ring" href="#support">Support {demoProject.name}</a>
-          <a class="pl-btn pl-btn--secondary pl-focus-ring" href="#updates">Read updates</a>
+        <div class={`${stylex.attrs(publicStyles.row).class} ${stylex.attrs(publicStyles.projectActions).class}`}>
+          <a class={stylex.attrs(publicStyles.action, publicStyles.actionPrimary).class} href="#support">{t('public.project.support', { project: project.name }, $locale)}</a>
+          <a class={stylex.attrs(publicStyles.action, publicStyles.actionSecondary).class} href="#updates">{t('public.project.readUpdates', {}, $locale)}</a>
         </div>
       </div>
 
-      <div id="support" class="pp-compose">
-        <SupportComposer tiers={demoTiers} currency={demoProject.currency} />
-        <GoalProgress goal={pageDemo.goal} />
+      <div id="support" class={stylex.attrs(publicStyles.projectCompose, publicStyles.projectSection).class}>
+        <SupportComposer
+          tiers={tiers}
+          currency={project.currency}
+          {...(project.minSupportMinor === undefined
+            ? {}
+            : { minAmountMinor: project.minSupportMinor })}
+          {...(project.maxSupportMinor === undefined
+            ? {}
+            : { maxAmountMinor: project.maxSupportMinor })}
+          disabled={checkoutDisabled}
+          loading={checkoutLoading}
+          error={checkoutError}
+          bind:selectedTierId={selectedTier}
+          {oncontinue}
+        />
+        {#if project.showGoal !== false}
+          {#if goal}
+            <GoalProgress {goal} />
+          {:else}
+            <p class={stylex.attrs(publicStyles.muted).class}>{t('public.project.noActiveGoal', {}, $locale)}</p>
+          {/if}
+        {/if}
       </div>
 
-      <h2 class="pl-display" style="font-size: 1.25rem; margin-bottom: 1rem;">Membership tiers</h2>
-      <div class="pp-tiers">
-        {#each demoTiers as tier (tier.id)}
-          <TierCard
-            {tier}
-            currency={demoProject.currency}
-            selected={selectedTier === tier.id}
-            onclick={() => (selectedTier = tier.id)}
-          />
-        {/each}
-      </div>
-
-      <div id="updates" class="pp-feed">
-        <section>
-          <h2 class="pl-display" style="font-size: 1.125rem; margin-bottom: 0.75rem;">Recent updates</h2>
-          {#each demoPosts as post (post.id)}
-            <article class="pp-update">
-              <div class="pl-row" style="margin-bottom: 0.25rem; flex-wrap: wrap;">
-                <h3 style="font-size: 1rem;">
-                  <a href="/{demoProject.slug}/posts/{post.slug}">{post.title}</a>
-                </h3>
-                <Badge>{post.tierVisibility}</Badge>
-              </div>
-              <p class="pl-muted" style="font-size: 0.875rem;">{post.excerpt}</p>
-              <p class="pl-muted" style="font-size: 0.8125rem; margin: 0.25rem 0 0;">
-                {post.publishedLabel} · {post.author}
-              </p>
-            </article>
-          {/each}
-        </section>
-        <SupporterWall supporters={demoSupporters} currency={demoProject.currency} />
-        <section>
-          <h2 class="pl-display" style="font-size: 1.125rem; margin-bottom: 0.75rem;">Project stats</h2>
-          <div class="pl-stack">
-            {#each pageDemo.stats as stat (stat.label)}
-              <DataCard
-                label={stat.label}
-                value={stat.value}
-                compare={stat.compare}
-                sparkline={stat.sparkline}
-              />
+      <section class={stylex.attrs(publicStyles.projectSection).class} aria-labelledby="membership-heading">
+        <h2 id="membership-heading" class={sectionTitleClass}>{t('public.project.membershipTiers', {}, $locale)}</h2>
+        {#if tiers.length > 0}
+          <div class={stylex.attrs(publicStyles.projectTiers).class}>
+            {#each tiers as tier (tier.id)}
+              <TierCard {tier} currency={project.currency} selected={selectedTier === tier.id} onclick={() => (selectedTier = tier.id)} />
             {/each}
           </div>
-        </section>
-      </div>
-
-      <section class="pp-thanks" aria-label="Thanks widget">
-        <div class="pl-row pl-row--between" style="margin-bottom: 1rem; flex-wrap: wrap;">
-          <div>
-            <h2 class="pl-display" style="font-size: 1.125rem;">Thanks</h2>
-            <p class="pl-muted" style="font-size: 0.875rem; margin-top: 0.25rem;">
-              Public notes left with support. Amounts stay hidden unless a supporter opts in.
-            </p>
-          </div>
-          <Badge variant="forest">Embeddable widget</Badge>
-        </div>
-        <div class="pp-thanks__grid">
-          {#each pageDemo.thanks as note (note.id)}
-            <article class="pp-thanks__note">
-              <p style="font-size: 0.9375rem; margin: 0 0 0.75rem;">"{note.message}"</p>
-              <p class="pl-muted" style="font-size: 0.8125rem; margin: 0;">
-                {note.displayName} · {note.tierName} · {note.relativeTime}
-              </p>
-            </article>
-          {/each}
-        </div>
-        <p class="pl-mono pl-muted" style="font-size: 0.8125rem; margin-top: 1rem; overflow-wrap: anywhere;">
-          {pageDemo.embed}
-        </p>
+        {:else}
+          <p class={stylex.attrs(publicStyles.muted).class}>{t('public.project.noMembershipTiers', {}, $locale)}</p>
+        {/if}
       </section>
 
-      <p class="pl-muted" style="font-size: 0.875rem; margin-top: 2rem;">
-        Secure payments via Stripe. {demoProject.name} is the merchant of record.
-        <a href="/pricing">How fees work</a>
-        ·
-        <a href="/security">Report this project</a>
+      <div id="updates" class={stylex.attrs(publicStyles.projectFeed).class}>
+        <section aria-labelledby="updates-heading">
+          <h2 id="updates-heading" class={sectionTitleClass}>{t('public.project.recentUpdates', {}, $locale)}</h2>
+          {#if posts.length > 0}
+            {#each posts as post (post.id)}
+              <article class={stylex.attrs(publicStyles.update).class}>
+                <div class={stylex.attrs(publicStyles.row).class}>
+                  <h3><a class={stylex.attrs(publicStyles.link, primitives.focusRing).class} href="/{project.slug}/posts/{post.slug}">{post.title}</a></h3>
+                  <Badge label={post.tierVisibility} />
+                </div>
+                <p class={stylex.attrs(publicStyles.muted, publicStyles.small).class}>{post.excerpt}</p>
+                  <p class={stylex.attrs(publicStyles.muted, publicStyles.small).class}>{t('public.post.publishedBy', { date: formatDate(post.publishedAt, $locale), author: post.author }, $locale)}</p>
+              </article>
+            {/each}
+          {:else}
+            <p class={stylex.attrs(publicStyles.muted).class}>{t('public.project.noPublicUpdates', {}, $locale)}</p>
+          {/if}
+        </section>
+        {#if project.showSupporters !== false}
+          <SupporterWall supporters={supporters} currency={project.currency} />
+        {/if}
+        {#if project.showStats !== false}
+          <section aria-labelledby="stats-heading">
+            <h2 id="stats-heading" class={sectionTitleClass}>{t('public.project.stats', {}, $locale)}</h2>
+            <div class={stylex.attrs(publicStyles.stack).class}>
+              {#each displayStats as stat (stat.label)}
+                <DataCard label={stat.label} value={stat.value} compare={stat.compare} sparkline={stat.sparkline} />
+              {/each}
+            </div>
+          </section>
+        {/if}
+      </div>
+
+      <section class={stylex.attrs(publicStyles.thanks, publicStyles.projectSection).class} aria-labelledby="thanks-heading">
+        <div class={stylex.attrs(publicStyles.row).class}>
+          <div>
+            <h2 id="thanks-heading" class={sectionTitleClass}>{t('public.project.thanks', {}, $locale)}</h2>
+            <p class={stylex.attrs(publicStyles.muted, publicStyles.small).class}>{t('public.project.thanksDescription', {}, $locale)}</p>
+          </div>
+          <Badge variant="forest" label={t('public.project.embeddableWidget', {}, $locale)} />
+        </div>
+        {#if visibleThanks.length > 0}
+          <div class={stylex.attrs(publicStyles.thanksGrid).class}>
+            {#each visibleThanks as note (note.id)}
+              <article class={stylex.attrs(publicStyles.thanksNote).class}>
+                <p>“{note.message}”</p>
+                <p class={stylex.attrs(publicStyles.muted, publicStyles.small).class}>{note.displayName} · {note.tierName} · {note.relativeTime}</p>
+              </article>
+            {/each}
+          </div>
+        {:else}
+          <p class={stylex.attrs(publicStyles.muted).class}>{t('public.project.noPublicNotes', {}, $locale)}</p>
+        {/if}
+        <p class={stylex.attrs(publicStyles.mono, publicStyles.muted, publicStyles.breakAnywhere).class}>{embed}</p>
+      </section>
+
+      <p class={stylex.attrs(publicStyles.legalNote).class}>
+        {t('public.project.securePayments', {}, $locale)} {t('public.project.merchantOfRecord', { project: project.name }, $locale)}
+        <a class={stylex.attrs(publicStyles.link, primitives.focusRing).class} href="/pricing">{t('public.project.howFees', {}, $locale)}</a> ·
+        <a class={stylex.attrs(publicStyles.link, primitives.focusRing).class} href="/security">{t('public.project.report', {}, $locale)}</a>
       </p>
     </div>
-  </main>
-  <PublicFooter />
-</div>
-
-<style>
-  .pp-identity {
-    margin-bottom: 2rem;
-  }
-
-  .pp-compose {
-    display: grid;
-    gap: 1.5rem;
-    margin: 0 0 2.5rem;
-  }
-
-  .pp-tiers {
-    display: grid;
-    gap: 1rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .pp-feed {
-    display: grid;
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .pp-update {
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--pl-border);
-  }
-
-  .pp-thanks {
-    padding: 1.25rem;
-    background: var(--pl-canvas-subtle);
-    border: 1px solid var(--pl-border);
-    border-radius: var(--pl-radius-lg);
-  }
-
-  .pp-thanks__grid {
-    display: grid;
-    gap: 1rem;
-  }
-
-  .pp-thanks__note {
-    padding: 1rem;
-    background: var(--pl-surface);
-    border: 1px solid var(--pl-border);
-    border-radius: var(--pl-radius-md);
-  }
-
-  @media (min-width: 44rem) {
-    .pp-compose {
-      grid-template-columns: 2fr 1fr;
-    }
-
-    .pp-tiers {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .pp-thanks__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 72rem) {
-    .pp-tiers {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    .pp-feed {
-      grid-template-columns: 1.2fr 1fr 0.9fr;
-    }
-  }
-</style>
+  {/snippet}
+</PublicPageFrame>

@@ -38,22 +38,21 @@ if (stubHits.length > 0) {
   process.exit(1);
 }
 
-const dashboardDir = join(root, 'packages/ui/src/pages/dashboard');
-const missingReexport = [];
-for (const name of readdirSync(dashboardDir)) {
-  if (!name.endsWith('.svelte')) {
-    continue;
-  }
-  const text = readFileSync(join(dashboardDir, name), 'utf8');
-  if (!text.includes('../project/')) {
-    missingReexport.push(name);
+const aliasPage =
+  /import\s+([A-Z]\w*)\s+from\s+['"](?:\.\.\/project\/|\.\/Admin)[^'"]+\.svelte['"][\s\S]*?<\1\s+\{\.\.\.props/;
+const aliasHits = [];
+for (const rel of ['packages/ui/src/pages/dashboard', 'packages/ui/src/pages/admin']) {
+  for (const file of walk(join(root, rel))) {
+    if (file.endsWith('.svelte') && aliasPage.test(readFileSync(file, 'utf8'))) {
+      aliasHits.push(relative(root, file));
+    }
   }
 }
 
-if (missingReexport.length > 0) {
-  console.error('Dashboard pages must re-export from ../project/:');
-  for (const name of missingReexport) {
-    console.error(`  ${name}`);
+if (aliasHits.length > 0) {
+  console.error('Alias page wrappers are not allowed; import canonical pages directly:');
+  for (const file of aliasHits) {
+    console.error(`  ${file}`);
   }
   process.exit(1);
 }

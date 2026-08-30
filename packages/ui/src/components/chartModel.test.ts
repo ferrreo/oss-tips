@@ -11,8 +11,22 @@ import {
 describe('chartModel', () => {
   it('keeps first-seen label order across series', () => {
     const labels = chartLabels([
-      { id: 'a', label: 'A', points: [{ label: 'Mon', value: 1 }, { label: 'Wed', value: 2 }] },
-      { id: 'b', label: 'B', points: [{ label: 'Tue', value: 3 }, { label: 'Wed', value: 4 }] },
+      {
+        id: 'a',
+        label: 'A',
+        points: [
+          { label: 'Mon', value: 1 },
+          { label: 'Wed', value: 2 },
+        ],
+      },
+      {
+        id: 'b',
+        label: 'B',
+        points: [
+          { label: 'Tue', value: 3 },
+          { label: 'Wed', value: 4 },
+        ],
+      },
     ]);
     expect(labels).toEqual(['Mon', 'Wed', 'Tue']);
   });

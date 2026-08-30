@@ -1,73 +1,88 @@
 <script lang="ts">
-  import PublicNav from '../../components/PublicNav.svelte';
-  import ThreadView from '../../components/ThreadView.svelte';
+  import { stylex } from '../../styles/stylex-runtime.js';
   import Badge from '../../components/Badge.svelte';
-  import { formatMoney } from '../../fixtures/demo.js';
-  import { cadenceLabel } from '../labels.js';
-  import SupporterAccountNav from './SupporterAccountNav.svelte';
-  import { requireThread, supporterThreads } from './supporter-demo.js';
+  import EmptyState from '../../components/EmptyState.svelte';
+  import ThreadView, { type ThreadAction } from '../../components/ThreadView.svelte';
+  import type { Thread } from '../../fixtures/demo.js';
+  import { formatCadence, formatCurrency, locale, t } from '../../lib/i18n.js';
+  import SupporterPageFrame from './SupporterPageFrame.svelte';
+  import { supporterThreads as defaultThreads } from './supporter-demo.js';
+  import { supporter } from '../../styles/supporter.stylex';
 
-  let selectedId = $state(requireThread().id);
-  const selected = $derived(supporterThreads.find((t) => t.id === selectedId) ?? requireThread());
+  export interface SupporterInboxPageProps {
+    source?: 'demo' | 'db';
+    threads?: Thread[];
+    error?: string | undefined;
+    blocked?: boolean;
+    reported?: boolean;
+    onSendReply?: ThreadAction;
+    onBlockThread?: ThreadAction;
+    onReportThread?: ThreadAction;
+  }
+
+  let {
+    threads = defaultThreads,
+    error,
+    blocked = false,
+    reported = false,
+    onSendReply,
+    onBlockThread,
+    onReportThread,
+  }: SupporterInboxPageProps = $props();
+
+  let selectedId = $state('');
+  const selected = $derived(threads.find((thread) => thread.id === selectedId) ?? threads[0] ?? null);
+  const layoutAttrs = stylex.attrs(supporter.inboxLayout);
+  const listAttrs = stylex.attrs(supporter.inboxList);
+  const listItemAttrs = stylex.attrs(supporter.inboxListItem);
+  const metaAttrs = stylex.attrs(supporter.inboxMeta);
+  const mutedAttrs = stylex.attrs(supporter.muted);
 </script>
 
-<div>
-  <PublicNav />
-  <main id="main-content" class="pl-section">
-    <div class="pl-container">
-      <p class="pl-public-hero__brand">oss.tips</p>
-      <h1 class="pl-page-title">Inbox</h1>
-      <p class="pl-page-lead">Replies from projects you support. Threads stay bound to the payment that started them.</p>
-      <SupporterAccountNav current="inbox" />
-
-      <div class="pl-grid-2">
-        <ul style="list-style: none; padding: 0; margin: 0;">
-          {#each supporterThreads as thread (thread.id)}
-            <li style="border-bottom: 1px solid var(--pl-border);">
-              <button
-                type="button"
-                class="pl-focus-ring inbox-item"
-                aria-current={thread.id === selectedId ? 'true' : undefined}
-                aria-label="{thread.unread ? 'Unread: ' : ''}{thread.subject} from {thread.project}"
-                onclick={() => (selectedId = thread.id)}
-              >
-                <div class="pl-row pl-row--between">
-                  <strong>{thread.subject}</strong>
-                  {#if thread.unread}
-                    <Badge variant="forest">Unread</Badge>
-                  {/if}
-                </div>
-                <span class="pl-muted" style="font-size: 0.8125rem;">
-                  {thread.project} · {formatMoney(thread.amountMinor)} · {cadenceLabel(thread.cadence)}
-                </span>
-              </button>
-            </li>
-          {/each}
-        </ul>
-        <ThreadView thread={selected} />
-      </div>
+<SupporterPageFrame
+  current="inbox"
+  title={t('supporter.inbox.title', {}, $locale)}
+  lede={t('supporter.inbox.lede', {}, $locale)}
+  {error}
+>
+  {#if threads.length > 0 && selected}
+    <div {...layoutAttrs}>
+      <ul {...listAttrs} aria-label={t('supporter.inbox.messagesLabel', {}, $locale)}>
+        {#each threads as thread (thread.id)}
+          <li {...listItemAttrs}>
+            <button
+              {...stylex.attrs([supporter.inboxItem, thread.id === selected.id && supporter.inboxItemSelected])}
+              type="button"
+              aria-current={thread.id === selected.id ? 'true' : undefined}
+              aria-label={t('supporter.inbox.threadAria', {
+                unread: thread.unread ? t('supporter.inbox.unreadPrefix', {}, $locale) : '',
+                subject: thread.subject,
+                project: thread.project,
+              }, $locale)}
+              onclick={() => (selectedId = thread.id)}
+            >
+              <span {...metaAttrs}>
+                <strong>{thread.subject}</strong>
+                {#if thread.unread}
+                  <Badge variant="forest">{t('supporter.inbox.unread', {}, $locale)}</Badge>
+                {/if}
+              </span>
+              <span {...mutedAttrs}>{thread.project} · {thread.amountMinor > 0 ? formatCurrency(thread.amountMinor, thread.currency ?? 'GBP', $locale) : t('common.notAvailable', {}, $locale)} · {formatCadence(thread.cadence, $locale)}</span>
+            </button>
+          </li>
+        {/each}
+      </ul>
+      <ThreadView
+        thread={selected}
+        actor="supporter"
+        blocked={blocked}
+        reported={reported}
+        onSendReply={onSendReply}
+        onBlock={onBlockThread}
+        onReport={onReportThread}
+      />
     </div>
-  </main>
-</div>
-
-<style>
-  .inbox-item {
-    display: block;
-    width: 100%;
-    padding: 0.875rem 0.25rem;
-    text-align: left;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: inherit;
-    font: inherit;
-  }
-
-  .inbox-item[aria-current='true'] {
-    background: color-mix(in srgb, var(--pl-forest) 8%, var(--pl-surface));
-    padding-inline: 0.75rem;
-    margin-inline: -0.5rem;
-    width: calc(100% + 1rem);
-    border-radius: var(--pl-radius-md);
-  }
-</style>
+  {:else}
+    <EmptyState headingLevel={2} title={t('supporter.inbox.emptyTitle', {}, $locale)} description={t('supporter.inbox.emptyDescription', {}, $locale)} />
+  {/if}
+</SupporterPageFrame>

@@ -1,16 +1,25 @@
-import { layout } from './base.js';
+import { emailUrl, escapeHtml, excerpt, layout } from './base.js';
+import { emailCopy, interpolate } from '../i18n.js';
 import type { RenderedEmail } from '../types.js';
 
 export function renderThankYouReplyEmail(args: {
   projectName: string;
   messagePreview: string;
   threadUrl: string;
+  locale?: string | null;
 }): RenderedEmail {
-  const subject = `${args.projectName} replied to your message`;
-  const text = `${args.projectName} replied: ${args.messagePreview}\nRead: ${args.threadUrl}`;
+  const copy = emailCopy(args.locale);
+  const preview = excerpt(args.messagePreview);
+  const subject = interpolate(copy.reply.subject, { projectName: args.projectName });
+  const text = interpolate(copy.reply.text, {
+    projectName: args.projectName,
+    preview,
+    threadUrl: args.threadUrl,
+  });
+  const threadUrl = emailUrl(args.threadUrl);
   const html = layout(
     subject,
-    `<p><strong>${args.projectName}</strong> replied to your message:</p><blockquote>${args.messagePreview}</blockquote><p><a href="${args.threadUrl}">View thread</a></p>`,
+    `<p>${interpolate(copy.reply.intro, { projectName: escapeHtml(args.projectName) })}</p><blockquote>${escapeHtml(preview)}</blockquote><p><a href="${threadUrl}">${copy.reply.view}</a></p>`,
   );
   return { subject, html, text };
 }

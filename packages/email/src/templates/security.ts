@@ -1,16 +1,19 @@
-import { layout } from './base.js';
+import { escapeHtml, layout } from './base.js';
+import { emailCopy, interpolate } from '../i18n.js';
 import type { RenderedEmail } from '../types.js';
 
 export function renderSecurityEventEmail(args: {
   event: string;
   ip?: string | undefined;
   userAgent?: string | undefined;
+  locale?: string | null;
 }): RenderedEmail {
-  const subject = 'New sign-in to your oss.tips account';
-  const text = `Security event: ${args.event}${args.ip ? ` from ${args.ip}` : ''}`;
+  const copy = emailCopy(args.locale);
+  const subject = copy.security.subject;
+  const text = `${interpolate(copy.security.textEvent, { event: args.event })}${args.ip ? interpolate(copy.security.textIp, { ip: args.ip }) : ''}${args.userAgent ? interpolate(copy.security.textDevice, { userAgent: args.userAgent }) : ''}`;
   const html = layout(
     subject,
-    `<p>A new sign-in was detected on your oss.tips account.</p><p>Event: ${args.event}</p>${args.ip ? `<p>IP: ${args.ip}</p>` : ''}`,
+    `<p>${copy.security.intro}</p><p>${copy.security.eventLabel}: ${escapeHtml(args.event)}</p>${args.ip ? `<p>${copy.security.ipLabel}: ${escapeHtml(args.ip)}</p>` : ''}${args.userAgent ? `<p>${copy.security.deviceLabel}: ${escapeHtml(args.userAgent)}</p>` : ''}`,
   );
   return { subject, html, text };
 }

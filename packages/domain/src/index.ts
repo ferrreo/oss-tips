@@ -7,3 +7,5 @@ export * from './permissions/index.js';
 export * from './goals/index.js';
 export * from './webhooks/index.js';
 export * from './project.js';
+export * from './content/markdown.js';
+export * from './cloudflare.js';

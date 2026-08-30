@@ -9,18 +9,22 @@
       "default": "./dist/index.js"
     },
     "./tokens.json": "./tokens.json",
-    "./css": "./css/paperlight.css"
+    "./css": "./css/paperlight.css",
+    "./paperlight.stylex": "./src/paperlight.stylex.ts"
   },
   "files": [
     "dist",
     "tokens.json",
-    "css"
+    "css",
+    "src/paperlight.stylex.ts"
   ],
+  "dependencies": {
+    "@stylexjs/stylex": "0.19.0"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --passWithNoTests",
-    "lint": "echo ok"
+    "test": "vitest run --passWithNoTests"
   },
   "devDependencies": {
     "typescript": "^5.8.2",

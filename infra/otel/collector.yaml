@@ -1,0 +1,104 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 256
+    spike_limit_mib: 64
+  attributes/redact:
+    actions:
+      - key: http.request.header.authorization
+        action: delete
+      - key: http.request.header.cookie
+        action: delete
+      - key: http.request.header.set_cookie
+        action: delete
+      - key: http.request.header.x_api_key
+        action: delete
+      - key: http.request.header.stripe_signature
+        action: delete
+      - key: http.request.header.oss_tips_signature
+        action: delete
+      - key: http.response.header.set_cookie
+        action: delete
+      - key: url.full
+        action: delete
+      - key: url.query
+        action: delete
+      - key: http.target
+        action: delete
+      - key: http.request.body
+        action: delete
+      - key: http.response.body
+        action: delete
+      - key: db.statement
+        action: delete
+      - key: db.query.text
+        action: delete
+      - key: enduser.email
+        action: delete
+      - key: user.email
+        action: delete
+      - key: email
+        action: delete
+      - key: account.id
+        action: delete
+      - key: project.id
+        action: delete
+      - key: payment.id
+        action: delete
+      - key: stripe.account.id
+        action: delete
+      - key: stripe.customer.id
+        action: delete
+      - key: stripe.payment_intent.id
+        action: delete
+      - key: entitlement.id
+        action: delete
+      - key: supporter.id
+        action: delete
+  batch:
+    timeout: 5s
+    send_batch_size: 512
+
+exporters:
+  otlphttp/maple:
+    endpoint: ${env:MAPLE_OTLP_ENDPOINT}
+    headers:
+      Authorization: Bearer ${env:MAPLE_OTLP_TOKEN}
+    timeout: 10s
+    sending_queue:
+      enabled: true
+      num_consumers: 2
+      queue_size: 1000
+    retry_on_failure:
+      enabled: true
+      initial_interval: 1s
+      max_interval: 30s
+      max_elapsed_time: 0s
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes/redact, batch]
+      exporters: [otlphttp/maple]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes/redact, batch]
+      exporters: [otlphttp/maple]
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes/redact, batch]
+      exporters: [otlphttp/maple]

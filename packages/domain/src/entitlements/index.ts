@@ -1,9 +1,4 @@
-export type OneOffDuration =
-  | 'none'
-  | 'days_30'
-  | 'days_90'
-  | 'days_365'
-  | 'permanent';
+export type OneOffDuration = 'none' | 'days_30' | 'days_90' | 'days_365' | 'permanent';
 
 export type EntitlementKind = 'one_off' | 'membership';
 
@@ -22,23 +17,21 @@ const DURATION_MS: Record<Exclude<OneOffDuration, 'none' | 'permanent'>, number>
   days_365: 365 * 24 * 60 * 60 * 1000,
 };
 
-export function oneOffEndsAt(
-  duration: OneOffDuration,
-  startsAt: Date,
-): Date | null {
+export function oneOffEndsAt(duration: OneOffDuration, startsAt: Date): Date | null {
   if (duration === 'none') return startsAt;
   if (duration === 'permanent') return null;
   return new Date(startsAt.getTime() + DURATION_MS[duration]);
 }
 
-export function isEntitlementActive(
-  entitlement: EntitlementSnapshot,
-  now = new Date(),
-): boolean {
+export function isEntitlementActive(entitlement: EntitlementSnapshot, now = new Date()): boolean {
   if (entitlement.revokedAt) return false;
   if (now < entitlement.startsAt) return false;
   if (entitlement.endsAt && now > entitlement.endsAt) return false;
-  if (entitlement.kind === 'one_off' && entitlement.endsAt && entitlement.endsAt.getTime() === entitlement.startsAt.getTime()) {
+  if (
+    entitlement.kind === 'one_off' &&
+    entitlement.endsAt &&
+    entitlement.endsAt.getTime() === entitlement.startsAt.getTime()
+  ) {
     return false; // duration none
   }
   return true;
@@ -82,7 +75,10 @@ export function canViewContent(args: {
 }
 
 /** Higher-tier payments do not aggregate; keep the highest active entitlement. */
-export function highestTierRank(entitlements: readonly EntitlementSnapshot[], now = new Date()): number {
+export function highestTierRank(
+  entitlements: readonly EntitlementSnapshot[],
+  now = new Date(),
+): number {
   return entitlements
     .filter((e) => isEntitlementActive(e, now))
     .reduce((max, e) => Math.max(max, e.tierRank), 0);

@@ -129,16 +129,24 @@ function seriesFromValues(
 export function demoRevenueSeries(): ChartSeries[] {
   return [
     seriesFromValues('one-off', 'One-off', [420, 180, 610, 240, 390, 860, 310], 'solid', 'circle'),
-    seriesFromValues('recurring', 'Recurring', [980, 1010, 1040, 1090, 1125, 1180, 1245], 'dashed', 'square'),
+    seriesFromValues(
+      'recurring',
+      'Recurring',
+      [980, 1010, 1040, 1090, 1125, 1180, 1245],
+      'dashed',
+      'square',
+    ),
   ];
 }
 
 export function demoGrowthSeries(): ChartSeries[] {
-  return [seriesFromValues('supporters', 'Supporters', [248, 252, 255, 261, 268, 276, 284], 'solid', 'circle')];
-}
-
-export function demoSeriesForLabel(label: string): ChartSeries[] {
-  const key = label.toLowerCase();
-  if (key.includes('growth') || key.includes('supporter')) return demoGrowthSeries();
-  return demoRevenueSeries();
+  return [
+    seriesFromValues(
+      'supporters',
+      'Supporters',
+      [248, 252, 255, 261, 268, 276, 284],
+      'solid',
+      'circle',
+    ),
+  ];
 }

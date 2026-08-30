@@ -1,0 +1,31 @@
+{
+  "scannedAt": "2026-08-29",
+  "framework": "SvelteKit 2, Svelte 5, Vite 8",
+  "fonts": {
+    "display": "Newsreader",
+    "body": "Source Sans 3",
+    "mono": "IBM Plex Mono",
+    "source": "apps/web/src/app.html"
+  },
+  "palette": {
+    "name": "OSS Tips Paperlight",
+    "modes": ["light", "dark"],
+    "source": "packages/design-tokens/tokens.json",
+    "conflict": "Runtime and docs token copies differed before this scan."
+  },
+  "motion": "CSS-only, restrained, reduced-motion required",
+  "spacing": "8px base rhythm with 4px half-step",
+  "preserve": [
+    "OSS Tips product name and canonical vector logo assets",
+    "Paperlight palette and typography",
+    "Existing routes, component ownership, copy intent, and information architecture",
+    "Light and dark themes"
+  ],
+  "introduce": [
+    "StyleX semantic themes and component recipes",
+    "Ecosystem Index, Workbench, and Long Document page families",
+    "Responsive navigation sheets",
+    "Complete interaction states and Storybook evidence",
+    "Hallmark slop-test and Humanizer review"
+  ]
+}

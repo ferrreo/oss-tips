@@ -1,7 +1,7 @@
 <script lang="ts">
-  import EntitlementsPage from '@oss-tips/ui/pages/supporter/EntitlementsPage.svelte';
+  import SupporterEntitlementsPage from '@oss-tips/ui/pages/supporter/SupporterEntitlementsPage.svelte';
 
   let { data } = $props();
 </script>
 
-<EntitlementsPage {...data} />
+<SupporterEntitlementsPage {...data} />

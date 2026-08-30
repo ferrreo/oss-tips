@@ -1,13 +1,8 @@
 import type { Goal, Payment, Post, Thread } from '../../fixtures/demo.js';
+import type { ChartMarker, ChartSeries, ChartStroke } from '../../components/chartModel.js';
 import { demoThreads, formatMoney, formatPercent } from '../../fixtures/demo.js';
 
-export interface ChartSeries {
-  id: string;
-  label: string;
-  color: string;
-  dashed?: boolean;
-  values: number[];
-}
+export type { ChartSeries } from '../../components/chartModel.js';
 
 export interface InboxPreviewRow {
   id: string;
@@ -16,7 +11,10 @@ export interface InboxPreviewRow {
   snippet: string;
   amount: string;
   time: string;
-  unread?: boolean;
+  unread: boolean;
+  amountMinor?: number;
+  currency?: string;
+  timeAt?: string;
 }
 
 export interface RankedSupporter {
@@ -25,6 +23,54 @@ export interface RankedSupporter {
   name: string;
   cadence: string;
   amount: string;
+  amountMinor?: number;
+  currency?: string;
+}
+
+export interface MembershipPreviewRow {
+  name: string;
+  tier: string;
+  cadence: string;
+  amount: string;
+  status: string;
+  renews: string;
+  amountMinor?: number;
+  currency?: string;
+  renewsAt?: string;
+}
+
+export interface TeamPreviewRow {
+  name: string;
+  email: string;
+  role: string;
+  lastActive: string;
+  lastActiveAt?: string;
+}
+
+export interface ApiKeyPreviewRow {
+  name: string;
+  scope: string;
+  created: string;
+  lastUsed: string;
+  createdAt?: string;
+  lastUsedAt?: string;
+}
+
+export interface WebhookPreviewRow {
+  url: string;
+  events: string;
+  status: string;
+  last: string;
+  lastAt?: string;
+}
+
+export interface DeliveryPreviewRow {
+  id: string;
+  event: string;
+  target: string;
+  code: string;
+  time: string;
+  timeAt?: string;
 }
 
 export interface ToolCard {
@@ -37,7 +83,38 @@ export interface ToolCard {
 export const overviewMetrics = [
   { label: 'Total support', value: '$12,841', compare: '+18.2%', compareDirection: 'up' as const },
   { label: 'New supporters', value: '284', compare: '+24.1%', compareDirection: 'up' as const },
-  { label: 'Monthly recurring', value: '$6,421', compare: '+22.7%', compareDirection: 'up' as const },
+  {
+    label: 'Monthly recurring',
+    value: '$6,421',
+    compare: '+22.7%',
+    compareDirection: 'up' as const,
+  },
+];
+
+export const analyticsDemoMetrics = [
+  {
+    label: 'Total support',
+    value: '',
+    valueMinor: 1284100,
+    currency: 'USD',
+    compare: '+18.2%',
+    compareDirection: 'up' as const,
+  },
+  {
+    label: 'Supporters',
+    value: '',
+    valueNumber: 284,
+    compare: 'Confirmed accounts',
+    compareDirection: 'up' as const,
+  },
+  {
+    label: 'Monthly recurring',
+    value: '',
+    valueMinor: 642100,
+    currency: 'USD',
+    compare: '+22.7%',
+    compareDirection: 'up' as const,
+  },
 ];
 
 export const supportOverTimeLabels = [
@@ -55,26 +132,45 @@ export const supportOverTimeLabels = [
   'Aug',
 ];
 
+function projectChartSeries(
+  id: string,
+  label: string,
+  values: number[],
+  stroke: ChartStroke = 'solid',
+  marker: ChartMarker = 'circle',
+): ChartSeries {
+  return {
+    id,
+    label,
+    stroke,
+    marker,
+    points: supportOverTimeLabels.map((pointLabel, index) => ({
+      label: pointLabel,
+      value: values[index] ?? 0,
+    })),
+  };
+}
+
 export const supportOverTimeSeries: ChartSeries[] = [
-  {
-    id: 'one-off',
-    label: 'One-off',
-    color: 'var(--pl-forest)',
-    values: [420, 510, 480, 620, 710, 690, 840, 910, 880, 1040, 1120, 1280],
-  },
-  {
-    id: 'monthly',
-    label: 'Monthly recurring',
-    color: 'var(--pl-moss)',
-    values: [2100, 2280, 2410, 2590, 2780, 3010, 3240, 3510, 3780, 4020, 4290, 4580],
-  },
-  {
-    id: 'annual',
-    label: 'Annual',
-    color: 'var(--pl-ochre)',
-    dashed: true,
-    values: [800, 800, 920, 920, 1100, 1100, 1350, 1350, 1620, 1620, 1840, 1841],
-  },
+  projectChartSeries(
+    'one-off',
+    'One-off',
+    [420, 510, 480, 620, 710, 690, 840, 910, 880, 1040, 1120, 1280],
+  ),
+  projectChartSeries(
+    'monthly',
+    'Monthly recurring',
+    [2100, 2280, 2410, 2590, 2780, 3010, 3240, 3510, 3780, 4020, 4290, 4580],
+    'solid',
+    'square',
+  ),
+  projectChartSeries(
+    'annual',
+    'Annual',
+    [800, 800, 920, 920, 1100, 1100, 1350, 1350, 1620, 1620, 1840, 1841],
+    'dashed',
+    'diamond',
+  ),
 ];
 
 export const rankedSupporters: RankedSupporter[] = [
@@ -119,12 +215,11 @@ export const toolCards: ToolCard[] = [
   },
 ];
 
-function goal(
-  partial: Omit<Goal, 'percentLabel'> & { percentLabel?: string },
-): Goal {
+function goal(partial: Omit<Goal, 'percentLabel'> & { percentLabel?: string }): Goal {
   return {
     ...partial,
-    percentLabel: partial.percentLabel ?? `${formatPercent(partial.raisedMinor, partial.targetMinor)}%`,
+    percentLabel:
+      partial.percentLabel ?? `${formatPercent(partial.raisedMinor, partial.targetMinor)}%`,
   };
 }
 
@@ -145,8 +240,11 @@ export const extraGoals: Goal[] = [
     slug: 'windows-notes',
     title: 'Windows release-note exporter',
     description: 'Signed Windows installers and notes for the next Grove CLI.',
-    targetMinor: 80000,
-    raisedMinor: 24000,
+    targetMinor: 80,
+    raisedMinor: 24,
+    type: 'active_supporter_count',
+    targetCount: 80,
+    progressCount: 24,
     basis: 'active supporters',
     currency: 'USD',
   }),
@@ -268,13 +366,13 @@ export const extraThreads: Thread[] = [
     amountLabel: '$10.00',
     cadence: 'monthly',
     relativeTime: '8 days ago',
-    preview: 'Thanks for the early-release access — the CLI notes look great.',
+    preview: 'Thanks for the early-release access. The CLI notes look great.',
     status: 'resolved',
     messages: [
       {
         id: 'm12',
         author: 'priya_oss',
-        body: 'Thanks for the early-release access — the CLI notes look great.',
+        body: 'Thanks for the early-release access. The CLI notes look great.',
         timestamp: '2026-05-21T16:10:00Z',
         relativeTime: '8 days ago',
       },
@@ -339,13 +437,13 @@ export const extraThreads: Thread[] = [
     amountLabel: '$15.00',
     cadence: 'monthly',
     relativeTime: '11 days ago',
-    preview: 'Posted a thank-you on the wall — keep the release notes coming.',
+    preview: 'Posted a thank-you on the wall. Keep the release notes coming.',
     status: 'resolved',
     messages: [
       {
         id: 'm16',
         author: 'opensourcefan',
-        body: 'Posted a thank-you on the wall — keep the release notes coming.',
+        body: 'Posted a thank-you on the wall. Keep the release notes coming.',
         timestamp: '2026-05-18T19:04:00Z',
         relativeTime: '11 days ago',
       },
@@ -363,32 +461,32 @@ export function inboxPreviewFromThread(thread: Thread): InboxPreviewRow {
     snippet: thread.preview,
     amount: thread.amountLabel,
     time: thread.relativeTime,
-    unread: thread.unread,
+    unread: thread.unread ?? false,
+    ...(thread.amountMinor > 0
+      ? { amountMinor: thread.amountMinor, currency: thread.currency ?? 'USD' }
+      : {}),
+    ...(thread.createdAt ? { timeAt: thread.createdAt } : {}),
   };
 }
 
 export const inboxPreviewRows: InboxPreviewRow[] = inboxThreads.map(inboxPreviewFromThread);
 
 export const supporterGrowthSeries: ChartSeries[] = [
-  {
-    id: 'new',
-    label: 'New supporters',
-    color: 'var(--pl-forest)',
-    values: [12, 18, 15, 22, 28, 24, 31, 36, 33, 41, 44, 48],
-  },
-  {
-    id: 'active',
-    label: 'Active supporters',
-    color: 'var(--pl-moss)',
-    values: [148, 160, 171, 186, 198, 209, 221, 236, 248, 259, 271, 284],
-  },
-  {
-    id: 'churned',
-    label: 'Churned',
-    color: 'var(--pl-ochre)',
-    dashed: true,
-    values: [3, 2, 4, 3, 5, 2, 4, 3, 2, 4, 3, 2],
-  },
+  projectChartSeries('new', 'New supporters', [12, 18, 15, 22, 28, 24, 31, 36, 33, 41, 44, 48]),
+  projectChartSeries(
+    'active',
+    'Active supporters',
+    [148, 160, 171, 186, 198, 209, 221, 236, 248, 259, 271, 284],
+    'solid',
+    'square',
+  ),
+  projectChartSeries(
+    'churned',
+    'Churned',
+    [3, 2, 4, 3, 5, 2, 4, 3, 2, 4, 3, 2],
+    'dashed',
+    'diamond',
+  ),
 ];
 
 export const analyticsBreakdown = [
@@ -399,12 +497,27 @@ export const analyticsBreakdown = [
   { source: 'Annual Supporter', gross: '$1,191', fees: '$48', net: '$1,143', share: '9.3%' },
 ];
 
-export const apiKeyRows = [
-  { name: 'production-read', scope: 'read:payments', created: '2026-03-01', lastUsed: '2026-05-29' },
+export const apiKeyRows: ApiKeyPreviewRow[] = [
+  {
+    name: 'production-read',
+    scope: 'read:payments',
+    created: '2026-03-01',
+    lastUsed: '2026-05-29',
+  },
   { name: 'ci-tests', scope: 'read:project', created: '2026-04-15', lastUsed: '2026-05-20' },
-  { name: 'webhooks-replay', scope: 'write:webhooks', created: '2026-02-12', lastUsed: '2026-05-28' },
+  {
+    name: 'webhooks-replay',
+    scope: 'write:webhooks',
+    created: '2026-02-12',
+    lastUsed: '2026-05-28',
+  },
   { name: 'exports-finance', scope: 'read:exports', created: '2026-01-03', lastUsed: '2026-05-18' },
-  { name: 'discord-sync', scope: 'read:memberships', created: '2026-01-22', lastUsed: '2026-05-29' },
+  {
+    name: 'discord-sync',
+    scope: 'read:memberships',
+    created: '2026-01-22',
+    lastUsed: '2026-05-29',
+  },
   { name: 'staging-sandbox', scope: 'read:project', created: '2026-05-01', lastUsed: '2026-05-25' },
 ];
 
@@ -419,38 +532,155 @@ export const discordRoleRows = [
 export const domainRows = [
   { host: 'grove.dev', type: 'Apex', status: 'Active', target: 'cname.oss.tips' },
   { host: 'www.grove.dev', type: 'WWW', status: 'Active', target: 'cname.oss.tips' },
-  { host: '_oss-tips.grove.dev', type: 'TXT', status: 'Verified', target: 'oss-tips-verify=pl-9f2c' },
+  {
+    host: '_oss-tips.grove.dev',
+    type: 'TXT',
+    status: 'Verified',
+    target: 'oss-tips-verify=pl-9f2c',
+  },
   { host: 'support.grove.dev', type: 'CNAME', status: 'Pending', target: 'pages.oss.tips' },
   { host: 'docs.grove.dev', type: 'CNAME', status: 'Active', target: 'pages.oss.tips' },
 ];
 
-export const exportRows = [
-  { type: 'Payments', range: 'May 2026', format: 'CSV', status: 'Ready' },
-  { type: 'Memberships', range: 'All time', format: 'CSV', status: 'Ready' },
-  { type: 'Ledger events', range: 'Last 30 days', format: 'JSONL', status: 'Ready' },
-  { type: 'Supporters', range: 'All time', format: 'CSV', status: 'Ready' },
-  { type: 'Refunds & disputes', range: '2026 YTD', format: 'CSV', status: 'Ready' },
-  { type: 'Fee breakdown', range: 'Last 90 days', format: 'CSV', status: 'Queued' },
+export interface ExportPreviewRow {
+  type: string;
+  range: string;
+  format: string;
+  status: string;
+  downloadUrl?: string;
+  expiresAt?: string;
+}
+
+export const exportRows: ExportPreviewRow[] = [
+  {
+    type: 'payments',
+    range: 'May 2026',
+    format: 'CSV',
+    status: 'ready',
+    downloadUrl: '/api/v1/project/exports/demo-payments/download?project_slug=grove',
+    expiresAt: '2026-09-30T00:00:00.000Z',
+  },
+  {
+    type: 'memberships',
+    range: 'All time',
+    format: 'CSV',
+    status: 'ready',
+    downloadUrl: '/api/v1/project/exports/demo-memberships/download?project_slug=grove',
+    expiresAt: '2026-09-30T00:00:00.000Z',
+  },
+  {
+    type: 'supporters',
+    range: 'Last 30 days',
+    format: 'JSON',
+    status: 'ready',
+    downloadUrl: '/api/v1/project/exports/demo-supporters-json/download?project_slug=grove',
+    expiresAt: '2026-09-30T00:00:00.000Z',
+  },
+  {
+    type: 'payments',
+    range: '2026 YTD',
+    format: 'CSV',
+    status: 'expired',
+    expiresAt: '2026-08-01T00:00:00.000Z',
+  },
+  { type: 'memberships', range: 'Last 90 days', format: 'CSV', status: 'pending' },
+  { type: 'supporters', range: '2026 YTD', format: 'CSV', status: 'failed' },
 ];
 
-export const membershipRows = [
-  { name: 'alex_dev', tier: 'Champion', cadence: 'monthly', amount: formatMoney(10000), status: 'active', renews: '2026-06-29' },
-  { name: 'marina_ux', tier: 'Backer', cadence: 'annual', amount: formatMoney(25000), status: 'active', renews: '2027-03-01' },
-  { name: 'kohei_rust', tier: 'Champion', cadence: 'one-off', amount: formatMoney(10000), status: 'entitled', renews: '—' },
-  { name: 'lara_code', tier: 'Backer', cadence: 'monthly', amount: formatMoney(2500), status: 'active', renews: '2026-06-15' },
-  { name: 'dylan_builds', tier: 'Coffee', cadence: 'monthly', amount: formatMoney(500), status: 'past_due', renews: '2026-05-23' },
-  { name: 'jane_dev', tier: 'Supporter', cadence: 'monthly', amount: formatMoney(1000), status: 'active', renews: '2026-06-20' },
+export const membershipRows: MembershipPreviewRow[] = [
+  {
+    name: 'alex_dev',
+    tier: 'Champion',
+    cadence: 'monthly',
+    amount: formatMoney(10000),
+    status: 'active',
+    renews: '2026-06-29',
+  },
+  {
+    name: 'marina_ux',
+    tier: 'Backer',
+    cadence: 'annual',
+    amount: formatMoney(25000),
+    status: 'active',
+    renews: '2027-03-01',
+  },
+  {
+    name: 'kohei_rust',
+    tier: 'Champion',
+    cadence: 'one-off',
+    amount: formatMoney(10000),
+    status: 'entitled',
+    renews: '—',
+  },
+  {
+    name: 'lara_code',
+    tier: 'Backer',
+    cadence: 'monthly',
+    amount: formatMoney(2500),
+    status: 'active',
+    renews: '2026-06-15',
+  },
+  {
+    name: 'dylan_builds',
+    tier: 'Coffee',
+    cadence: 'monthly',
+    amount: formatMoney(500),
+    status: 'past_due',
+    renews: '2026-05-23',
+  },
+  {
+    name: 'jane_dev',
+    tier: 'Supporter',
+    cadence: 'monthly',
+    amount: formatMoney(1000),
+    status: 'active',
+    renews: '2026-06-20',
+  },
 ];
 
 export const onboardingSteps = [
-  { step: '1', label: 'Identity', detail: 'Grove · grove.dev', status: 'Complete' },
-  { step: '2', label: 'Ownership', detail: 'github.com/oss-tips/grove', status: 'In progress' },
-  { step: '3', label: 'Stripe', detail: 'acct_1Grove · charges enabled', status: 'Waiting' },
-  { step: '4', label: 'Page & tiers', detail: 'Coffee, Supporter, Backer, Champion drafted', status: 'Waiting' },
-  { step: '5', label: 'Publish', detail: 'Directory listing after first payment', status: 'Waiting' },
+  {
+    step: '1',
+    label: 'Identity',
+    detail: '',
+    detailKey: 'identity' as const,
+    detailValue: 'Grove',
+    status: 'Complete',
+  },
+  {
+    step: '2',
+    label: 'Ownership',
+    detail: 'github.com/oss-tips/grove',
+    detailKey: 'ownership' as const,
+    status: 'In progress',
+  },
+  {
+    step: '3',
+    label: 'Stripe',
+    detail: '',
+    detailKey: 'stripe' as const,
+    detailValue: 'connected',
+    status: 'Waiting',
+  },
+  {
+    step: '4',
+    label: 'Page & tiers',
+    detail: '',
+    detailKey: 'tiers' as const,
+    detailValue: 4,
+    status: 'Waiting',
+  },
+  {
+    step: '5',
+    label: 'Publish',
+    detail: '',
+    detailKey: 'publish' as const,
+    detailValue: 'draft',
+    status: 'Waiting',
+  },
 ];
 
-export const teamRows = [
+export const teamRows: TeamPreviewRow[] = [
   { name: 'Ada Lovelace', email: 'ada@grove.dev', role: 'Owner', lastActive: 'Just now' },
   { name: 'Marcus Chen', email: 'marcus@grove.dev', role: 'Finance', lastActive: '2h ago' },
   { name: 'Yuki Sato', email: 'yuki@grove.dev', role: 'Editor', lastActive: 'Yesterday' },
@@ -459,20 +689,75 @@ export const teamRows = [
   { name: 'Helena Ruiz', email: 'helena@grove.dev', role: 'Editor', lastActive: '1w ago' },
 ];
 
-export const webhookRows = [
-  { url: 'https://api.grove.dev/hooks', events: 'payment.*, membership.*', status: 'Active', last: '2m ago' },
-  { url: 'https://api.grove.dev/discord', events: 'entitlement.*', status: 'Active', last: '14m ago' },
-  { url: 'https://hooks.grove.dev/ledger', events: 'ledger.posted', status: 'Failing', last: '1h ago' },
-  { url: 'https://ci.grove.dev/oss-tips', events: 'payment.succeeded', status: 'Active', last: '3h ago' },
-  { url: 'https://ops.grove.dev/alerts', events: 'domain.*, webhook.failed', status: 'Paused', last: '2d ago' },
+export const webhookRows: WebhookPreviewRow[] = [
+  {
+    url: 'https://api.grove.dev/hooks',
+    events: 'payment.*, membership.*',
+    status: 'Active',
+    last: '2m ago',
+  },
+  {
+    url: 'https://api.grove.dev/discord',
+    events: 'entitlement.*',
+    status: 'Active',
+    last: '14m ago',
+  },
+  {
+    url: 'https://hooks.grove.dev/ledger',
+    events: 'ledger.posted',
+    status: 'Failing',
+    last: '1h ago',
+  },
+  {
+    url: 'https://ci.grove.dev/oss-tips',
+    events: 'payment.succeeded',
+    status: 'Active',
+    last: '3h ago',
+  },
+  {
+    url: 'https://ops.grove.dev/alerts',
+    events: 'domain.*, webhook.failed',
+    status: 'Paused',
+    last: '2d ago',
+  },
 ];
 
-export const webhookDeliveries = [
-  { id: 'del_91', event: 'payment.succeeded', target: 'api.grove.dev/hooks', code: '200', time: '2m ago' },
-  { id: 'del_90', event: 'membership.renewed', target: 'api.grove.dev/hooks', code: '200', time: '14m ago' },
-  { id: 'del_89', event: 'ledger.posted', target: 'hooks.grove.dev/ledger', code: '502', time: '1h ago' },
-  { id: 'del_88', event: 'entitlement.granted', target: 'api.grove.dev/discord', code: '200', time: '3h ago' },
-  { id: 'del_87', event: 'payment.refunded', target: 'api.grove.dev/hooks', code: '200', time: '1d ago' },
+export const webhookDeliveries: DeliveryPreviewRow[] = [
+  {
+    id: 'del_91',
+    event: 'payment.succeeded',
+    target: 'api.grove.dev/hooks',
+    code: '200',
+    time: '2m ago',
+  },
+  {
+    id: 'del_90',
+    event: 'membership.renewed',
+    target: 'api.grove.dev/hooks',
+    code: '200',
+    time: '14m ago',
+  },
+  {
+    id: 'del_89',
+    event: 'ledger.posted',
+    target: 'hooks.grove.dev/ledger',
+    code: '502',
+    time: '1h ago',
+  },
+  {
+    id: 'del_88',
+    event: 'entitlement.granted',
+    target: 'api.grove.dev/discord',
+    code: '200',
+    time: '3h ago',
+  },
+  {
+    id: 'del_87',
+    event: 'payment.refunded',
+    target: 'api.grove.dev/hooks',
+    code: '200',
+    time: '1d ago',
+  },
 ];
 
 export const stripeCapabilityRows = [

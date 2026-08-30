@@ -45,10 +45,10 @@ Excluded from v1:
 
 Let `P` be the amount designated for the project and `T` the supporter’s optional platform tip.
 
-| Project mode | One-off | Monthly | Annual | Storage | Custom domain |
-|---|---:|---:|---:|---:|---:|
-| Standard | 0% | 2% | 2% | 1 GB | No |
-| Supports oss.tips | 5% | 5% | 5% | 5 GB | Yes |
+| Project mode      | One-off | Monthly | Annual | Storage | Custom domain |
+| ----------------- | ------: | ------: | -----: | ------: | ------------: |
+| Standard          |      0% |      2% |     2% |    1 GB |            No |
+| Supports oss.tips |      5% |      5% |     5% |    5 GB |           Yes |
 
 For every successful charge:
 

@@ -1,119 +1,108 @@
 <script lang="ts">
-  import PublicNav from '../../components/PublicNav.svelte';
-  import PublicFooter from '../../components/PublicFooter.svelte';
+  import { stylex } from '../../styles/stylex-runtime.js';
+  import PublicPageFrame from './PublicPageFrame.svelte';
+  import { formatDate, locale, t, type MessageKey } from '../../lib/i18n.js';
+  import { primitives } from '../../styles/primitives.stylex.js';
+  import { publicStyles } from '../../styles/public.stylex.js';
 
-  interface Props {
-    doc?: string;
+  export type LegalDocument = 'privacy' | 'acceptable-use' | 'refunds' | 'cookies';
+
+  interface LegalSection {
+    heading: string;
+    body: string;
   }
 
-  let { doc = 'privacy' }: Props = $props();
+  export interface LegalDocumentContent {
+    title: string;
+    sections: LegalSection[];
+  }
 
-  const pageDemo: Record<string, { title: string; sections: { heading: string; body: string }[] }> = {
+  export interface Props {
+    doc?: LegalDocument | string;
+    documents?: Partial<Record<LegalDocument, LegalDocumentContent>>;
+    updated?: string;
+  }
+
+  const documentMessageKeys: Record<LegalDocument, { title: MessageKey; sections: Array<{ heading: MessageKey; body: MessageKey }> }> = {
     privacy: {
-      title: 'Privacy policy',
+      title: 'public.terms.privacy',
       sections: [
-        {
-          heading: 'What we collect',
-          body: 'Account email, project metadata, payment references from Stripe, and coarse analytics without fingerprinting. Guest checkout can include a receipt email and an optional display name.',
-        },
-        {
-          heading: 'What we do not sell',
-          body: 'oss.tips does not sell personal data or run third-party behavioural advertising. Project members never receive a supporter email solely to send a thank-you.',
-        },
-        {
-          heading: 'Retention',
-          body: 'Financial and audit records are retained for the legally required period. OTP codes expire within minutes. Guest reply links expire in seven days.',
-        },
-        {
-          heading: 'Public recognition',
-          body: 'Display name, message, tier, duration, and amount are separate opt-ins. A supporter can remove themselves from the wall later.',
-        },
+        { heading: 'public.terms.privacy.collectHeading', body: 'public.terms.privacy.collectBody' },
+        { heading: 'public.terms.privacy.sellHeading', body: 'public.terms.privacy.sellBody' },
+        { heading: 'public.terms.privacy.retentionHeading', body: 'public.terms.privacy.retentionBody' },
+        { heading: 'public.terms.privacy.recognitionHeading', body: 'public.terms.privacy.recognitionBody' },
       ],
     },
     'acceptable-use': {
-      title: 'Acceptable use',
+      title: 'public.terms.acceptableUse',
       sections: [
-        {
-          heading: 'Projects',
-          body: 'Projects must be open source or accurately describe their openness. Impersonation, malware distribution, and catalogue-style paid downloads are prohibited.',
-        },
-        {
-          heading: 'Supporters',
-          body: 'Abuse, harassment, and fraudulent payments are prohibited and may lead to account restriction. Chargebacks for delivered entitlements are reviewed as cases.',
-        },
-        {
-          heading: 'Posts',
-          body: 'Posts may not include arbitrary HTML, script, or free-form iframes. Embeds are limited to YouTube, Vimeo, and PeerTube.',
-        },
+        { heading: 'public.terms.acceptable.projectsHeading', body: 'public.terms.acceptable.projectsBody' },
+        { heading: 'public.terms.acceptable.supportersHeading', body: 'public.terms.acceptable.supportersBody' },
+        { heading: 'public.terms.acceptable.postsHeading', body: 'public.terms.acceptable.postsBody' },
       ],
     },
     refunds: {
-      title: 'Refunds and disputes',
+      title: 'public.terms.refunds',
       sections: [
-        {
-          heading: 'Project responsibility',
-          body: 'Each project is the merchant of record and sets its refund posture within Stripe and network rules. Entitlements recalculate after a refund or chargeback.',
-        },
-        {
-          heading: 'Platform exceptions',
-          body: 'oss.tips may issue exceptional refunds for fraud, duplicates, or serious policy violations with an immutable audit reason.',
-        },
-        {
-          heading: 'Grace',
-          body: 'Failed membership renewals keep access for seven days. Mapped Discord roles stay during grace and revoke after it ends.',
-        },
+        { heading: 'public.terms.refunds.projectHeading', body: 'public.terms.refunds.projectBody' },
+        { heading: 'public.terms.refunds.platformHeading', body: 'public.terms.refunds.platformBody' },
+        { heading: 'public.terms.refunds.graceHeading', body: 'public.terms.refunds.graceBody' },
       ],
     },
     cookies: {
-      title: 'Cookie policy',
+      title: 'public.terms.cookies',
       sections: [
-        {
-          heading: 'Essential cookies',
-          body: 'Session cookies are required for sign-in and CSRF protection. Theme preference may be stored locally.',
-        },
-        {
-          heading: 'No advertising cookies',
-          body: 'We do not use third-party advertising or cross-site tracking cookies.',
-        },
-        {
-          heading: 'Stripe Checkout',
-          body: 'Leaving oss.tips for Stripe Checkout is a first-party payment flow. Stripe sets its own cookies on stripe.com.',
-        },
+        { heading: 'public.terms.cookies.essentialHeading', body: 'public.terms.cookies.essentialBody' },
+        { heading: 'public.terms.cookies.adsHeading', body: 'public.terms.cookies.adsBody' },
+        { heading: 'public.terms.cookies.stripeHeading', body: 'public.terms.cookies.stripeBody' },
       ],
     },
   };
 
-  const content = $derived(
-    pageDemo[doc] ?? {
-      title: 'Legal document',
-      sections: [
-        {
-          heading: 'Document',
-          body: 'This legal document is under review for the public beta. Contact legal@oss.tips for the current draft.',
-        },
-      ],
-    },
-  );
+  let { doc = 'privacy', documents = {}, updated }: Props = $props();
+
+  const content = $derived.by(() => {
+    const custom = documents[doc as LegalDocument];
+    if (custom) return custom;
+    const keys = documentMessageKeys[doc as LegalDocument];
+    if (!keys) {
+      return {
+        title: t('public.terms.unknownTitle', {}, $locale),
+        sections: [{ heading: t('public.terms.unknownHeading', {}, $locale), body: t('public.terms.unknownBody', {}, $locale) }],
+      };
+    }
+    return {
+      title: t(keys.title, {}, $locale),
+      sections: keys.sections.map(({ heading, body }) => ({ heading: t(heading, {}, $locale), body: t(body, {}, $locale) })),
+    };
+  });
+  const displayUpdated = $derived.by(() => {
+    if (updated) {
+      const parsed = new Date(updated);
+      if (!Number.isNaN(parsed.getTime())) return t('public.terms.updated', { date: formatDate(parsed, $locale) }, $locale);
+      return updated;
+    }
+    return t('public.terms.updated', { date: formatDate('2026-08-01', $locale) }, $locale);
+  });
+
+  const heroClass = stylex.attrs(publicStyles.hero).class;
+  const containerClass = stylex.attrs(publicStyles.container, publicStyles.reading).class;
+  const sectionClass = stylex.attrs(publicStyles.sectionTight).class;
 </script>
 
-<div>
-  <PublicNav />
-  <main id="main-content">
-    <section class="pl-public-hero">
-      <div class="pl-container pl-container--reading">
-        <p class="pl-muted" style="margin-bottom: 0.75rem;">
-          <a href="/terms">Terms</a>
-          /
-          {content.title}
-        </p>
-        <p class="pl-public-hero__brand">oss.tips</p>
-        <h1 class="pl-display pl-public-hero__title">{content.title}</h1>
-        <p class="pl-page-lead">Last updated August 2026</p>
+<PublicPageFrame>
+  {#snippet children()}
+    <section class={heroClass}>
+      <div class={containerClass}>
+        <p class={stylex.attrs(publicStyles.mono, publicStyles.muted).class}>{t('public.terms.kicker', {}, $locale)}</p>
+        <p class={stylex.attrs(publicStyles.small, publicStyles.muted).class}><a class={stylex.attrs(publicStyles.link, primitives.focusRing).class} href="/terms">{t('public.terms.title', {}, $locale)}</a> / {content.title}</p>
+        <h1 class={stylex.attrs(publicStyles.heroTitle, publicStyles.heroTitleLong).class}>{content.title}</h1>
+        <p class={stylex.attrs(publicStyles.lead).class}>{displayUpdated}</p>
       </div>
     </section>
-    <section class="pl-section" style="padding-top: 0;">
-      <div class="pl-container pl-container--reading">
-        <div class="pl-prose">
+    <section class={sectionClass}>
+      <div class={containerClass}>
+        <div class={stylex.attrs(publicStyles.prose).class}>
           {#each content.sections as section (section.heading)}
             <h2>{section.heading}</h2>
             <p>{section.body}</p>
@@ -121,6 +110,5 @@
         </div>
       </div>
     </section>
-  </main>
-  <PublicFooter />
-</div>
+  {/snippet}
+</PublicPageFrame>

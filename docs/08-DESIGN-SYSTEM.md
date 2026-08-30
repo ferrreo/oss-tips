@@ -5,13 +5,14 @@
 - Preserve the warm Paperlight identity without sacrificing dense, efficient dashboards.
 - Keep public project pages expressive and dashboards task-first.
 - Encode light/dark/contrast behaviour in semantic tokens.
-- Build every component once in Svelte + StyleX with accessible primitives.
+- Build every component once in Svelte + StyleX with accessible primitives. Static recipes live in `*.stylex.ts`; global CSS is limited to document-level rules.
 - Avoid a card around every piece of content.
 
-Code-ready starting tokens are in:
+Canonical and generated token sources are in:
 
-- `assets/design-tokens.json`
-- `assets/stylex-tokens.ts`
+- `../packages/design-tokens/tokens.json` (canonical)
+- `../packages/design-tokens/src/paperlight.stylex.ts` (runtime StyleX variables/themes)
+- `assets/design-tokens.json` and `assets/stylex-tokens.ts` (documentation snapshots)
 
 ## 2. Layout system
 
@@ -20,7 +21,7 @@ Code-ready starting tokens are in:
 Widths:
 
 ```text
-reading content   46rem
+reading content   70ch
 public content    80rem
 dashboard         96rem
 sidebar           16rem
@@ -31,6 +32,7 @@ Breakpoints are content-driven rather than device names:
 - Compact: under 44rem.
 - Medium: 44–72rem.
 - Wide: over 72rem.
+- Public navigation uses a content-driven 64rem sheet threshold at medium widths when translated labels and actions no longer fit one row; dashboard sidebars keep the 44rem compact threshold.
 
 Public project page wide layout:
 
@@ -190,24 +192,24 @@ Separate visual shell/status accent so the operator never confuses admin with a 
 
 Detailed motion inventory:
 
-| Interaction | Behaviour |
-|---|---|
-| Primary press | 1 px translate + .99 scale, 100 ms |
-| Hover card/action | border/ink shift; no floating card lift by default |
-| Tier select | check draw + tint, 180 ms |
-| Amount change | value cross-fade/slide 4 px, 140 ms |
-| Goal update | bar grows once, 360 ms |
-| Support success | open-seed sprout draws, 500 ms max |
-| Copy API key | icon changes to check and label “Copied” |
+| Interaction        | Behaviour                                                |
+| ------------------ | -------------------------------------------------------- |
+| Primary press      | 1 px translate + .99 scale, 100 ms                       |
+| Hover card/action  | border/ink shift; no floating card lift by default       |
+| Tier select        | check draw + tint, 180 ms                                |
+| Amount change      | value cross-fade/slide 4 px, 140 ms                      |
+| Goal update        | bar grows once, 360 ms                                   |
+| Support success    | open-seed sprout draws, 500 ms max                       |
+| Copy API key       | icon changes to check and label “Copied”                 |
 | Optimistic setting | switch changes immediately, rolls back with inline error |
-| Dashboard filter | skeleton only for changed region, not whole page |
-| New inbox item | subtle background wash that fades after focus |
+| Dashboard filter   | skeleton only for changed region, not whole page         |
+| New inbox item     | subtle background wash that fades after focus            |
 
 No cursor-following effects, parallax, floating blobs, decorative autoplay or scroll-jacking.
 
 ## 10. Content editor
 
-Use a rich-text surface backed by a Markdown AST:
+Use a source-first Markdown editor with the domain Markdown AST as its parse/serialize boundary:
 
 - Toolbar visible but compact.
 - Slash menu optional, not required.
@@ -215,7 +217,7 @@ Use a rich-text surface backed by a Markdown AST:
 - Paste image uploads to quarantine and inserts placeholder/progress.
 - Embed paste recognises only allowlisted URLs.
 - Side-by-side or instant preview at target visibility/tier.
-- Markdown source mode for technical users.
+- Markdown source mode remains the primary accessible editing surface in beta; toolbar actions edit the canonical source.
 - Autosave locally and server draft with version/conflict handling.
 - Word/character counts only where useful.
 

@@ -1,4 +1,5 @@
-import { layout } from './base.js';
+import { emailUrl, escapeHtml, layout } from './base.js';
+import { emailCopy, formatEmailDate, interpolate } from '../i18n.js';
 import type { RenderedEmail } from '../types.js';
 
 export function renderTeamInviteEmail(args: {
@@ -6,12 +7,22 @@ export function renderTeamInviteEmail(args: {
   role: string;
   inviteUrl: string;
   expiresAt: string;
+  locale?: string | null;
 }): RenderedEmail {
-  const subject = `Invitation to join ${args.projectName} on oss.tips`;
-  const text = `You have been invited as ${args.role} on ${args.projectName}. Accept: ${args.inviteUrl} (expires ${args.expiresAt})`;
+  const copy = emailCopy(args.locale);
+  const expires = formatEmailDate(args.expiresAt, args.locale);
+  const role = copy.teamInvite.roles[args.role] ?? args.role;
+  const subject = interpolate(copy.teamInvite.subject, { projectName: args.projectName });
+  const text = interpolate(copy.teamInvite.text, {
+    projectName: args.projectName,
+    role,
+    inviteUrl: args.inviteUrl,
+    expires,
+  });
+  const inviteUrl = emailUrl(args.inviteUrl);
   const html = layout(
     subject,
-    `<p>You have been invited as <strong>${args.role}</strong> on <strong>${args.projectName}</strong>.</p><p><a href="${args.inviteUrl}">Accept invitation</a></p><p>Expires: ${args.expiresAt}</p>`,
+    `<p>${interpolate(copy.teamInvite.intro, { role: escapeHtml(role), projectName: escapeHtml(args.projectName) })}</p><p><a href="${inviteUrl}">${copy.teamInvite.accept}</a></p><p>${interpolate(copy.teamInvite.expires, { expires: escapeHtml(expires) })}</p>`,
   );
   return { subject, html, text };
 }

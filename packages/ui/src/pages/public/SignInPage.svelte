@@ -1,75 +1,224 @@
 <script lang="ts">
-  import PublicNav from '../../components/PublicNav.svelte';
-  import PublicFooter from '../../components/PublicFooter.svelte';
+  import { untrack } from 'svelte';
+  import { stylex } from '../../styles/stylex-runtime.js';
+  import PublicPageFrame from './PublicPageFrame.svelte';
   import TextField from '../../components/TextField.svelte';
   import Button from '../../components/Button.svelte';
   import StatusBanner from '../../components/StatusBanner.svelte';
+  import { locale, t } from '../../lib/i18n.js';
+  import { publicStyles } from '../../styles/public.stylex.js';
 
-  interface Props {
-    step?: 'email' | 'otp';
-    email?: string;
+  export interface OAuthProvider {
+    id: string;
+    label: string;
   }
 
-  let { step = $bindable('email'), email = $bindable('') }: Props = $props();
+  export type SignInActionResult =
+    | { ok: true }
+    | { ok: false; message?: string };
+  export type SignInAction<T = string> =
+    (value: T) => SignInActionResult | void | Promise<SignInActionResult | void>;
 
-  const pageDemo = {
-    title: 'Sign in',
-    lead: 'We email a six-digit code. No passwords. You can also use GitHub or Google.',
-    oauth: [
-      { id: 'github', label: 'Continue with GitHub' },
-      { id: 'google', label: 'Continue with Google' },
-    ],
-  };
+  export interface Props {
+    step?: 'email' | 'otp';
+    email?: string;
+    otp?: string;
+    oauth?: OAuthProvider[];
+    state?: 'idle' | 'loading' | 'error';
+    errorMessage?: string;
+    onRequestCode?: SignInAction;
+    onVerifyCode?: SignInAction<{ email: string; otp: string }>;
+    onOAuth?: SignInAction;
+  }
 
-  let otp = $state('');
+  let {
+    step = $bindable('email'),
+    email = $bindable(''),
+    otp = $bindable(''),
+    oauth = [],
+    state: initialState = 'idle',
+    onRequestCode,
+    onVerifyCode,
+    onOAuth,
+    errorMessage: initialErrorMessage = '',
+  }: Props = $props();
+
+  let status = $state(untrack(() => initialState));
+  let errorMessage = $state(untrack(() => initialErrorMessage));
+  let errorField = $state<'email' | 'otp' | null>(
+    untrack(() => initialState === 'error' && !initialErrorMessage ? (step === 'otp' ? 'otp' : 'email') : null),
+  );
+  let pendingProvider = $state<string | null>(null);
+  let pendingAction = $state<'request' | 'verify' | 'oauth' | null>(null);
+  const cardClass = stylex.attrs(publicStyles.container, publicStyles.reading, publicStyles.surface).class;
+
+  function setError(message: string, field: 'email' | 'otp' | null = null) {
+    status = 'error';
+    errorMessage = message;
+    errorField = field;
+    pendingAction = null;
+  }
+
+  async function requestCode() {
+    if (isBusy) return;
+    const nextEmail = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nextEmail)) {
+      setError(t('auth.validEmail', {}, $locale), 'email');
+      return;
+    }
+
+    status = 'loading';
+    pendingAction = 'request';
+    errorMessage = '';
+    errorField = null;
+    try {
+      const result = await onRequestCode?.(nextEmail);
+      if (result && !result.ok) {
+        setError(result.message ?? t('auth.sendFailed', {}, $locale));
+        return;
+      }
+      step = 'otp';
+      otp = '';
+      status = 'idle';
+      pendingAction = null;
+    } catch {
+      setError(t('auth.sendFailed', {}, $locale));
+    }
+  }
+
+  async function verifyCode() {
+    if (isBusy) return;
+    const nextEmail = email.trim();
+    const nextOtp = otp.trim();
+    if (!/^\d{6}$/.test(nextOtp)) {
+      setError(t('auth.sixDigits', {}, $locale), 'otp');
+      return;
+    }
+
+    status = 'loading';
+    pendingAction = 'verify';
+    errorMessage = '';
+    errorField = null;
+    try {
+      const result = await onVerifyCode?.({ email: nextEmail, otp: nextOtp });
+      if (result && !result.ok) {
+        setError(result.message ?? t('auth.codeFailed', {}, $locale));
+        return;
+      }
+      status = 'idle';
+      pendingAction = null;
+    } catch {
+      setError(t('auth.codeFailed', {}, $locale));
+    }
+  }
+
+  async function startOAuth(provider: OAuthProvider) {
+    if (isBusy) return;
+    status = 'loading';
+    pendingAction = 'oauth';
+    pendingProvider = provider.id;
+    errorMessage = '';
+    errorField = null;
+    try {
+      const result = await onOAuth?.(provider.id);
+      if (result && !result.ok) {
+        setError(result.message ?? t('auth.providerFailed', { provider: provider.id }, $locale));
+        return;
+      }
+      status = 'idle';
+    } catch {
+      setError(t('auth.providerFailed', { provider: provider.id }, $locale));
+    } finally {
+      pendingProvider = null;
+      pendingAction = null;
+    }
+  }
+
+  function resetToEmail() {
+    step = 'email';
+    status = 'idle';
+    errorMessage = '';
+    errorField = null;
+    pendingProvider = null;
+    pendingAction = null;
+  }
+
+  function handleEmailSubmit(event: SubmitEvent) {
+    event.preventDefault();
+    void requestCode();
+  }
+
+  function handleOtpSubmit(event: SubmitEvent) {
+    event.preventDefault();
+    void verifyCode();
+  }
+
+  const isBusy = $derived(status === 'loading');
+  const requestLoading = $derived(
+    status === 'loading' && (pendingAction === 'request' || (pendingAction === null && step === 'email')),
+  );
+  const verifyLoading = $derived(
+    status === 'loading' && (pendingAction === 'verify' || (pendingAction === null && step === 'otp')),
+  );
+  const errorTitle = $derived(
+    step === 'otp' ? t('auth.codeNotRecognised', {}, $locale) : t('auth.signInFailed', {}, $locale),
+  );
+  const visibleErrorMessage = $derived(
+    errorMessage || (step === 'otp' ? t('auth.checkInbox', { email: email || t('auth.yourInbox', {}, $locale) }, $locale) : t('auth.enterEmail', {}, $locale)),
+  );
+  const visibleFieldError = $derived(
+    errorMessage || (step === 'otp' ? t('auth.sixDigits', {}, $locale) : t('auth.validEmail', {}, $locale)),
+  );
+
+  function providerLabel(provider: OAuthProvider): string {
+    if (provider.label) return provider.label;
+    const name = {
+      github: 'GitHub',
+      google: 'Google',
+      discord: 'Discord',
+      gitlab: 'GitLab',
+      codeberg: 'Codeberg',
+    }[provider.id] ?? provider.id;
+    return t('auth.continueWith', { provider: name }, $locale);
+  }
 </script>
 
-<div>
-  <PublicNav />
-  <main id="main-content">
-    <div class="pl-signin-card">
-      <p class="pl-public-hero__brand">oss.tips</p>
-      <h1 class="pl-page-title" style="font-size: 1.75rem;">{pageDemo.title}</h1>
-      <p class="pl-page-lead" style="margin-bottom: 1.5rem; font-size: 1rem;">{pageDemo.lead}</p>
+<PublicPageFrame mainClass={stylex.attrs(publicStyles.section).class ?? ''}>
+  {#snippet children()}
+    <div class={cardClass}>
+      <p class={stylex.attrs(publicStyles.mono, publicStyles.muted).class}>{t('auth.kicker', {}, $locale)}</p>
+      <h1 class={stylex.attrs(publicStyles.pageTitle).class}>{t('auth.title', {}, $locale)}</h1>
+      <p class={stylex.attrs(publicStyles.lead, publicStyles.small).class}>{t('auth.lede', {}, $locale)}</p>
       {#if step === 'email'}
-        <TextField
-          label="Email"
-          name="email"
-          type="email"
-          bind:value={email}
-          placeholder="you@example.com"
-          help="We send a 6-digit code to this address."
-          required
-        />
-        <div style="margin-top: 1rem;">
-          <Button variant="primary" onclick={() => (step = 'otp')}>Send sign-in code</Button>
-        </div>
-        <p class="pl-muted" style="font-size: 0.875rem; margin: 1.25rem 0 0.75rem;">Or use an account you already have</p>
-        <div class="pl-stack">
-          {#each pageDemo.oauth as provider (provider.id)}
-            <Button variant="secondary">{provider.label}</Button>
-          {/each}
-        </div>
+        <form class={stylex.attrs(publicStyles.stack).class} onsubmit={handleEmailSubmit}>
+          {#if status === 'error'}
+            <StatusBanner variant="danger" title={errorTitle} message={visibleErrorMessage} />
+          {/if}
+          <TextField label={t('auth.email', {}, $locale)} name="email" type="email" autocomplete="email" bind:value={email} placeholder={t('public.auth.emailPlaceholder', {}, $locale)} help={t('auth.emailHelp', {}, $locale)} error={errorField === 'email' ? visibleFieldError : ''} required disabled={isBusy} />
+          <Button variant="primary" type="submit" label={t('auth.sendCode', {}, $locale)} loading={requestLoading} />
+          {#if oauth.length > 0}
+            <p class={stylex.attrs(publicStyles.small, publicStyles.muted).class}>{t('auth.oauthPrompt', {}, $locale)}</p>
+            {#each oauth as provider (provider.id)}
+              <Button
+                variant="secondary"
+                type="button"
+                label={providerLabel(provider)}
+                loading={pendingProvider === provider.id}
+                disabled={isBusy}
+                onclick={() => void startOAuth(provider)}
+              />
+            {/each}
+          {/if}
+        </form>
       {:else}
-        <StatusBanner variant="info" title="Code sent" message={`Check ${email || 'your inbox'} for a 6-digit code.`} />
-        <div style="margin-top: 1rem;">
-          <TextField
-            label="One-time code"
-            name="otp"
-            bind:value={otp}
-            placeholder="000000"
-            help="Expires in 10 minutes."
-            required
-          />
-        </div>
-        <div style="margin-top: 1rem;">
-          <Button variant="primary">Verify and sign in</Button>
-        </div>
-        <div style="margin-top: 0.5rem;">
-          <Button variant="quiet" onclick={() => (step = 'email')}>Use a different email</Button>
-        </div>
+        <form class={stylex.attrs(publicStyles.stack).class} onsubmit={handleOtpSubmit}>
+          <StatusBanner variant={status === 'error' ? 'danger' : 'info'} title={status === 'error' ? errorTitle : t('auth.codeSent', {}, $locale)} message={status === 'error' ? visibleErrorMessage : t('auth.checkInbox', { email: email || t('auth.yourInbox', {}, $locale) }, $locale)} />
+          <TextField label={t('auth.otp', {}, $locale)} name="otp" type="text" inputmode="numeric" autocomplete="one-time-code" bind:value={otp} placeholder={t('public.auth.otpPlaceholder', {}, $locale)} help={t('auth.otpHelp', {}, $locale)} error={errorField === 'otp' ? visibleFieldError : ''} required disabled={isBusy} />
+          <Button variant="primary" type="submit" label={t('auth.verify', {}, $locale)} loading={verifyLoading} />
+          <Button variant="quiet" type="button" label={t('auth.newCode', {}, $locale)} onclick={() => void requestCode()} disabled={isBusy} loading={requestLoading} />
+          <Button variant="quiet" type="button" label={t('auth.differentEmail', {}, $locale)} onclick={resetToEmail} disabled={isBusy} />
+        </form>
       {/if}
     </div>
-  </main>
-  <PublicFooter />
-</div>
+  {/snippet}
+</PublicPageFrame>

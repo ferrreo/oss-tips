@@ -1,10 +1,5 @@
 export type MembershipStatus =
-  | 'active'
-  | 'grace'
-  | 'cancelled'
-  | 'expired'
-  | 'incomplete'
-  | 'past_due';
+  'active' | 'grace' | 'cancelled' | 'expired' | 'incomplete' | 'past_due';
 
 export type MembershipEvent =
   | { kind: 'invoice_paid'; periodEnd: Date }
@@ -33,10 +28,7 @@ export function initialMembershipState(): MembershipState {
   };
 }
 
-export function reduceMembership(
-  state: MembershipState,
-  event: MembershipEvent,
-): MembershipState {
+export function reduceMembership(state: MembershipState, event: MembershipEvent): MembershipState {
   switch (event.kind) {
     case 'invoice_paid':
       return {

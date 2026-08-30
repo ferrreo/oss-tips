@@ -1,22 +1,52 @@
 import { z } from 'zod';
-import { IdSchema, MoneySchema, TimestampSchema } from './money.js';
+import { IdSchema, MoneySchema, SupportedCurrencySchema, TimestampSchema } from './money.js';
 
-export const PublicSupportOptionsSchema = z.object({
-  showName: z.boolean(),
-  showAmount: z.boolean(),
-  showMessage: z.boolean(),
-});
+export const PublicSupportOptionsSchema = z
+  .object({
+    showName: z.boolean(),
+    showAmount: z.boolean(),
+    showMessage: z.boolean(),
+    displayName: z.string().trim().min(1).max(120).optional(),
+    message: z.string().trim().max(2000).optional(),
+  })
+  .strict()
+  .superRefine((value, context) => {
+    if (!value.showName && value.displayName) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['displayName'],
+        message: 'Display name requires showName',
+      });
+    }
+    if (!value.showMessage && value.message) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['message'],
+        message: 'Message requires showMessage',
+      });
+    }
+    if (value.message && /(?:https?|ftp|javascript|data):|www\./i.test(value.message)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['message'],
+        message: 'Message must not contain links',
+      });
+    }
+  });
 
 export const CadenceSchema = z.enum(['one_off', 'monthly', 'annual']);
 
-export const CheckoutIntentRequestSchema = z.object({
-  tierId: z.string().optional(),
-  projectAmountMinor: z.number().int().positive(),
-  projectCurrency: z.string().length(3),
-  platformTipMinor: z.number().int().min(0),
-  cadence: CadenceSchema,
-  publicOptions: PublicSupportOptionsSchema,
-});
+export const CheckoutIntentRequestSchema = z
+  .object({
+    tierId: z.string().min(1).optional(),
+    projectAmountMinor: z.number().int().safe().positive(),
+    projectCurrency: SupportedCurrencySchema,
+    platformTipMinor: z.number().int().safe().min(0),
+    cadence: CadenceSchema,
+    publicOptions: PublicSupportOptionsSchema,
+    receiptEmail: z.string().trim().email().max(320).optional(),
+  })
+  .strict();
 
 export type CheckoutIntentRequest = z.infer<typeof CheckoutIntentRequestSchema>;
 

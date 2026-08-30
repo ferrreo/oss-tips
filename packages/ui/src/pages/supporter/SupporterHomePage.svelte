@@ -1,116 +1,220 @@
 <script lang="ts">
-  import PublicNav from '../../components/PublicNav.svelte';
-  import DataCard from '../../components/DataCard.svelte';
-  import Table from '../../components/Table.svelte';
+  import { stylex } from '../../styles/stylex-runtime.js';
   import Badge from '../../components/Badge.svelte';
-  import SupporterAccountNav from './SupporterAccountNav.svelte';
-  import { cadenceLabel, entitlementStatusLabel, membershipStatusLabel } from '../labels.js';
+  import DataCard from '../../components/DataCard.svelte';
+  import EmptyState from '../../components/EmptyState.svelte';
+  import Table from '../../components/Table.svelte';
+  import type { Entitlement, Membership, Thread } from '../../fixtures/demo.js';
+  import { formatCadence, formatCurrency, formatDate, locale, t, type Locale } from '../../lib/i18n.js';
+  import SupporterPageFrame from './SupporterPageFrame.svelte';
   import {
-    formatMoney,
-    lifetimeSupport,
-    lifetimeTotalMinor,
-    monthlyActiveMinor,
-    supporterEntitlements,
-    supporterMemberships,
-    supporterName,
-    unreadThreadCount,
+    lifetimeSupport as defaultLifetimeSupport,
+    supporterEntitlements as defaultEntitlements,
+    supporterMemberships as defaultMemberships,
+    supporterName as defaultSupporterName,
+    supporterThreads as defaultThreads,
   } from './supporter-demo.js';
+  import type { LifetimeSupport } from './supporter-demo.js';
+  import { supporter } from '../../styles/supporter.stylex';
 
-  const activeMemberships = supporterMemberships.filter((m) => m.status === 'active');
-  const liveEntitlements = supporterEntitlements.filter((e) => e.permanent || (e.expiresAt && e.expiresAt >= '2026-08-29'));
+  export interface SupporterHomePageProps {
+    source?: 'demo' | 'db';
+    supporterName?: string;
+    memberships?: Membership[];
+    entitlements?: Entitlement[];
+    threads?: Thread[];
+    lifetimeSupport?: LifetimeSupport[];
+    currentDate?: string;
+    error?: string | undefined;
+  }
+
+  let {
+    supporterName = defaultSupporterName,
+    memberships = defaultMemberships,
+    entitlements = defaultEntitlements,
+    threads = defaultThreads,
+    lifetimeSupport = defaultLifetimeSupport,
+    currentDate = '2026-08-29',
+    error,
+  }: SupporterHomePageProps = $props();
+
+  const activeMemberships = $derived(memberships.filter((membership) => membership.status === 'active'));
+  const liveEntitlements = $derived(
+    entitlements.filter((entitlement) => entitlement.permanent || (entitlement.expiresAt && entitlement.expiresAt >= currentDate)),
+  );
+  const lifetimeCurrencies = $derived(new Set(lifetimeSupport.map((row) => row.currency.toUpperCase())));
+  const lifetimeTotalMinor = $derived(
+    lifetimeCurrencies.size > 1
+      ? undefined
+      : lifetimeSupport.reduce((sum, row) => sum + row.oneOffMinor + row.recurringMinor, 0),
+  );
+  const activeMembershipCurrencies = $derived(
+    new Set(activeMemberships.map((membership) => membership.currency.toUpperCase())),
+  );
+  const monthlyActiveMinor = $derived(
+    activeMembershipCurrencies.size > 1
+      ? undefined
+      : activeMemberships.reduce(
+          (sum, membership) =>
+            sum + (membership.cadence === 'annual' ? Math.round(membership.amountMinor / 12) : membership.amountMinor),
+          0,
+        ),
+  );
+  const lifetimeCurrency = $derived(lifetimeSupport[0]?.currency ?? memberships[0]?.currency ?? 'GBP');
+  const membershipCurrency = $derived(activeMemberships[0]?.currency ?? memberships[0]?.currency ?? 'GBP');
+  const unreadThreadCount = $derived(threads.filter((thread) => thread.unread).length);
+
+  function membershipStatusLabel(status: Membership['status'], currentLocale: Locale): string {
+    return t(
+      status === 'active'
+        ? 'supporter.membershipStatus.active'
+        : status === 'past_due'
+          ? 'supporter.membershipStatus.pastDue'
+          : 'supporter.membershipStatus.cancelled',
+      {},
+      currentLocale,
+    );
+  }
+
+  function entitlementStatusLabel(status: string, currentLocale: Locale): string {
+    return t(
+      status === 'permanent'
+        ? 'supporter.entitlementStatus.permanent'
+        : status === 'expired'
+          ? 'supporter.entitlementStatus.expired'
+          : 'supporter.entitlementStatus.active',
+      {},
+      currentLocale,
+    );
+  }
+
+  function dateLabel(value: string, currentLocale: Locale): string {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? t('common.notAvailable', {}, currentLocale) : formatDate(date, currentLocale);
+  }
+
+  function expiresLabel(entitlement: Entitlement, currentLocale: Locale): string {
+    return entitlement.permanent ? t('supporter.entitlements.permanent', {}, currentLocale) : dateLabel(entitlement.expiresAt, currentLocale);
+  }
+
+  const summaryAttrs = stylex.attrs(supporter.summaryGrid);
+  const sectionAttrs = stylex.attrs(supporter.section);
+  const sectionTitleAttrs = stylex.attrs(supporter.sectionTitle);
+  const introAttrs = stylex.attrs(supporter.sectionIntro);
+  const statusAttrs = stylex.attrs(supporter.statusLine);
 </script>
 
-<div>
-  <PublicNav />
-  <main id="main-content" class="pl-section">
-    <div class="pl-container">
-      <p class="pl-public-hero__brand">oss.tips</p>
-      <h1 class="pl-page-title">Your support</h1>
-      <p class="pl-page-lead">
-        {supporterName} — memberships, access, and lifetime totals across the projects you support.
-      </p>
-      <SupporterAccountNav current="home" />
+<SupporterPageFrame
+  current="home"
+  title={t('supporter.home.title', {}, $locale)}
+  lede={t('supporter.home.lede', { name: supporterName }, $locale)}
+  {error}
+>
+  <div {...summaryAttrs}>
+    <DataCard
+      label={t('supporter.home.lifetimeSupport', {}, $locale)}
+      value={lifetimeTotalMinor === undefined ? t('common.notAvailable', {}, $locale) : formatCurrency(lifetimeTotalMinor, lifetimeCurrency, $locale)}
+      compare={t('supporter.home.acrossProjects', { count: lifetimeSupport.length }, $locale)}
+    />
+    <DataCard
+      label={t('supporter.home.activeMemberships', {}, $locale)}
+      value={String(activeMemberships.length)}
+      compare={
+        monthlyActiveMinor === undefined
+          ? t('common.notAvailable', {}, $locale)
+          : t('supporter.home.monthlyEquivalent', { amount: formatCurrency(monthlyActiveMinor, membershipCurrency, $locale) }, $locale)
+      }
+    />
+    <DataCard
+      label={t('supporter.home.unreadMessages', {}, $locale)}
+      value={String(unreadThreadCount)}
+      compare={t('supporter.home.fromSupportedProjects', {}, $locale)}
+      compareDirection={unreadThreadCount > 0 ? 'up' : 'neutral'}
+    />
+  </div>
 
-      <div class="pl-grid-3" style="margin-bottom: 1.5rem;">
-        <DataCard
-          label="Lifetime support"
-          value={formatMoney(lifetimeTotalMinor)}
-          compare="Across {lifetimeSupport.length} projects"
-        />
-        <DataCard
-          label="Active memberships"
-          value={String(activeMemberships.length)}
-          compare="{formatMoney(monthlyActiveMinor)} / month equivalent"
-        />
-        <DataCard
-          label="Unread messages"
-          value={String(unreadThreadCount)}
-          compare="From projects you support"
-          compareDirection="up"
-        />
-      </div>
-
-      <h2 style="font-size: 1.125rem; margin-bottom: 0.75rem;">Memberships</h2>
+  <section {...sectionAttrs} aria-labelledby="supporter-memberships-title">
+    <h2 id="supporter-memberships-title" {...sectionTitleAttrs}>{t('supporter.home.membershipsHeading', {}, $locale)}</h2>
+    <p {...introAttrs}>{t('supporter.home.membershipsIntro', {}, $locale)}</p>
+    {#if memberships.length > 0}
       <Table
-        caption="Recurring memberships, including past-due and cancelled periods."
+        caption={t('supporter.home.membershipCaption', {}, $locale)}
         columns={[
-          { key: 'project', label: 'Project' },
-          { key: 'tier', label: 'Tier' },
-          { key: 'amount', label: 'Amount' },
-          { key: 'status', label: 'Status' },
-          { key: 'renews', label: 'Renews' },
+          { key: 'project', label: t('supporter.home.project', {}, $locale) },
+          { key: 'tier', label: t('supporter.home.tier', {}, $locale) },
+          { key: 'amount', label: t('supporter.home.amount', {}, $locale) },
+          { key: 'status', label: t('supporter.home.status', {}, $locale) },
+          { key: 'renews', label: t('supporter.home.renews', {}, $locale) },
         ]}
-        rows={supporterMemberships.map((m) => ({
-          project: m.projectName,
-          tier: m.tierName,
-          amount: `${formatMoney(m.amountMinor, m.currency)} / ${cadenceLabel(m.cadence)}`,
-          status: membershipStatusLabel(m.status),
-          renews: m.renewsLabel,
+        rows={memberships.map((membership) => ({
+          project: membership.projectName,
+          tier: membership.tierName,
+          amount: `${formatCurrency(membership.amountMinor, membership.currency, $locale)} / ${formatCadence(membership.cadence, $locale)}`,
+          status: membershipStatusLabel(membership.status, $locale),
+          renews: dateLabel(membership.renewsAt, $locale),
         }))}
       />
+    {:else}
+      <EmptyState title={t('supporter.home.noMembershipsTitle', {}, $locale)} description={t('supporter.home.noMembershipsDescription', {}, $locale)} />
+    {/if}
+  </section>
 
-      <h2 style="font-size: 1.125rem; margin: 2rem 0 0.75rem;">Entitlements</h2>
+  <section {...sectionAttrs} aria-labelledby="supporter-entitlements-title">
+    <h2 id="supporter-entitlements-title" {...sectionTitleAttrs}>{t('supporter.home.entitlementsHeading', {}, $locale)}</h2>
+    <p {...introAttrs}>{t('supporter.home.entitlementsIntro', { count: liveEntitlements.length }, $locale)}</p>
+    {#if entitlements.length > 0}
       <Table
-        caption="{liveEntitlements.length} currently grant access. Expired rows stay visible for history."
+        caption={t('supporter.home.entitlementCaption', {}, $locale)}
         columns={[
-          { key: 'project', label: 'Project' },
-          { key: 'tier', label: 'Tier / reward' },
-          { key: 'expires', label: 'Expires' },
-          { key: 'status', label: 'Status' },
+          { key: 'project', label: t('supporter.home.project', {}, $locale) },
+          { key: 'tier', label: t('supporter.home.tierReward', {}, $locale) },
+          { key: 'expires', label: t('supporter.home.expires', {}, $locale) },
+          { key: 'status', label: t('supporter.home.status', {}, $locale) },
         ]}
-        rows={supporterEntitlements.map((e) => {
-          const expired = !e.permanent && e.expiresAt && e.expiresAt < '2026-08-29';
-          const status = e.permanent ? 'permanent' : expired ? 'expired' : 'active';
+        rows={entitlements.map((entitlement) => {
+          const expired = !entitlement.permanent && entitlement.expiresAt < currentDate;
+          const status = entitlement.permanent ? 'permanent' : expired ? 'expired' : 'active';
           return {
-            project: e.projectName,
-            tier: e.tierName,
-            expires: e.expiresLabel,
-            status: entitlementStatusLabel(status),
+            project: entitlement.projectName,
+            tier: entitlement.tierName,
+            status: entitlementStatusLabel(status, $locale),
+            expires: expiresLabel(entitlement, $locale),
           };
         })}
       />
+    {:else}
+      <EmptyState title={t('supporter.home.noEntitlementsTitle', {}, $locale)} description={t('supporter.home.noEntitlementsDescription', {}, $locale)} />
+    {/if}
+  </section>
 
-      <h2 style="font-size: 1.125rem; margin: 2rem 0 0.75rem;">Lifetime support by project</h2>
+  <section {...sectionAttrs} aria-labelledby="supporter-lifetime-title">
+    <h2 id="supporter-lifetime-title" {...sectionTitleAttrs}>{t('supporter.home.lifetimeHeading', {}, $locale)}</h2>
+    <p {...introAttrs}>{t('supporter.home.lifetimeIntro', {}, $locale)}</p>
+    {#if lifetimeSupport.length > 0}
       <Table
-        caption="One-off payments plus settled recurring charges. Tips to oss.tips are not included."
+        caption={t('supporter.home.lifetimeCaption', {}, $locale)}
         columns={[
-          { key: 'project', label: 'Project' },
-          { key: 'oneOff', label: 'One-off' },
-          { key: 'recurring', label: 'Recurring' },
-          { key: 'total', label: 'Lifetime' },
+          { key: 'project', label: t('supporter.home.project', {}, $locale) },
+          { key: 'oneOff', label: t('supporter.home.oneOff', {}, $locale) },
+          { key: 'recurring', label: t('supporter.home.recurring', {}, $locale) },
+          { key: 'total', label: t('supporter.home.lifetime', {}, $locale) },
         ]}
         rows={lifetimeSupport.map((row) => ({
           project: row.projectName,
-          oneOff: formatMoney(row.oneOffMinor, row.currency),
-          recurring: formatMoney(row.recurringMinor, row.currency),
-          total: formatMoney(row.oneOffMinor + row.recurringMinor, row.currency),
+          oneOff: formatCurrency(row.oneOffMinor, row.currency, $locale),
+          recurring: formatCurrency(row.recurringMinor, row.currency, $locale),
+          total: formatCurrency(row.oneOffMinor + row.recurringMinor, row.currency, $locale),
         }))}
       />
+    {:else}
+      <EmptyState title={t('supporter.home.noLifetimeTitle', {}, $locale)} description={t('supporter.home.noLifetimeDescription', {}, $locale)} />
+    {/if}
+  </section>
 
-      <p class="pl-muted" style="font-size: 0.875rem; margin-top: 1rem;">
-        <Badge>Past due</Badge>
-        ledger-kit is in the seven-day grace period. Access stays until the grace ends.
-      </p>
-    </div>
-  </main>
-</div>
+  {#if memberships.some((membership) => membership.status === 'past_due')}
+    <p {...statusAttrs}>
+      <Badge>{t('supporter.home.pastDue', {}, $locale)}</Badge>
+      {t('supporter.home.gracePeriod', { project: memberships.find((membership) => membership.status === 'past_due')?.projectName ?? '' }, $locale)}
+    </p>
+  {/if}
+</SupporterPageFrame>

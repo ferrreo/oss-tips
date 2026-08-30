@@ -1,3 +1,6 @@
+export * from './components/index.js';
+export * from './lib/i18n.js';
+
 export {
   adminNavGroups,
   demoAnalytics,
@@ -34,6 +37,7 @@ export type {
   Entitlement,
   ExportJob,
   Goal,
+  GoalType,
   Membership,
   NavGroup,
   NavItem,

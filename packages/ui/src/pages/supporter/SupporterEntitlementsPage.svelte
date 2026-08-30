@@ -1,63 +1,103 @@
 <script lang="ts">
-  import PublicNav from '../../components/PublicNav.svelte';
-  import Table from '../../components/Table.svelte';
+  import { stylex } from '../../styles/stylex-runtime.js';
   import Badge from '../../components/Badge.svelte';
   import DataCard from '../../components/DataCard.svelte';
-  import SupporterAccountNav from './SupporterAccountNav.svelte';
-  import { entitlementStatusLabel } from '../labels.js';
-  import { supporterEntitlements } from './supporter-demo.js';
+  import EmptyState from '../../components/EmptyState.svelte';
+  import Table from '../../components/Table.svelte';
+  import type { Entitlement } from '../../fixtures/demo.js';
+  import { formatDate, locale, t, type Locale } from '../../lib/i18n.js';
+  import SupporterPageFrame from './SupporterPageFrame.svelte';
+  import {
+    supporterEntitlements as defaultEntitlements,
+  } from './supporter-demo.js';
+  import { supporter } from '../../styles/supporter.stylex';
 
-  const today = '2026-08-29';
+  export interface SupporterEntitlementsPageProps {
+    source?: 'demo' | 'db';
+    entitlements?: Entitlement[];
+    currentDate?: string;
+    error?: string | undefined;
+  }
 
-  function statusOf(e: (typeof supporterEntitlements)[number]): 'permanent' | 'active' | 'expired' {
-    if (e.permanent) return 'permanent';
-    if (e.expiresAt && e.expiresAt < today) return 'expired';
+  let {
+    entitlements = defaultEntitlements,
+    currentDate = '2026-08-29',
+    error,
+  }: SupporterEntitlementsPageProps = $props();
+
+  function statusOf(entitlement: Entitlement): 'permanent' | 'active' | 'expired' {
+    if (entitlement.permanent) return 'permanent';
+    if (entitlement.expiresAt < currentDate) return 'expired';
     return 'active';
   }
 
-  const permanent = supporterEntitlements.filter((e) => statusOf(e) === 'permanent');
-  const active = supporterEntitlements.filter((e) => statusOf(e) === 'active');
-  const expired = supporterEntitlements.filter((e) => statusOf(e) === 'expired');
+  const permanent = $derived(entitlements.filter((entitlement) => statusOf(entitlement) === 'permanent'));
+  const active = $derived(entitlements.filter((entitlement) => statusOf(entitlement) === 'active'));
+  const expired = $derived(entitlements.filter((entitlement) => statusOf(entitlement) === 'expired'));
+  const summaryAttrs = stylex.attrs(supporter.summaryGrid);
+  const statusAttrs = stylex.attrs(supporter.statusLine);
+
+  function statusLabel(status: 'permanent' | 'active' | 'expired', currentLocale: Locale): string {
+    return t(
+      status === 'permanent'
+        ? 'supporter.entitlementStatus.permanent'
+        : status === 'expired'
+          ? 'supporter.entitlementStatus.expired'
+          : 'supporter.entitlementStatus.active',
+      {},
+      currentLocale,
+    );
+  }
+
+  function dateLabel(value: string, currentLocale: Locale): string {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? t('common.notAvailable', {}, currentLocale) : formatDate(date, currentLocale);
+  }
+
+  function expiresLabel(entitlement: Entitlement, currentLocale: Locale): string {
+    return entitlement.permanent ? t('supporter.entitlements.permanent', {}, currentLocale) : dateLabel(entitlement.expiresAt, currentLocale);
+  }
 </script>
 
-<div>
-  <PublicNav />
-  <main id="main-content" class="pl-section">
-    <div class="pl-container">
-      <p class="pl-public-hero__brand">oss.tips</p>
-      <h1 class="pl-page-title">Entitlements</h1>
-      <p class="pl-page-lead">Rewards from one-off and recurring support. Duration was shown before you paid.</p>
-      <SupporterAccountNav current="entitlements" />
+<SupporterPageFrame
+  current="entitlements"
+  title={t('supporter.entitlements.title', {}, $locale)}
+  lede={t('supporter.entitlements.lede', {}, $locale)}
+  {error}
+>
+  <div {...summaryAttrs}>
+    <DataCard label={t('supporter.entitlements.active', {}, $locale)} value={String(active.length)} compare={t('supporter.entitlements.activeCompare', {}, $locale)} />
+    <DataCard label={t('supporter.entitlements.permanent', {}, $locale)} value={String(permanent.length)} compare={t('supporter.entitlements.permanentCompare', {}, $locale)} />
+    <DataCard label={t('supporter.entitlements.expired', {}, $locale)} value={String(expired.length)} compare={t('supporter.entitlements.expiredCompare', {}, $locale)} />
+  </div>
 
-      <div class="pl-grid-3" style="margin-bottom: 1.5rem;">
-        <DataCard label="Active" value={String(active.length)} compare="Renew with the membership" />
-        <DataCard label="Permanent" value={String(permanent.length)} compare="One-off payments that do not expire" />
-        <DataCard label="Expired" value={String(expired.length)} compare="Kept for your records" />
-      </div>
+  {#if entitlements.length > 0}
+    <Table
+      caption={t('supporter.entitlements.tableCaption', {}, $locale)}
+      columns={[
+        { key: 'project', label: t('supporter.entitlements.project', {}, $locale) },
+        { key: 'tier', label: t('supporter.entitlements.tierReward', {}, $locale) },
+        { key: 'expires', label: t('supporter.entitlements.expires', {}, $locale) },
+        { key: 'status', label: t('supporter.entitlements.status', {}, $locale) },
+        { key: 'source', label: t('supporter.entitlements.source', {}, $locale) },
+      ]}
+      rows={entitlements.map((entitlement) => ({
+        project: entitlement.projectName,
+        tier: entitlement.tierName,
+        expires: expiresLabel(entitlement, $locale),
+        status: statusLabel(statusOf(entitlement), $locale),
+        source: entitlement.permanent
+          ? t('supporter.entitlements.oneOff', {}, $locale)
+          : t('supporter.entitlements.membership', {}, $locale),
+      }))}
+    />
+  {:else}
+    <EmptyState headingLevel={2} title={t('supporter.entitlements.noEntitlementsTitle', {}, $locale)} description={t('supporter.entitlements.noEntitlementsDescription', {}, $locale)} />
+  {/if}
 
-      <Table
-        caption="Higher-tier payments do not automatically absorb a lower-tier one-off."
-        columns={[
-          { key: 'project', label: 'Project' },
-          { key: 'tier', label: 'Tier / reward' },
-          { key: 'expires', label: 'Expires' },
-          { key: 'status', label: 'Status' },
-          { key: 'source', label: 'Source' },
-        ]}
-        rows={supporterEntitlements.map((e) => ({
-          project: e.projectName,
-          tier: e.tierName,
-          expires: e.expiresLabel,
-          status: entitlementStatusLabel(statusOf(e)),
-          source: e.permanent ? 'One-off' : 'Membership',
-        }))}
-      />
-
-      <div class="pl-row" style="margin-top: 1rem; flex-wrap: wrap;">
-        <Badge variant="forest">{active.length} active</Badge>
-        <Badge>{permanent.length} permanent</Badge>
-        <Badge variant="ochre">{expired.length} expired</Badge>
-      </div>
-    </div>
-  </main>
-</div>
+  <p {...statusAttrs}>
+    <Badge variant="forest">{t('supporter.entitlements.activeCount', { count: active.length }, $locale)}</Badge>
+    <Badge>{t('supporter.entitlements.permanentCount', { count: permanent.length }, $locale)}</Badge>
+    <Badge variant="ochre">{t('supporter.entitlements.expiredCount', { count: expired.length }, $locale)}</Badge>
+  </p>
+</SupporterPageFrame>

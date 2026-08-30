@@ -1,4 +1,5 @@
-import { layout } from './base.js';
+import { emailUrl, escapeHtml, layout } from './base.js';
+import { emailCopy, interpolate } from '../i18n.js';
 import type { RenderedEmail } from '../types.js';
 
 export function renderDomainFailureEmail(args: {
@@ -6,12 +7,15 @@ export function renderDomainFailureEmail(args: {
   domain: string;
   failure: string;
   actionUrl?: string | undefined;
+  locale?: string | null;
 }): RenderedEmail {
-  const subject = `Custom domain issue — ${args.domain}`;
-  const text = `Domain ${args.domain} for ${args.projectName} failed: ${args.failure}${args.actionUrl ? `\nFix: ${args.actionUrl}` : ''}`;
+  const copy = emailCopy(args.locale);
+  const subject = interpolate(copy.domain.subject, { domain: args.domain });
+  const text = `${interpolate(copy.domain.text, { domain: args.domain, projectName: args.projectName, failure: args.failure })}${args.actionUrl ? `\n${interpolate(copy.domain.fix, { actionUrl: args.actionUrl })}` : ''}`;
+  const actionUrl = args.actionUrl ? emailUrl(args.actionUrl) : null;
   const html = layout(
     subject,
-    `<p>Custom domain <strong>${args.domain}</strong> for ${args.projectName} needs attention.</p><p>${args.failure}</p>${args.actionUrl ? `<p><a href="${args.actionUrl}">Review domain settings</a></p>` : ''}`,
+    `<p>${interpolate(copy.domain.intro, { domain: escapeHtml(args.domain), projectName: escapeHtml(args.projectName) })}</p><p>${escapeHtml(args.failure)}</p>${actionUrl ? `<p><a href="${actionUrl}">${copy.domain.review}</a></p>` : ''}`,
   );
   return { subject, html, text };
 }
@@ -19,12 +23,17 @@ export function renderDomainFailureEmail(args: {
 export function renderStripeRestrictionEmail(args: {
   projectName: string;
   restriction: string;
+  locale?: string | null;
 }): RenderedEmail {
-  const subject = `Stripe account restriction — ${args.projectName}`;
-  const text = `Stripe restriction for ${args.projectName}: ${args.restriction}`;
+  const copy = emailCopy(args.locale);
+  const subject = interpolate(copy.stripe.subject, { projectName: args.projectName });
+  const text = interpolate(copy.stripe.text, {
+    projectName: args.projectName,
+    restriction: args.restriction,
+  });
   const html = layout(
     subject,
-    `<p>Stripe account restriction for <strong>${args.projectName}</strong>:</p><p>${args.restriction}</p>`,
+    `<p>${interpolate(copy.stripe.intro, { projectName: escapeHtml(args.projectName) })}</p><p>${escapeHtml(args.restriction)}</p>`,
   );
   return { subject, html, text };
 }
@@ -33,20 +42,36 @@ export function renderProjectReviewEmail(args: {
   projectName: string;
   status: 'approved' | 'rejected' | 'action_required';
   detail?: string | undefined;
+  locale?: string | null;
 }): RenderedEmail {
-  const labels = { approved: 'approved', rejected: 'rejected', action_required: 'action required' };
-  const subject = `Project ${labels[args.status]} — ${args.projectName}`;
-  const text = `${args.projectName} was ${labels[args.status]}.${args.detail ? ` ${args.detail}` : ''}`;
-  const html = layout(subject, `<p><strong>${args.projectName}</strong> was ${labels[args.status]}.</p>${args.detail ? `<p>${args.detail}</p>` : ''}`);
+  const copy = emailCopy(args.locale);
+  const status = copy.review.statuses[args.status];
+  const subject = interpolate(copy.review.subject, {
+    status: status.label,
+    projectName: args.projectName,
+  });
+  const text = `${interpolate(status.text, { projectName: args.projectName })}${args.detail ? ` ${args.detail}` : ''}`;
+  const html = layout(
+    subject,
+    `<p>${interpolate(status.text, { projectName: `<strong>${escapeHtml(args.projectName)}</strong>` })}</p>${args.detail ? `<p>${escapeHtml(args.detail)}</p>` : ''}`,
+  );
   return { subject, html, text };
 }
 
 export function renderSecurityChangeEmail(args: {
   projectName: string;
   change: string;
+  locale?: string | null;
 }): RenderedEmail {
-  const subject = `Security change — ${args.projectName}`;
-  const text = `Security change for ${args.projectName}: ${args.change}`;
-  const html = layout(subject, `<p>Security change for <strong>${args.projectName}</strong>:</p><p>${args.change}</p>`);
+  const copy = emailCopy(args.locale);
+  const subject = interpolate(copy.securityChange.subject, { projectName: args.projectName });
+  const text = interpolate(copy.securityChange.text, {
+    projectName: args.projectName,
+    change: args.change,
+  });
+  const html = layout(
+    subject,
+    `<p>${interpolate(copy.securityChange.intro, { projectName: escapeHtml(args.projectName) })}</p><p>${escapeHtml(args.change)}</p>`,
+  );
   return { subject, html, text };
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import DirectoryPage from '@oss-tips/ui/pages/admin/DirectoryPage.svelte';
+  import AdminDirectoryPage from '@oss-tips/ui/pages/admin/AdminDirectoryPage.svelte';
 
   let { data } = $props();
 </script>
 
-<DirectoryPage {...data} />
+<AdminDirectoryPage {...data} />

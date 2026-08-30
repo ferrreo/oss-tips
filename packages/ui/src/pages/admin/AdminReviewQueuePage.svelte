@@ -1,102 +1,137 @@
 <script lang="ts">
+  import { stylex } from '../../styles/stylex-runtime.js';
   import AdminShell from '../../components/AdminShell.svelte';
-  import Table from '../../components/Table.svelte';
-  import Button from '../../components/Button.svelte';
   import Badge from '../../components/Badge.svelte';
-  import TextField from '../../components/TextField.svelte';
+  import Button from '../../components/Button.svelte';
   import SegmentedControl from '../../components/SegmentedControl.svelte';
-  import AdminOperatorBar from './AdminOperatorBar.svelte';
+  import Table from '../../components/Table.svelte';
+  import TextField from '../../components/TextField.svelte';
+  import { formatDate, formatNumber, locale, t, type MessageKey, type MessageValues } from '../../lib/i18n.js';
   import { labelRisk } from '../../lib/labels.js';
-  import { adminNav, requireItem, reviewQueue } from './admin-demo.js';
+  import { admin } from '../../styles/admin.stylex.js';
+  import { primitives } from '../../styles/primitives.stylex.js';
+  import AdminOperatorBar from './AdminOperatorBar.svelte';
+  import AdminStatePanel from './AdminStatePanel.svelte';
+  import { adminNav, reviewQueue as defaultReviewItems } from './admin-demo.js';
+  import type { AdminReviewQueuePageProps } from './admin-types.js';
 
-  let filter = $state('all');
-  let selectedId = $state(requireItem(reviewQueue, 'reviewQueue').id);
+  let {
+    navGroups = adminNav('/admin/review'),
+    reviewItems = defaultReviewItems,
+    initialFilter = 'all',
+    initialSelectedId,
+    state: pageState = 'ready',
+  }: AdminReviewQueuePageProps = $props();
+
+  // svelte-ignore state_referenced_locally -- route/story seeds are intentionally copied into local controls.
+  let filter = $state(initialFilter);
+  // svelte-ignore state_referenced_locally -- selected row is a local control seeded from route/story data.
+  let selectedId = $state(initialSelectedId ?? reviewItems[0]?.id ?? '');
   let reason = $state('');
 
-  const selected = $derived(reviewQueue.find((item) => item.id === selectedId) ?? requireItem(reviewQueue, 'reviewQueue'));
+  const tt = (key: string, values: MessageValues = {}) => t(key as MessageKey, values, $locale);
+  const riskLabels: Record<string, string> = {
+    high: 'admin.status.high',
+    medium: 'admin.status.medium',
+    low: 'admin.status.low',
+  };
+  const riskLabel = (value: string) => riskLabels[value] ? tt(riskLabels[value]!) : labelRisk(value);
 
-  const visible = $derived(
-    reviewQueue.filter((item) => (filter === 'all' ? true : item.risk === filter)),
-  );
+  const selected = $derived(reviewItems.find((item) => item.id === selectedId));
+  const visible = $derived(reviewItems.filter((item) => (filter === 'all' ? true : item.risk === filter)));
 </script>
 
-<AdminShell navGroups={adminNav('/admin/review')} title="Review queue">
-  <AdminOperatorBar
-    context="Reviewing {selected.name}"
-    detail="{selected.repository}. Approve or reject only with a reason. That writes an audit event."
-  />
+<AdminShell navGroups={navGroups} title={tt('admin.title.reviewQueue')}>
+  {#if pageState !== 'ready'}
+    <AdminStatePanel state={pageState} />
+  {:else if reviewItems.length === 0 || !selected}
+    <AdminStatePanel state="empty" message={tt('admin.state.noReview')} />
+  {:else}
+    <div {...stylex.attrs(admin.page)}>
+      <AdminOperatorBar
+        context={tt('admin.operator.reviewContext', { name: selected.name })}
+        detail={tt('admin.operator.reviewDetail', { repository: selected.repository })}
+      />
 
-  <div class="pl-row pl-row--between" style="margin-bottom: 1rem; flex-wrap: wrap;">
-    <p class="pl-muted" style="margin: 0;">
-      {reviewQueue.length} items. First-payment activation, duplicate claims, and risk flags.
-    </p>
-    <div class="pl-row">
-      <Badge variant="ochre">{reviewQueue.filter((i) => i.risk === 'high').length} {labelRisk('high')} risk</Badge>
-      <Badge>{reviewQueue.filter((i) => i.queueDays >= 7).length} waiting 7 days or more</Badge>
+      <div {...stylex.attrs(admin.toolbar)}>
+        <p {...stylex.attrs(admin.footnote)}>
+          {tt('admin.review.footnote', { count: formatNumber(reviewItems.length, $locale) })}
+        </p>
+        <div {...stylex.attrs(admin.row)}>
+          <Badge variant="ochre">{tt('admin.review.highRisk', { count: formatNumber(reviewItems.filter((item) => item.risk === 'high').length, $locale) })}</Badge>
+          <Badge>{tt('admin.review.waitingLong', { count: formatNumber(reviewItems.filter((item) => item.queueDays >= 7).length, $locale) })}</Badge>
+        </div>
+      </div>
+
+      <SegmentedControl
+        label={tt('admin.review.filterLabel')}
+        value={filter}
+        options={[
+          { value: 'all', label: tt('admin.review.all') },
+          { value: 'high', label: riskLabel('high') },
+          { value: 'medium', label: riskLabel('medium') },
+          { value: 'low', label: riskLabel('low') },
+        ]}
+        onchange={(value) => (filter = value)}
+      />
+
+      <div {...stylex.attrs(admin.tableWrap)}>
+        <Table
+          caption={tt('admin.review.caption')}
+          columns={[
+            { key: 'id', label: tt('admin.review.id') },
+            { key: 'project', label: tt('admin.review.project') },
+            { key: 'reason', label: tt('admin.review.reason') },
+            { key: 'risk', label: tt('admin.review.risk') },
+            { key: 'submitted', label: tt('admin.review.submitted') },
+            { key: 'wait', label: tt('admin.review.daysWaiting') },
+          ]}
+          rows={visible.map((item) => ({
+            id: item.id,
+            project: item.name,
+            reason: item.reason,
+            risk: riskLabel(item.risk),
+            submitted: formatDate(item.submitted, $locale, { dateStyle: 'medium' }),
+            wait: formatNumber(item.queueDays, $locale),
+          }))}
+        />
+      </div>
+
+      <section {...stylex.attrs(admin.surface)}>
+        <h2 {...stylex.attrs(admin.sectionHeading)}>{tt('admin.review.decideHeading', { name: selected.name })}</h2>
+        <p>{tt('admin.review.decideSummary', { reason: selected.reason, repository: selected.repository, submitted: formatDate(selected.submitted, $locale, { dateStyle: 'medium' }) })}</p>
+        <label for="review-select">{tt('admin.review.queueItem')}</label>
+        <select id="review-select" {...stylex.attrs(admin.select, primitives.focusRing)} bind:value={selectedId}>
+          {#each reviewItems as item (item.id)}
+            <option value={item.id}>{item.name}, {item.reason}</option>
+          {/each}
+        </select>
+        <TextField
+          label={tt('admin.review.decisionReason')}
+          name="review-reason"
+          bind:value={reason}
+          placeholder={tt('admin.review.reasonPlaceholder')}
+          help={tt('admin.review.reasonHelp')}
+          required
+        />
+        <div {...stylex.attrs(admin.row)}>
+          <form method="POST" action="?/approve">
+            <input type="hidden" name="reviewId" value={selected.id} />
+            <input type="hidden" name="reason" value={reason} />
+            <Button type="submit" variant="primary" label={tt('admin.review.approve')} />
+          </form>
+          <form method="POST" action="?/hold">
+            <input type="hidden" name="reviewId" value={selected.id} />
+            <input type="hidden" name="reason" value={reason} />
+            <Button type="submit" variant="secondary" label={tt('admin.review.hold')} />
+          </form>
+          <form method="POST" action="?/reject">
+            <input type="hidden" name="reviewId" value={selected.id} />
+            <input type="hidden" name="reason" value={reason} />
+            <Button type="submit" variant="destructive" label={tt('admin.review.reject')} />
+          </form>
+        </div>
+      </section>
     </div>
-  </div>
-
-  <SegmentedControl
-    label="Risk filter"
-    value={filter}
-    options={[
-      { value: 'all', label: 'All' },
-      { value: 'high', label: labelRisk('high') },
-      { value: 'medium', label: labelRisk('medium') },
-      { value: 'low', label: labelRisk('low') },
-    ]}
-    onchange={(v) => (filter = v)}
-  />
-
-  <div style="margin-top: 1rem;">
-    <Table
-      caption="Select a row in the panel below. This table is the live operator queue."
-      columns={[
-        { key: 'id', label: 'ID' },
-        { key: 'project', label: 'Project' },
-        { key: 'reason', label: 'Reason' },
-        { key: 'risk', label: 'Risk' },
-        { key: 'submitted', label: 'Submitted' },
-        { key: 'wait', label: 'Days waiting' },
-      ]}
-      rows={visible.map((item) => ({
-        id: item.id,
-        project: item.name,
-        reason: item.reason,
-        risk: labelRisk(item.risk),
-        submitted: item.submitted,
-        wait: item.queueDays,
-      }))}
-    />
-  </div>
-
-  <section class="pl-surface" style="margin-top: 1.5rem; padding: 1.25rem;">
-    <h2 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Decide on {selected.name}</h2>
-    <p class="pl-muted" style="margin: 0 0 1rem; font-size: 0.875rem;">
-      {selected.reason}. {selected.repository}, submitted {selected.submitted}.
-    </p>
-    <label class="pl-field__label" for="review-select">Queue item</label>
-    <select
-      id="review-select"
-      class="pl-input pl-focus-ring"
-      bind:value={selectedId}
-      style="margin-bottom: 1rem;"
-    >
-      {#each reviewQueue as item (item.id)}
-        <option value={item.id}>{item.name}, {item.reason}</option>
-      {/each}
-    </select>
-    <TextField
-      label="Reason for this decision"
-      name="review-reason"
-      bind:value={reason}
-      placeholder="Required. Shown on the audit event."
-      help="Approvals, holds, and rejections all need a reason."
-    />
-    <div class="pl-row" style="margin-top: 1rem; flex-wrap: wrap;">
-      <Button variant="primary">Approve first payment</Button>
-      <Button variant="secondary">Hold for more evidence</Button>
-      <Button variant="destructive">Reject with reason</Button>
-    </div>
-  </section>
+  {/if}
 </AdminShell>

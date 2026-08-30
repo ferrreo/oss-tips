@@ -1,4 +1,6 @@
 export * from './types.js';
+export * from './webhook.js';
+export * from './i18n.js';
 export * from './sender/index.js';
 export * from './templates/otp.js';
 export * from './templates/security.js';
@@ -8,3 +10,7 @@ export * from './templates/membership.js';
 export * from './templates/thank-you-reply.js';
 export * from './templates/refund.js';
 export * from './templates/domain-failure.js';
+export * from './templates/post-published.js';
+export * from './templates/security-changes.js';
+export * from './security-change-copy.js';
+export * from './support-email-verification.js';

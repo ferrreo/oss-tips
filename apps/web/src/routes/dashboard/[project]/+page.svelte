@@ -1,7 +1,7 @@
 <script lang="ts">
-  import OverviewPage from '@oss-tips/ui/pages/dashboard/OverviewPage.svelte';
+  import ProjectOverviewPage from '@oss-tips/ui/pages/project/ProjectOverviewPage.svelte';
 
   let { data } = $props();
 </script>
 
-<OverviewPage {...data} />
+<ProjectOverviewPage {...data} supporters={data.rankings} />

@@ -18,7 +18,7 @@ describe('project dashboard fixtures', () => {
   it('keeps chart series aligned with month labels', () => {
     expect(supportOverTimeLabels.length).toBe(12);
     for (const series of [...supportOverTimeSeries, ...supporterGrowthSeries]) {
-      expect(series.values.length).toBe(12);
+      expect(series.points.length).toBe(12);
       expect(series.label.length).toBeGreaterThan(0);
     }
   });
@@ -37,7 +37,9 @@ describe('project dashboard fixtures', () => {
   });
 
   it('gives tool cards real destinations and CTAs', () => {
-    expect(toolCards.every((tool) => tool.href.startsWith('/grove/') && tool.cta.length > 0)).toBe(true);
+    expect(toolCards.every((tool) => tool.href.startsWith('/grove/') && tool.cta.length > 0)).toBe(
+      true,
+    );
   });
 
   it('fills analytics and membership tables', () => {

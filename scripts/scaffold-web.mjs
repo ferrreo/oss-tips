@@ -11,9 +11,7 @@ function write(filePath, content) {
 }
 
 function pageStub(name, props = []) {
-  const propDecl = props.length
-    ? props.map((p) => `  export let ${p}: string;`).join('\n')
-    : '';
+  const propDecl = props.length ? props.map((p) => `  export let ${p}: string;`).join('\n') : '';
   const propDisplay = props.length
     ? `\n  <dl class="meta">\n${props.map((p) => `    <div><dt>${p}</dt><dd>{${p}}</dd></div>`).join('\n')}\n  </dl>`
     : '';
@@ -153,7 +151,7 @@ write(
       },
       devDependencies: {
         '@sveltejs/vite-plugin-svelte': '^5.0.3',
-        'svelte': '^5.20.2',
+        svelte: '^5.20.2',
         'svelte-check': '^4.1.5',
         typescript: '^5.8.2',
       },
@@ -187,20 +185,52 @@ write(
 
 const routes = [
   ['apps/web/src/routes/+page.svelte', '@oss-tips/ui/pages/public/HomePage.svelte', 'HomePage'],
-  ['apps/web/src/routes/explore/+page.svelte', '@oss-tips/ui/pages/public/ExplorePage.svelte', 'ExplorePage'],
-  ['apps/web/src/routes/about/+page.svelte', '@oss-tips/ui/pages/public/AboutPage.svelte', 'AboutPage'],
-  ['apps/web/src/routes/pricing/+page.svelte', '@oss-tips/ui/pages/public/PricingPage.svelte', 'PricingPage'],
-  ['apps/web/src/routes/docs/+page.svelte', '@oss-tips/ui/pages/public/DocsPage.svelte', 'DocsPage'],
-  ['apps/web/src/routes/security/+page.svelte', '@oss-tips/ui/pages/public/SecurityPage.svelte', 'SecurityPage'],
-  ['apps/web/src/routes/transparency/+page.svelte', '@oss-tips/ui/pages/public/TransparencyPage.svelte', 'TransparencyPage'],
-  ['apps/web/src/routes/terms/+page.svelte', '@oss-tips/ui/pages/public/TermsPage.svelte', 'TermsPage'],
+  [
+    'apps/web/src/routes/explore/+page.svelte',
+    '@oss-tips/ui/pages/public/ExplorePage.svelte',
+    'ExplorePage',
+  ],
+  [
+    'apps/web/src/routes/about/+page.svelte',
+    '@oss-tips/ui/pages/public/AboutPage.svelte',
+    'AboutPage',
+  ],
+  [
+    'apps/web/src/routes/pricing/+page.svelte',
+    '@oss-tips/ui/pages/public/PricingPage.svelte',
+    'PricingPage',
+  ],
+  [
+    'apps/web/src/routes/docs/+page.svelte',
+    '@oss-tips/ui/pages/public/DocsPage.svelte',
+    'DocsPage',
+  ],
+  [
+    'apps/web/src/routes/security/+page.svelte',
+    '@oss-tips/ui/pages/public/SecurityPage.svelte',
+    'SecurityPage',
+  ],
+  [
+    'apps/web/src/routes/transparency/+page.svelte',
+    '@oss-tips/ui/pages/public/TransparencyPage.svelte',
+    'TransparencyPage',
+  ],
+  [
+    'apps/web/src/routes/terms/+page.svelte',
+    '@oss-tips/ui/pages/public/TermsPage.svelte',
+    'TermsPage',
+  ],
   [
     'apps/web/src/routes/terms/[doc]/+page.svelte',
     '@oss-tips/ui/pages/public/TermsDocPage.svelte',
     'TermsDocPage',
     'doc={page.params.doc}',
   ],
-  ['apps/web/src/routes/sign-in/+page.svelte', '@oss-tips/ui/pages/public/SignInPage.svelte', 'SignInPage'],
+  [
+    'apps/web/src/routes/sign-in/+page.svelte',
+    '@oss-tips/ui/pages/public/SignInPage.svelte',
+    'SignInPage',
+  ],
   [
     'apps/web/src/routes/[project]/+page.svelte',
     '@oss-tips/ui/pages/public/ProjectPage.svelte',
@@ -253,7 +283,11 @@ const routes = [
     '@oss-tips/ui/pages/supporter/EntitlementsPage.svelte',
     'EntitlementsPage',
   ],
-  ['apps/web/src/routes/me/inbox/+page.svelte', '@oss-tips/ui/pages/supporter/InboxPage.svelte', 'InboxPage'],
+  [
+    'apps/web/src/routes/me/inbox/+page.svelte',
+    '@oss-tips/ui/pages/supporter/InboxPage.svelte',
+    'InboxPage',
+  ],
   [
     'apps/web/src/routes/me/settings/+page.svelte',
     '@oss-tips/ui/pages/supporter/SettingsPage.svelte',
@@ -373,8 +407,16 @@ const routes = [
     'OnboardingPage',
     'project={page.params.project}',
   ],
-  ['apps/web/src/routes/admin/+page.svelte', '@oss-tips/ui/pages/admin/AdminHomePage.svelte', 'AdminHomePage'],
-  ['apps/web/src/routes/admin/review/+page.svelte', '@oss-tips/ui/pages/admin/ReviewPage.svelte', 'ReviewPage'],
+  [
+    'apps/web/src/routes/admin/+page.svelte',
+    '@oss-tips/ui/pages/admin/AdminHomePage.svelte',
+    'AdminHomePage',
+  ],
+  [
+    'apps/web/src/routes/admin/review/+page.svelte',
+    '@oss-tips/ui/pages/admin/ReviewPage.svelte',
+    'ReviewPage',
+  ],
   [
     'apps/web/src/routes/admin/directory/+page.svelte',
     '@oss-tips/ui/pages/admin/DirectoryPage.svelte',
@@ -385,8 +427,16 @@ const routes = [
     '@oss-tips/ui/pages/admin/ReconciliationPage.svelte',
     'ReconciliationPage',
   ],
-  ['apps/web/src/routes/admin/cases/+page.svelte', '@oss-tips/ui/pages/admin/CasesPage.svelte', 'CasesPage'],
-  ['apps/web/src/routes/admin/audit/+page.svelte', '@oss-tips/ui/pages/admin/AuditPage.svelte', 'AuditPage'],
+  [
+    'apps/web/src/routes/admin/cases/+page.svelte',
+    '@oss-tips/ui/pages/admin/CasesPage.svelte',
+    'CasesPage',
+  ],
+  [
+    'apps/web/src/routes/admin/audit/+page.svelte',
+    '@oss-tips/ui/pages/admin/AuditPage.svelte',
+    'AuditPage',
+  ],
 ];
 
 for (const [path, importPath, component, propsPass] of routes) {

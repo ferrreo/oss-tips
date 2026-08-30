@@ -1,9 +1,7 @@
 /** Human labels for payment and membership values shown on public surfaces. */
 
 function titleFromEnum(value: string): string {
-  return value
-    .replace(/[_-]+/g, ' ')
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+  return value.replace(/[_-]+/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 export function membershipStatusLabel(status: string): string {

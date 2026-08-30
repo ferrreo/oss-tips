@@ -1,7 +1,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { FileMigrationProvider, Migrator } from 'kysely';
+import { FileMigrationProvider, Migrator } from 'kysely/migration';
 import { createDb, destroyDb } from './client.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -25,9 +25,7 @@ async function main(): Promise<void> {
 
   const command = process.argv[2] ?? 'up';
   const result =
-    command === 'down'
-      ? await migrator.migrateDown()
-      : await migrator.migrateToLatest();
+    command === 'down' ? await migrator.migrateDown() : await migrator.migrateToLatest();
 
   result.results?.forEach((it) => {
     if (it.status === 'Success') {

@@ -226,7 +226,7 @@ The UI must not describe any attachment as a standalone product. There is no ite
 ### Authoring
 
 - Markdown is canonical storage.
-- Rich-text editor round-trips to Markdown without silently losing constructs.
+- Markdown editor round-trips through the domain AST without silently losing supported constructs.
 - Headings, emphasis, links, lists, task lists, tables, quotes, footnotes, fenced code, images and attachments.
 - Code blocks use a small, deterministic syntax highlighter bundle; language grammars load on demand.
 - Embeds: YouTube, Vimeo and PeerTube through allowlisted providers.
@@ -367,18 +367,18 @@ Privileged actions require a reason and are immutable. No silent impersonation; 
 
 ### Project roles
 
-| Capability | Owner | Admin | Finance | Editor | Community | Analyst |
-|---|---:|---:|---:|---:|---:|---:|
-| Transfer ownership/delete | Yes | No | No | No | No | No |
-| Connect/disconnect Stripe | Yes | No | No | No | No | No |
-| Change fee mode/domain | Yes | Yes | No | No | No | No |
-| Manage team | Yes | Yes | No | No | No | No |
-| Refund/export finance | Yes | Optional | Yes | No | No | Read only |
-| Manage tiers/goals | Yes | Yes | No | Optional | No | Read only |
-| Publish posts | Yes | Yes | No | Yes | No | Read only |
-| Reply to supporters | Yes | Yes | No | Optional | Yes | No |
-| Discord mappings | Yes | Yes | No | No | Yes | Read only |
-| Analytics | Yes | Yes | Yes | Yes | Yes | Yes |
+| Capability                | Owner |    Admin | Finance |   Editor | Community |   Analyst |
+| ------------------------- | ----: | -------: | ------: | -------: | --------: | --------: |
+| Transfer ownership/delete |   Yes |       No |      No |       No |        No |        No |
+| Connect/disconnect Stripe |   Yes |       No |      No |       No |        No |        No |
+| Change fee mode/domain    |   Yes |      Yes |      No |       No |        No |        No |
+| Manage team               |   Yes |      Yes |      No |       No |        No |        No |
+| Refund/export finance     |   Yes | Optional |     Yes |       No |        No | Read only |
+| Manage tiers/goals        |   Yes |      Yes |      No | Optional |        No | Read only |
+| Publish posts             |   Yes |      Yes |      No |      Yes |        No | Read only |
+| Reply to supporters       |   Yes |      Yes |      No | Optional |       Yes |        No |
+| Discord mappings          |   Yes |      Yes |      No |       No |       Yes | Read only |
+| Analytics                 |   Yes |      Yes |     Yes |      Yes |       Yes |       Yes |
 
 Permissions are stored as capabilities so custom roles can be introduced later without schema replacement.
 
@@ -417,17 +417,17 @@ No third-party behavioural advertising, cross-site tracking or fingerprinting. S
 
 ## 20. Quotas and media
 
-| Asset | Limit |
-|---|---:|
-| Avatar/logo | 2 MB |
-| Banner | 8 MB |
-| Post image | 10 MB |
-| Attachment | 25 MB |
-| Images per post | 30 |
-| Attachments per post | 10 |
-| Standard project quota | 1 GB |
-| 5% project quota | 5 GB |
-| Hosted video | Not supported |
+| Asset                  |         Limit |
+| ---------------------- | ------------: |
+| Avatar/logo            |          2 MB |
+| Banner                 |          8 MB |
+| Post image             |         10 MB |
+| Attachment             |         25 MB |
+| Images per post        |            30 |
+| Attachments per post   |            10 |
+| Standard project quota |          1 GB |
+| 5% project quota       |          5 GB |
+| Hosted video           | Not supported |
 
 Images are decoded/re-encoded, metadata stripped and variants generated. SVG is sanitised or rasterised. Executables, package files and arbitrary HTML are rejected in beta.
 

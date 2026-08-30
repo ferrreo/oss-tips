@@ -1,46 +1,63 @@
 <script lang="ts">
-  import PublicNav from '../../components/PublicNav.svelte';
-  import PublicFooter from '../../components/PublicFooter.svelte';
+  import { stylex } from '../../styles/stylex-runtime.js';
+  import PublicPageFrame from './PublicPageFrame.svelte';
+  import { locale, t } from '../../lib/i18n.js';
+  import { publicStyles } from '../../styles/public.stylex.js';
 
-  const pageDemo = {
-    lead: 'oss.tips helps open-source projects take one-off support and memberships. The project is the merchant. We run the tooling. We do not hold project money.',
-    beliefs: [
-      'No project wallet on oss.tips',
-      'Fees shown before checkout',
-      'One-off support works without an account',
-      'Memberships give access. There is no shop catalogue',
-      'Names and amounts stay private unless a supporter opts in',
+  export interface Props {
+    lead?: string;
+    beliefs?: string[];
+    audience?: string;
+  }
+
+  let {
+    lead,
+    beliefs,
+    audience,
+  }: Props = $props();
+
+  const displayLead = $derived(lead ?? t('about.lead', {}, $locale));
+  const displayBeliefs = $derived(
+    beliefs ?? [
+      t('about.belief.noWallet', {}, $locale),
+      t('about.belief.fees', {}, $locale),
+      t('about.belief.guest', {}, $locale),
+      t('about.belief.memberships', {}, $locale),
+      t('about.belief.privacy', {}, $locale),
     ],
-  };
+  );
+  const displayAudience = $derived(audience ?? t('about.audience', {}, $locale));
+
+  const heroClass = stylex.attrs(publicStyles.hero).class;
+  const containerClass = stylex.attrs(publicStyles.container, publicStyles.reading).class;
+  const sectionClass = stylex.attrs(publicStyles.sectionTight).class;
+  const displayClass = stylex.attrs(publicStyles.heroTitle).class;
+  const leadClass = stylex.attrs(publicStyles.lead).class;
+  const proseClass = stylex.attrs(publicStyles.prose).class;
 </script>
 
-<div>
-  <PublicNav />
-  <main id="main-content">
-    <section class="pl-public-hero">
-      <div class="pl-container pl-container--reading">
-        <p class="pl-public-hero__brand">oss.tips</p>
-        <h1 class="pl-display pl-public-hero__title">About</h1>
-        <p class="pl-page-lead">{pageDemo.lead}</p>
+<PublicPageFrame>
+  {#snippet children()}
+    <section class={heroClass}>
+      <div class={containerClass}>
+        <p class={stylex.attrs(publicStyles.mono, publicStyles.muted).class}>{t('about.kicker', {}, $locale)}</p>
+        <h1 class={displayClass}>{t('about.title', {}, $locale)}</h1>
+        <p class={leadClass}>{displayLead}</p>
       </div>
     </section>
-    <section class="pl-section" style="padding-top: 0;">
-      <div class="pl-container pl-container--reading">
-        <div class="pl-prose">
-          <h2>How it works</h2>
+    <section class={sectionClass}>
+      <div class={containerClass}>
+        <div class={proseClass}>
+          <h2>{t('about.howItWorks', {}, $locale)}</h2>
           <ul>
-            {#each pageDemo.beliefs as belief (belief)}
+            {#each displayBeliefs as belief (belief)}
               <li>{belief}</li>
             {/each}
           </ul>
-          <h2>Who uses it</h2>
-          <p>
-            Maintainers who need steady funding without running a storefront. Supporters who want to know where the money
-            goes and what access they receive.
-          </p>
+          <h2>{t('about.whoUsesIt', {}, $locale)}</h2>
+          <p>{displayAudience}</p>
         </div>
       </div>
     </section>
-  </main>
-  <PublicFooter />
-</div>
+  {/snippet}
+</PublicPageFrame>

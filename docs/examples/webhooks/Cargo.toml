@@ -1,0 +1,13 @@
+[package]
+name = "oss-tips-webhook-signature-example"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "verify-rust"
+path = "verify-rust.rs"
+
+[dependencies]
+hmac = "0.13.0"
+sha2 = "0.11.0"

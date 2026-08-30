@@ -1,6 +1,8 @@
 import { z } from 'zod';
-import { WEBHOOK_API_VERSION, type OutgoingEventType } from '@oss-tips/domain';
+import type { OutgoingEventType } from '@oss-tips/domain';
 import { IdSchema, TimestampSchema } from './money.js';
+
+export const WEBHOOK_API_VERSION = '2026-08-01';
 
 const outgoingEventTypes = [
   'project.updated',
@@ -26,7 +28,7 @@ const outgoingEventTypes = [
 export const OutgoingEventTypeSchema = z.enum(outgoingEventTypes);
 
 export const WebhookEnvelopeSchema = z.object({
-  id: IdSchema,
+  id: z.string().regex(/^evt_[A-Za-z0-9_-]+$/),
   type: OutgoingEventTypeSchema,
   api_version: z.literal(WEBHOOK_API_VERSION),
   created_at: TimestampSchema,
@@ -39,7 +41,7 @@ export const WebhookEnvelopeSchema = z.object({
 export type WebhookEnvelope = z.infer<typeof WebhookEnvelopeSchema>;
 
 export const WebhookSignatureHeadersSchema = z.object({
-  'oss-tips-event-id': z.string(),
-  'oss-tips-timestamp': z.string(),
-  'oss-tips-signature': z.string().regex(/^v1=[a-f0-9]+$/),
+  'oss-tips-event-id': z.string().regex(/^evt_[A-Za-z0-9_-]+$/),
+  'oss-tips-timestamp': z.string().regex(/^\d+$/),
+  'oss-tips-signature': z.string().regex(/^v1=[a-f0-9]{64}$/),
 });

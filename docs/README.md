@@ -14,20 +14,20 @@ Stripe stablecoin payments are designed into v1 as a capability-gated payment me
 
 ## Contents
 
-| File | Purpose |
-|---|---|
-| `00-DECISIONS.md` | Final decision register and unresolved external blockers |
-| `01-PRODUCT-SPEC.md` | Full product behaviour and dashboard requirements |
-| `02-ARCHITECTURE.md` | Runtime, deployment, PlanetScale, RustFS, caching and observability |
-| `03-DATA-AND-LEDGER.md` | PostgreSQL model, TigerBeetle model, idempotency and reconciliation |
-| `04-PAYMENTS-AUTH-INTEGRATIONS.md` | Stripe, crypto, Better Auth, Resend, Discord and custom domains |
-| `05-API-AND-WEBHOOKS.md` | Public API and outgoing webhook contracts |
-| `06-SECURITY-OPERATIONS.md` | Security model, legal launch work, backups and runbooks |
-| `07-BRAND-IDENTITY.md` | Final Paperlight identity, logo, palette, type and voice |
-| `08-DESIGN-SYSTEM.md` | Components, motion, responsive behaviour and accessibility |
-| `09-IMPLEMENTATION-PLAN.md` | Repository layout, workstreams, tests and beta launch gates |
-| `assets/` | Selected mockups, SVG/PNG logos, brand board and code-ready tokens |
-| `SOURCES.md` | Current primary-source references used by the plan |
+| File                               | Purpose                                                             |
+| ---------------------------------- | ------------------------------------------------------------------- |
+| `00-DECISIONS.md`                  | Final decision register and unresolved external blockers            |
+| `01-PRODUCT-SPEC.md`               | Full product behaviour and dashboard requirements                   |
+| `02-ARCHITECTURE.md`               | Runtime, deployment, PlanetScale, RustFS, caching and observability |
+| `03-DATA-AND-LEDGER.md`            | PostgreSQL model, TigerBeetle model, idempotency and reconciliation |
+| `04-PAYMENTS-AUTH-INTEGRATIONS.md` | Stripe, crypto, Better Auth, Resend, Discord and custom domains     |
+| `05-API-AND-WEBHOOKS.md`           | Public API and outgoing webhook contracts                           |
+| `06-SECURITY-OPERATIONS.md`        | Security model, legal launch work, backups and runbooks             |
+| `07-BRAND-IDENTITY.md`             | Final Paperlight identity, logo, palette, type and voice            |
+| `08-DESIGN-SYSTEM.md`              | Components, motion, responsive behaviour and accessibility          |
+| `09-IMPLEMENTATION-PLAN.md`        | Repository layout, workstreams, tests and beta launch gates         |
+| `assets/`                          | Selected mockups, SVG/PNG logos, brand board and code-ready tokens  |
+| `SOURCES.md`                       | Current primary-source references used by the plan                  |
 
 ## Source mockups
 

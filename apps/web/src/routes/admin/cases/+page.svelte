@@ -1,7 +1,7 @@
 <script lang="ts">
-  import CasesPage from '@oss-tips/ui/pages/admin/CasesPage.svelte';
+  import AdminCasesPage from '@oss-tips/ui/pages/admin/AdminCasesPage.svelte';
 
   let { data } = $props();
 </script>
 
-<CasesPage {...data} />
+<AdminCasesPage {...data} />

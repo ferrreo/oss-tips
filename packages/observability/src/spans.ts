@@ -20,7 +20,9 @@ export function paymentSpan(operation: 'checkout' | 'refund' | 'invoice_fee'): S
   }
 }
 
-export function webhookSpan(direction: 'incoming_stripe' | 'incoming_verify' | 'outgoing_deliver'): SpanName {
+export function webhookSpan(
+  direction: 'incoming_stripe' | 'incoming_verify' | 'outgoing_deliver',
+): SpanName {
   switch (direction) {
     case 'incoming_stripe':
       return SPAN_NAMES.stripeWebhookReceive;

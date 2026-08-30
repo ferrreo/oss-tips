@@ -13,7 +13,9 @@ import {
 describe('redaction', () => {
   it('strips emails and signed urls', () => {
     expect(redactString('contact user@example.com')).toContain('[REDACTED_EMAIL]');
-    expect(redactString('https://s3.example.com/x?X-Amz-Signature=abc')).toContain('[REDACTED_SIGNED_URL]');
+    expect(redactString('https://s3.example.com/x?X-Amz-Signature=abc')).toContain(
+      '[REDACTED_SIGNED_URL]',
+    );
   });
 
   it('redacts auth headers and bodies', () => {
@@ -21,7 +23,10 @@ describe('redaction', () => {
       authorization: '[REDACTED]',
       'content-type': 'json',
     });
-    expect(redactBody({ email: 'a@b.com', name: 'Rust' })).toEqual({ email: '[REDACTED]', name: 'Rust' });
+    expect(redactBody({ email: 'a@b.com', name: 'Rust' })).toEqual({
+      email: '[REDACTED]',
+      name: 'Rust',
+    });
     expect(redactCookieHeader('session=abc; other=1')).toContain('[REDACTED]');
   });
 });

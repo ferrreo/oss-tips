@@ -1,7 +1,7 @@
 import { AccountCode } from './codes.js';
 import type { LedgerClient } from './client/index.js';
 import { accountId } from './ids.js';
-import type { PostingIntent } from './intents.js';
+import type { LedgerAccountDefinition, PostingIntent } from './intents.js';
 
 export type ReplayResult = {
   intentKey: string;
@@ -28,7 +28,11 @@ export async function replayIntents(
   const results: ReplayResult[] = [];
 
   for (const intent of intents) {
-    const accountDefs = new Map<string, { id: bigint; ledger: number; code: number }>();
+    const accountDefs = new Map<string, LedgerAccountDefinition>();
+
+    for (const definition of intent.accountDefinitions ?? []) {
+      accountDefs.set(definition.id.toString(), definition);
+    }
 
     for (const t of intent.transfers) {
       for (const [id, code] of [
@@ -42,21 +46,29 @@ export async function replayIntents(
       }
     }
 
-    await client.createAccounts([...accountDefs.values()]);
-
-    const outcome = await client.createTransfers(intent.transfers);
-    if (outcome.ok) {
-      results.push({
-        intentKey: intent.semanticKey,
-        ok: true,
-        transferIds: outcome.transferIds.map((id) => id.toString()),
-      });
-    } else {
+    try {
+      await client.createAccounts([...accountDefs.values()]);
+      const outcome = await client.createTransfers(intent.transfers);
+      if (outcome.ok) {
+        results.push({
+          intentKey: intent.semanticKey,
+          ok: true,
+          transferIds: outcome.transferIds.map((id) => id.toString()),
+        });
+      } else {
+        results.push({
+          intentKey: intent.semanticKey,
+          ok: false,
+          transferIds: [],
+          error: outcome.error,
+        });
+      }
+    } catch (error) {
       results.push({
         intentKey: intent.semanticKey,
         ok: false,
         transferIds: [],
-        error: outcome.error,
+        error: error instanceof Error ? error.message : String(error),
       });
     }
   }

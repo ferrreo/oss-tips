@@ -1,3 +1,5 @@
+import { currencyExponent } from '@oss-tips/domain/money';
+
 export interface Tier {
   id: string;
   name: string;
@@ -6,9 +8,18 @@ export interface Tier {
   annualMinor: number;
   oneOffMinor: number;
   memberLimit?: number;
+  oneOffDuration?: 'days_30' | 'days_90' | 'year' | 'permanent';
   popular?: boolean;
   rewards: string[];
 }
+
+export type GoalType =
+  | 'one_time_money'
+  | 'calendar_month_money'
+  | 'active_supporter_count'
+  | 'mrr'
+  | 'recurring_money'
+  | 'supporter_count';
 
 export interface Goal {
   id: string;
@@ -17,6 +28,9 @@ export interface Goal {
   description: string;
   targetMinor: number;
   raisedMinor: number;
+  type?: GoalType;
+  targetCount?: number;
+  progressCount?: number;
   basis: string;
   deadline?: string;
   currency: string;
@@ -35,6 +49,7 @@ export interface Supporter {
   supportedAt: string;
   currency: string;
   tierName: string;
+  duration?: string;
   avatarLetter: string;
 }
 
@@ -63,6 +78,7 @@ export interface Post {
   publishedLabel: string;
   tierVisibility: string;
   author: string;
+  version?: string;
 }
 
 export interface ThreadMessage {
@@ -81,6 +97,8 @@ export interface Thread {
   supporter: string;
   amountMinor: number;
   amountLabel: string;
+  currency?: string;
+  createdAt?: string;
   cadence: string;
   relativeTime: string;
   preview: string;
@@ -92,13 +110,31 @@ export interface Thread {
 export interface Project {
   slug: string;
   name: string;
+  status?: 'draft' | 'published' | 'closed' | string;
   description: string;
   website: string;
   repository: string;
+  supportEmail?: string;
+  supportEmailVerified?: boolean;
   verified: boolean;
   currency: string;
   feeMode: 'standard' | 'project_5pct';
+  minSupportMinor?: number;
+  maxSupportMinor?: number;
   logoLetter: string;
+  logoUrl?: string;
+  bannerUrl?: string;
+  logoAssetId?: string;
+  bannerAssetId?: string;
+  ecosystems?: string[];
+  languages?: string[];
+  hasActiveGoal?: boolean;
+  acceptsRecurringSupport?: boolean;
+  updatedAt?: string;
+  showSupporters?: boolean;
+  showGoal?: boolean;
+  showStats?: boolean;
+  showGatedPostMetadata?: boolean;
   tags: string[];
   stats: {
     supporters: number;
@@ -118,7 +154,7 @@ export interface Membership {
   currency: string;
   status: 'active' | 'past_due' | 'cancelled';
   renewsAt: string;
-  renewsLabel: string;
+  renewsLabel?: string;
 }
 
 export interface Entitlement {
@@ -128,7 +164,7 @@ export interface Entitlement {
   reward: string;
   status: string;
   expiresAt: string;
-  expiresLabel: string;
+  expiresLabel?: string;
   permanent?: boolean;
 }
 
@@ -308,6 +344,8 @@ export interface ApiKey {
   scope: string;
   created: string;
   lastUsed: string;
+  createdAt?: string;
+  lastUsedAt?: string;
 }
 
 export interface DiscordRoleMapping {
@@ -321,7 +359,20 @@ export interface ExportJob {
   action: string;
 }
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as const;
+const MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+] as const;
 
 function chartLabel(year: number, monthIndex: number, day: number): string {
   const month = MONTHS[monthIndex];
@@ -354,7 +405,9 @@ function buildDemoChartSeries(): ChartSeries {
     const t = smoothstep(i / 29);
     const recWave = Math.sin(i * 0.85) * (1 - t) * 0.03;
     const offWave = Math.sin(i * 1.25 + 0.4) * (1 - t) * 0.045;
-    let recurring = Math.round(lerp(recurringStart, recurringEnd, Math.min(1, Math.max(0, t + recWave))));
+    let recurring = Math.round(
+      lerp(recurringStart, recurringEnd, Math.min(1, Math.max(0, t + recWave))),
+    );
     let oneOff = Math.round(lerp(oneOffStart, oneOffEnd, Math.min(1, Math.max(0, t + offWave))));
     if (i === 29) {
       recurring = recurringEnd;
@@ -370,7 +423,7 @@ function buildDemoChartSeries(): ChartSeries {
   }
 
   return {
-    label: 'Support — one-off vs recurring',
+    label: 'Support: one-off vs recurring',
     range: 'Apr 30 – May 29 · America/Los_Angeles',
     currency: 'USD',
     points,
@@ -380,12 +433,18 @@ function buildDemoChartSeries(): ChartSeries {
 export const demoProject: Project = {
   slug: 'grove',
   name: 'Grove',
+  status: 'published',
   description: 'Dependency health checks and release notes for open-source maintainers.',
   website: 'https://grove.dev',
   repository: 'github.com/oss-tips/grove',
+  supportEmail: 'hello@grove.dev',
+  supportEmailVerified: false,
   verified: true,
   currency: 'USD',
   feeMode: 'standard',
+  showGatedPostMetadata: false,
+  minSupportMinor: 500,
+  maxSupportMinor: 250000,
   logoLetter: 'G',
   tags: ['tooling', 'typescript', 'ci'],
   stats: {
@@ -404,6 +463,7 @@ export const demoTiers: Tier[] = [
     monthlyMinor: 500,
     annualMinor: 5000,
     oneOffMinor: 500,
+    oneOffDuration: 'days_30',
     rewards: ['Public thank-you on the wall', 'Supporter newsletter'],
   },
   {
@@ -413,6 +473,7 @@ export const demoTiers: Tier[] = [
     monthlyMinor: 1000,
     annualMinor: 10000,
     oneOffMinor: 1000,
+    oneOffDuration: 'days_90',
     popular: true,
     rewards: ['All Coffee rewards', 'Early releases', 'Supporter-only posts'],
   },
@@ -423,6 +484,7 @@ export const demoTiers: Tier[] = [
     monthlyMinor: 2500,
     annualMinor: 25000,
     oneOffMinor: 2500,
+    oneOffDuration: 'year',
     rewards: ['All Supporter rewards', 'Priority inbox replies', 'Named docs credit'],
   },
   {
@@ -433,6 +495,7 @@ export const demoTiers: Tier[] = [
     annualMinor: 100000,
     oneOffMinor: 10000,
     memberLimit: 25,
+    oneOffDuration: 'permanent',
     rewards: ['All Backer rewards', 'Quarterly working session', 'Roadmap voting'],
   },
 ];
@@ -442,7 +505,8 @@ export const demoGoals: Goal[] = [
     id: 'g1',
     slug: 'infrastructure-upgrade',
     title: 'Infrastructure upgrade',
-    description: 'Move production to dedicated Postgres, object storage, and a second region for supporter checkout.',
+    description:
+      'Move production to dedicated Postgres, object storage, and a second region for supporter checkout.',
     targetMinor: 7500000,
     raisedMinor: 4523000,
     basis: 'before fees',
@@ -454,9 +518,13 @@ export const demoGoals: Goal[] = [
     id: 'g2',
     slug: 'documentation-overhaul',
     title: 'Documentation overhaul',
-    description: 'Rewrite the getting-started guides, add illustrated recipes, and ship a searchable component cookbook.',
-    targetMinor: 3000000,
-    raisedMinor: 1860000,
+    description:
+      'Rewrite the getting-started guides, add CI recipes, and ship a searchable dependency-policy cookbook.',
+    targetMinor: 300,
+    raisedMinor: 186,
+    type: 'active_supporter_count',
+    targetCount: 300,
+    progressCount: 186,
     basis: 'active supporters',
     deadline: '2026-11-15',
     currency: 'USD',
@@ -500,7 +568,7 @@ export const demoSupporters: Supporter[] = [
     amountMinor: 1000,
     cadence: 'monthly',
     public: true,
-    message: 'Monthly Supporter here — Storybook coverage is the real gift.',
+    message: 'The migration guide saved me an afternoon. Happy to help keep this going.',
     relativeTime: 'yesterday',
     supportedAt: '2026-05-28T09:18:00Z',
     currency: 'USD',
@@ -584,7 +652,7 @@ export const demoSupporters: Supporter[] = [
     amountMinor: 1000,
     cadence: 'monthly',
     public: true,
-    message: 'Writing the cookbook with you. Supporter posts are gold.',
+    message: 'Writing the cookbook with you. The early drafts have already helped.',
     relativeTime: '1 week ago',
     supportedAt: '2026-05-22T10:09:00Z',
     currency: 'USD',
@@ -779,9 +847,9 @@ export const demoPosts: Post[] = [
   {
     id: 'p2',
     slug: 'grove-1-0',
-    title: 'Grove 1.0 tokens and docs',
-    excerpt: 'Semantic colour tokens, typography stacks, and motion defaults are now stable.',
-    body: 'Semantic colour tokens, typography stacks, and motion defaults are now stable across light, dark, and contrast themes. Components read `--pl-*` custom properties so Storybook and production stay aligned.',
+    title: 'Grove 1.0 checks lockfile changes before release',
+    excerpt: 'npm, pnpm, and Cargo lockfiles now get the same dependency health report.',
+    body: 'Grove 1.0 now checks npm, pnpm, and Cargo lockfile changes before release. Each changed dependency links to its advisory and upstream changelog.',
     publishedAt: '2026-05-20',
     publishedLabel: 'May 20, 2026',
     tierVisibility: 'Public',
@@ -789,10 +857,10 @@ export const demoPosts: Post[] = [
   },
   {
     id: 'p3',
-    slug: 'storybook-preview',
-    title: 'Storybook preview for every product route',
-    excerpt: 'Every product page now has a Storybook story with realistic fixtures.',
-    body: 'Supporters on the Supporter tier and above can preview every dashboard and public route with the branded demo dataset before we cut a release.',
+    slug: 'private-registry-checks',
+    title: 'Private registry checks are ready to test',
+    excerpt: 'Supporters can try the new npm and Cargo registry credentials flow before release.',
+    body: 'The preview reads scoped registry credentials from CI without storing them in Grove. Supporters can test it against npm or Cargo and send us the redacted report.',
     publishedAt: '2026-05-15',
     publishedLabel: 'May 15, 2026',
     tierVisibility: 'Supporter+',
@@ -800,10 +868,10 @@ export const demoPosts: Post[] = [
   },
   {
     id: 'p4',
-    slug: 'fee-transparency',
-    title: 'How we disclose fees before checkout',
-    excerpt: 'A walkthrough of the support composer fee disclosure module.',
-    body: 'The composer always shows the project amount, the oss.tips project fee, an optional tip, and the payment method before Stripe Checkout opens. No vanity totals.',
+    slug: 'health-score-change',
+    title: 'Why the latest health score changed',
+    excerpt: 'Maintainer activity now counts releases and reviewed pull requests separately.',
+    body: 'A busy issue tracker no longer hides a stalled release. The report now shows release cadence, reviewed pull requests, and unresolved advisories as separate signals.',
     publishedAt: '2026-05-08',
     publishedLabel: 'May 8, 2026',
     tierVisibility: 'Public',
@@ -813,8 +881,8 @@ export const demoPosts: Post[] = [
     id: 'p5',
     slug: 'docs-cookbook-wip',
     title: 'Documentation overhaul is at 62%',
-    excerpt: 'Illustrated recipes and the searchable cookbook are in review.',
-    body: 'The getting-started rewrite is live in draft. Illustrated recipes for Goal, Tier, and Inbox land next. Backer credits appear on the cookbook colophon.',
+    excerpt: 'CI recipes and the searchable policy cookbook are in review.',
+    body: 'The getting-started rewrite is live in draft. Recipes for GitHub Actions, GitLab CI, and monorepos land next. Backer credits appear on the cookbook colophon.',
     publishedAt: '2026-05-02',
     publishedLabel: 'May 2, 2026',
     tierVisibility: 'Backer+',
@@ -913,7 +981,7 @@ export const demoThreads: Thread[] = [
     amountLabel: '$5.00',
     cadence: 'monthly',
     relativeTime: '3 days ago',
-    preview: 'My $5 renewal failed — is access paused?',
+    preview: 'My $5 renewal failed. Is access paused?',
     status: 'open',
     messages: [
       {
@@ -975,7 +1043,7 @@ export const demoThreads: Thread[] = [
       {
         id: 'm10',
         author: 'kohei_rust',
-        body: 'The signed webhook retries unblocked our launch last week. Champion one-off is on me — thank you.',
+        body: 'The signed webhook retries unblocked our launch last week. The Champion one-off is on me. Thank you.',
         timestamp: '2026-05-22T19:33:00Z',
         relativeTime: '1 week ago',
       },
@@ -1458,6 +1526,20 @@ export const demoReconciliationDiffs: ReconciliationDiff[] = [
     status: 'mismatch',
     note: 'Failed Coffee renewal still reserved in the ledger pending void.',
   },
+  {
+    id: 'rec6',
+    date: '2026-05-22',
+    project: 'tiny-sqlite',
+    stripeNetMinor: 6700,
+    ledgerNetMinor: 7200,
+    deltaMinor: -500,
+    stripeLabel: '¥6,700',
+    ledgerLabel: '¥7,200',
+    deltaLabel: '−¥500',
+    currency: 'JPY',
+    status: 'mismatch',
+    note: 'Japanese account settlement remains open for review.',
+  },
 ];
 
 export const demoAuditEvents: AuditEvent[] = [
@@ -1547,21 +1629,81 @@ export const demoCases: AdminCase[] = [
 ];
 
 export const demoReferrers: ReferrerRow[] = [
-  { source: 'github.com', sessions: 1842, supporters: 96, conversionLabel: '5.2%', sharePercent: 41 },
+  {
+    source: 'github.com',
+    sessions: 1842,
+    supporters: 96,
+    conversionLabel: '5.2%',
+    sharePercent: 41,
+  },
   { source: 'grove.dev', sessions: 980, supporters: 71, conversionLabel: '7.2%', sharePercent: 22 },
   { source: 'Direct', sessions: 640, supporters: 48, conversionLabel: '7.5%', sharePercent: 14 },
-  { source: 'news.ycombinator.com', sessions: 510, supporters: 32, conversionLabel: '6.3%', sharePercent: 11 },
-  { source: 'discord.com', sessions: 288, supporters: 19, conversionLabel: '6.6%', sharePercent: 7 },
+  {
+    source: 'news.ycombinator.com',
+    sessions: 510,
+    supporters: 32,
+    conversionLabel: '6.3%',
+    sharePercent: 11,
+  },
+  {
+    source: 'discord.com',
+    sessions: 288,
+    supporters: 19,
+    conversionLabel: '6.6%',
+    sharePercent: 7,
+  },
   { source: 'Other', sessions: 210, supporters: 18, conversionLabel: '8.6%', sharePercent: 5 },
 ];
 
 export const demoCountries: CountryRow[] = [
-  { country: 'United States', countryCode: 'US', supporters: 112, amountMinor: 512400, amountLabel: '$5,124', sharePercent: 39 },
-  { country: 'United Kingdom', countryCode: 'GB', supporters: 54, amountMinor: 248200, amountLabel: '$2,482', sharePercent: 19 },
-  { country: 'Germany', countryCode: 'DE', supporters: 38, amountMinor: 176800, amountLabel: '$1,768', sharePercent: 13 },
-  { country: 'Canada', countryCode: 'CA', supporters: 27, amountMinor: 121500, amountLabel: '$1,215', sharePercent: 10 },
-  { country: 'Japan', countryCode: 'JP', supporters: 22, amountMinor: 98600, amountLabel: '$986', sharePercent: 8 },
-  { country: 'Other', countryCode: 'XX', supporters: 31, amountMinor: 126600, amountLabel: '$1,266', sharePercent: 11 },
+  {
+    country: 'United States',
+    countryCode: 'US',
+    supporters: 112,
+    amountMinor: 512400,
+    amountLabel: '$5,124',
+    sharePercent: 39,
+  },
+  {
+    country: 'United Kingdom',
+    countryCode: 'GB',
+    supporters: 54,
+    amountMinor: 248200,
+    amountLabel: '$2,482',
+    sharePercent: 19,
+  },
+  {
+    country: 'Germany',
+    countryCode: 'DE',
+    supporters: 38,
+    amountMinor: 176800,
+    amountLabel: '$1,768',
+    sharePercent: 13,
+  },
+  {
+    country: 'Canada',
+    countryCode: 'CA',
+    supporters: 27,
+    amountMinor: 121500,
+    amountLabel: '$1,215',
+    sharePercent: 10,
+  },
+  {
+    country: 'Japan',
+    countryCode: 'JP',
+    supporters: 22,
+    amountMinor: 98600,
+    amountLabel: '$986',
+    sharePercent: 8,
+  },
+  {
+    country: 'Other',
+    countryCode: 'XX',
+    supporters: 31,
+    amountMinor: 126600,
+    amountLabel: '$1,266',
+    sharePercent: 11,
+  },
 ];
 
 export const demoRetention: RetentionCohort[] = [
@@ -1642,12 +1784,13 @@ export const demoReconciliation = demoReconciliationDiffs;
 export const demoAuditLog = demoAuditEvents;
 
 export function formatMoney(minor: number, currency = 'USD'): string {
-  const major = minor / 100;
+  const exponent = currencyExponent(currency);
+  const major = minor / 10 ** exponent;
   const locale = currency === 'USD' ? 'en-US' : 'en-GB';
   try {
     return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(major);
   } catch {
-    return `${major.toFixed(2)} ${currency}`;
+    return `${major.toFixed(exponent)} ${currency}`;
   }
 }
 

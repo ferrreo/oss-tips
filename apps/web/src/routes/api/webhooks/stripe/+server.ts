@@ -7,6 +7,12 @@ import { createStripeEventsRepository, type JsonValue } from '@oss-tips/db';
 import type { RequestHandler } from './$types';
 import { getDb, hasDatabaseUrl } from '$lib/server/db';
 import { json, problem } from '$lib/server/http';
+import {
+  parseUploadContentLength,
+  readBoundedUploadBody,
+  UploadBodyLengthMismatchError,
+  UploadBodyTooLargeError,
+} from '$lib/server/storage';
 
 function asJsonValue(value: Record<string, unknown>): JsonValue {
   return value as JsonValue;
@@ -31,9 +37,27 @@ export const POST: RequestHandler = async ({ request }) => {
     return problem(503, 'Webhook secret unset', 'STRIPE_WEBHOOK_SECRET is required');
   }
 
-  const rawBody = Buffer.from(await request.arrayBuffer());
-  if (rawBody.byteLength > DURABLE_INBOX_MAX_BODY_BYTES) {
+  let contentLength: number | undefined;
+  try {
+    contentLength = parseUploadContentLength(request.headers.get('content-length'));
+  } catch (err) {
+    return problem(400, 'Invalid Content-Length', err instanceof Error ? err.message : undefined);
+  }
+  if (contentLength !== undefined && contentLength > DURABLE_INBOX_MAX_BODY_BYTES) {
     return problem(413, 'Payload too large');
+  }
+
+  let rawBody: Buffer;
+  try {
+    rawBody = Buffer.from(
+      await readBoundedUploadBody(request, DURABLE_INBOX_MAX_BODY_BYTES, contentLength),
+    );
+  } catch (err) {
+    if (err instanceof UploadBodyTooLargeError) return problem(413, 'Payload too large');
+    if (err instanceof UploadBodyLengthMismatchError) {
+      return problem(400, 'Payload length mismatch');
+    }
+    return problem(400, 'Invalid request body');
   }
 
   let event;
@@ -75,6 +99,7 @@ export const POST: RequestHandler = async ({ request }) => {
         };
       },
     },
+    expectedStripeAccountId: process.env.STRIPE_WEBHOOK_ACCOUNT_ID,
   });
 
   if (result.kind === 'rejected') {

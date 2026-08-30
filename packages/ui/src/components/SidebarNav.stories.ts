@@ -1,14 +1,25 @@
-import { projectNavGroups } from "../fixtures/demo.js";
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import SidebarNav from './SidebarNav.svelte';
+import { adminNavGroups, projectNavGroups } from '../fixtures/demo.js';
 
-const meta: Meta<SidebarNav> = {
+const meta = {
   title: 'Components/SidebarNav',
   component: SidebarNav,
-};
+  parameters: { layout: 'padded' },
+} satisfies Meta<typeof SidebarNav>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = { args: { groups: projectNavGroups } };
-export const Dark: Story = { args: { groups: projectNavGroups }, globals: { theme: 'dark' } };
+export const Project: Story = {
+  args: { groups: projectNavGroups, ariaLabel: 'Project dashboard navigation' },
+};
+
+export const Admin: Story = {
+  args: { groups: adminNavGroups, ariaLabel: 'Admin navigation', tone: 'admin' },
+};
+
+export const Dark: Story = {
+  args: { groups: projectNavGroups, ariaLabel: 'Project dashboard navigation' },
+  globals: { theme: 'dark' },
+};

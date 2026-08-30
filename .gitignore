@@ -2,6 +2,7 @@ node_modules
 dist
 build
 .svelte-kit
+.svelte-kit-*
 .env
 .env.*
 !.env.example
@@ -16,3 +17,5 @@ data
 
 storybook-static
 packages/ui/storybook-static
+test-results
+playwright-report

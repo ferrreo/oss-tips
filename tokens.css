@@ -1,0 +1,91 @@
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4
+ * Paperlight portable tokens · custom brand system · light / roman-serif / chromatic-green
+ */
+
+:root {
+  --color-paper: oklch(97.7% 0.0114 84.6);
+  --color-paper-2: oklch(95.38% 0.016 82.8);
+  --color-paper-3: oklch(94.97% 0.0209 88.7);
+  --color-surface: oklch(99.42% 0.0069 88.6);
+  --color-ink: oklch(27.09% 0.0222 155.5);
+  --color-ink-2: oklch(49.82% 0.0211 142.7);
+  --color-muted: oklch(50.84% 0.0164 138.7);
+  --color-neutral: oklch(60.99% 0.069 121.9);
+  --color-rule: oklch(87.53% 0.0221 83.3);
+  --color-rule-2: oklch(63.01% 0.0257 82.1);
+  --color-accent: oklch(43.14% 0.0765 151);
+  --color-accent-hover: oklch(37.28% 0.0627 152.5);
+  --color-accent-ink: oklch(97.7% 0.0114 84.6);
+  --color-focus: oklch(43.14% 0.0765 151);
+  --color-success: oklch(47.32% 0.0907 151.4);
+  --color-warning: oklch(55.16% 0.1068 68.9);
+  --color-danger: oklch(51.43% 0.1255 28.4);
+  --color-info: oklch(49.33% 0.0586 214.6);
+
+  --font-display: Newsreader, 'EB Garamond', Georgia, serif;
+  --font-body: 'Source Sans 3', Inter, system-ui, sans-serif;
+  --font-outlier: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-display: clamp(2.75rem, 6vw, 4.5rem);
+
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 5rem;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 80ms;
+  --dur-short: 140ms;
+  --dur-long: 360ms;
+
+  --rule-hair: 1px;
+  --rule-fine: 2px;
+  --radius-card: 0.875rem;
+  --radius-pill: 9999px;
+  --radius-input: 0.625rem;
+  --shadow-card: 0 1px 2px rgb(30 42 34 / 6%), 0 12px 32px rgb(30 42 34 / 7%);
+}
+
+[data-theme='dark'] {
+  --color-paper: oklch(18.29% 0.0086 129);
+  --color-paper-2: oklch(20.39% 0.0108 132.8);
+  --color-paper-3: oklch(24.14% 0.0126 135.1);
+  --color-surface: oklch(21.27% 0.0106 132.7);
+  --color-ink: oklch(92.86% 0.021 88.7);
+  --color-ink-2: oklch(75.89% 0.0199 96.9);
+  --color-muted: oklch(64.81% 0.0176 114.6);
+  --color-neutral: oklch(58.22% 0.0773 124.3);
+  --color-rule: oklch(33.35% 0.0179 125.1);
+  --color-rule-2: oklch(50.72% 0.0257 124.1);
+  --color-accent: oklch(69.47% 0.0811 125.2);
+  --color-accent-hover: oklch(75.88% 0.0798 125);
+  --color-accent-ink: oklch(18.29% 0.0086 129);
+  --color-focus: oklch(81.9% 0.0924 125.8);
+  --color-success: oklch(78.92% 0.1072 129);
+  --color-warning: oklch(77.83% 0.098 79.8);
+  --color-danger: oklch(67.51% 0.1145 28.5);
+  --color-info: oklch(71.96% 0.0395 181.6);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 32%), 0 16px 40px rgb(0 0 0 / 22%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-micro: 0ms;
+    --dur-short: 0ms;
+    --dur-long: 0ms;
+  }
+}

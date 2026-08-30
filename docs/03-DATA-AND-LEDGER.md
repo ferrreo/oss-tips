@@ -95,7 +95,10 @@ webhook_endpoint
 webhook_delivery
 custom_domain
 email_delivery
+email_delivery_event
+email_suppression
 object_asset
+object_asset_variant             decoded responsive image metadata
 ```
 
 ### Platform operations
@@ -142,17 +145,17 @@ Take the first 128 bits of BLAKE3/SHA-256, map forbidden zero/max values, and pe
 
 Account code registry:
 
-| Code | Account class | Scope |
-|---:|---|---|
-| 100 | Stripe external clearing | connected account + currency |
-| 110 | Payment transit | payment + currency |
-| 200 | Project gross support | project + currency |
-| 210 | Project estimated Stripe fee expense | project + currency |
-| 220 | Project refund/dispute loss | project + currency |
-| 300 | oss.tips project-fee revenue | platform + currency |
-| 310 | oss.tips supporter-tip revenue | platform + currency |
-| 320 | oss.tips fee-refund contra revenue | platform + currency |
-| 400 | Unreconciled/suspense | provider account + currency |
+| Code | Account class                        | Scope                        |
+| ---: | ------------------------------------ | ---------------------------- |
+|  100 | Stripe external clearing             | connected account + currency |
+|  110 | Payment transit                      | payment + currency           |
+|  200 | Project gross support                | project + currency           |
+|  210 | Project estimated Stripe fee expense | project + currency           |
+|  220 | Project refund/dispute loss          | project + currency           |
+|  300 | oss.tips project-fee revenue         | platform + currency          |
+|  310 | oss.tips supporter-tip revenue       | platform + currency          |
+|  320 | oss.tips fee-refund contra revenue   | platform + currency          |
+|  400 | Unreconciled/suspense                | provider account + currency  |
 
 A per-payment transit account makes the split explicit and allows exact reversal without mutating history. TigerBeetle scale is not a concern at the expected volume.
 
@@ -160,20 +163,20 @@ Account metadata that does not fit TigerBeetle remains in `ledger_account_bindin
 
 ## 6. Transfer codes
 
-| Code | Meaning |
-|---:|---|
+| Code | Meaning                               |
+| ---: | ------------------------------------- |
 | 1000 | settled customer payment into transit |
-| 1010 | transit to project gross share |
-| 1020 | transit to oss.tips project fee |
-| 1030 | transit to oss.tips supporter tip |
-| 1040 | Stripe processing fee attribution |
-| 1100 | full/partial project refund |
-| 1110 | application-fee refund |
-| 1120 | dispute opened |
-| 1130 | dispute won/reversal |
-| 1140 | dispute lost/final |
-| 1200 | manual correction |
-| 1300 | reconciliation suspense transfer |
+| 1010 | transit to project gross share        |
+| 1020 | transit to oss.tips project fee       |
+| 1030 | transit to oss.tips supporter tip     |
+| 1040 | Stripe processing fee attribution     |
+| 1100 | full/partial project refund           |
+| 1110 | application-fee refund                |
+| 1120 | dispute opened                        |
+| 1130 | dispute won/reversal                  |
+| 1140 | dispute lost/final                    |
+| 1200 | manual correction                     |
+| 1300 | reconciliation suspense transfer      |
 
 Posting chains for one provider event use TigerBeetle linked transfers so either the complete split is accepted or none is.
 
@@ -329,3 +332,4 @@ Workers update the current day incrementally and rebuild any day from immutable 
 - Webhook bodies: retain redacted/minimised form; provider event IDs and hashes permanently with financial record.
 - Expired export files: 24 hours.
 - Deleted public media: soft-delete metadata then purge object after recovery window unless legal hold applies.
+- Failed upload completions leave no durable reference; nightly maintenance reclaims unreferenced content-addressed final objects only after a safety window and a locked reference recheck.

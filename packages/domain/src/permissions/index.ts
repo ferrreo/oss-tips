@@ -1,6 +1,4 @@
-export type Decision =
-  | { allowed: true }
-  | { allowed: false; reason: string };
+export type Decision = { allowed: true } | { allowed: false; reason: string };
 
 export type ProjectCapability =
   | 'project.transfer_ownership'
@@ -19,7 +17,33 @@ export type ProjectCapability =
   | 'project.view_analytics'
   | 'project.manage_webhooks'
   | 'project.manage_api_keys'
-  | 'project.view_payments';
+  | 'project.view_payments'
+  | 'project.publish_project';
+
+export const PROJECT_CAPABILITIES = [
+  'project.transfer_ownership',
+  'project.delete',
+  'project.connect_stripe',
+  'project.change_fee_mode',
+  'project.manage_domain',
+  'project.manage_team',
+  'project.refund',
+  'project.export_finance',
+  'project.manage_tiers',
+  'project.manage_goals',
+  'project.publish_posts',
+  'project.reply_supporters',
+  'project.discord_mappings',
+  'project.view_analytics',
+  'project.manage_webhooks',
+  'project.manage_api_keys',
+  'project.view_payments',
+  'project.publish_project',
+] as const satisfies readonly ProjectCapability[];
+
+export function isProjectCapability(value: unknown): value is ProjectCapability {
+  return typeof value === 'string' && (PROJECT_CAPABILITIES as readonly string[]).includes(value);
+}
 
 export type ProjectRole = 'owner' | 'admin' | 'finance' | 'editor' | 'community' | 'analyst';
 
@@ -42,6 +66,7 @@ const ROLE_CAPS: Record<ProjectRole, ReadonlySet<ProjectCapability>> = {
     'project.manage_webhooks',
     'project.manage_api_keys',
     'project.view_payments',
+    'project.publish_project',
   ]),
   admin: new Set([
     'project.change_fee_mode',
@@ -57,6 +82,7 @@ const ROLE_CAPS: Record<ProjectRole, ReadonlySet<ProjectCapability>> = {
     'project.manage_webhooks',
     'project.manage_api_keys',
     'project.view_payments',
+    'project.publish_project',
   ]),
   finance: new Set([
     'project.refund',
@@ -64,28 +90,21 @@ const ROLE_CAPS: Record<ProjectRole, ReadonlySet<ProjectCapability>> = {
     'project.view_analytics',
     'project.view_payments',
   ]),
-  editor: new Set([
-    'project.publish_posts',
-    'project.view_analytics',
-  ]),
+  editor: new Set(['project.publish_posts', 'project.view_analytics']),
   community: new Set([
     'project.reply_supporters',
     'project.discord_mappings',
     'project.view_analytics',
   ]),
-  analyst: new Set([
-    'project.view_analytics',
-    'project.view_payments',
-  ]),
+  analyst: new Set(['project.view_analytics', 'project.view_payments']),
 };
 
+export function projectCapabilitiesForRole(role: ProjectRole): ReadonlySet<ProjectCapability> {
+  return ROLE_CAPS[role];
+}
+
 export type PlatformRole =
-  | 'owner'
-  | 'operations'
-  | 'finance'
-  | 'moderation'
-  | 'support'
-  | 'auditor';
+  'owner' | 'operations' | 'finance' | 'moderation' | 'support' | 'auditor';
 
 export type PlatformCapability =
   | 'platform.review_projects'
@@ -111,28 +130,24 @@ const PLATFORM_CAPS: Record<PlatformRole, ReadonlySet<PlatformCapability>> = {
     'platform.view_reconciliation',
     'platform.view_as_readonly',
   ]),
-  finance: new Set([
-    'platform.refund',
-    'platform.view_audit',
-    'platform.view_reconciliation',
-  ]),
+  finance: new Set(['platform.refund', 'platform.view_audit', 'platform.view_reconciliation']),
   moderation: new Set([
     'platform.review_projects',
     'platform.view_audit',
     'platform.view_as_readonly',
   ]),
-  support: new Set([
-    'platform.view_audit',
-    'platform.view_as_readonly',
-  ]),
-  auditor: new Set([
-    'platform.view_audit',
-    'platform.view_reconciliation',
-  ]),
+  support: new Set(['platform.view_audit', 'platform.view_as_readonly']),
+  auditor: new Set(['platform.view_audit', 'platform.view_reconciliation']),
 };
 
 export type Actor =
-  | { kind: 'user'; userId: string; projectRoles: ReadonlyMap<string, ProjectRole>; platformRoles: readonly PlatformRole[] }
+  | {
+      kind: 'user';
+      userId: string;
+      projectRoles: ReadonlyMap<string, ProjectRole>;
+      projectCapabilities?: ReadonlyMap<string, ReadonlySet<ProjectCapability>>;
+      platformRoles: readonly PlatformRole[];
+    }
   | { kind: 'api_key'; projectId: string; scopes: ReadonlySet<string> }
   | { kind: 'anonymous' };
 
@@ -165,8 +180,15 @@ export function canProject(
     }
     return { allowed: false, reason: 'insufficient_scope' };
   }
-  const role = actor.projectRoles.get(projectId);
+  const role = actor.projectRoles.get(projectId) ?? actor.projectRoles.get('*');
   if (!role) return { allowed: false, reason: 'not_a_member' };
+  const storedCapabilities =
+    actor.projectCapabilities?.get(projectId) ?? actor.projectCapabilities?.get('*');
+  if (storedCapabilities) {
+    return storedCapabilities.has(capability)
+      ? { allowed: true }
+      : { allowed: false, reason: 'missing_capability' };
+  }
   if (ROLE_CAPS[role].has(capability)) return { allowed: true };
   return { allowed: false, reason: 'missing_capability' };
 }

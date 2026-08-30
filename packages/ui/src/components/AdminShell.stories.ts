@@ -1,37 +1,74 @@
-import { adminNavGroups } from '../fixtures/demo.js';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import AdminShellPreview from './AdminShellPreview.svelte';
+import AdminShell from './AdminShell.svelte';
+import { adminNavGroups } from '../fixtures/demo.js';
 
-const sharedArgs = {
-  navGroups: adminNavGroups,
-  title: 'Overview',
-  lede: 'Review queue, settlement volume, and failed jobs.',
-  projectContext: 'Acting on Grove. Refunds and restrictions stay on this project.',
+const tabletViewport = {
+  defaultViewport: 'tablet',
+  viewports: { tablet: { name: 'Tablet 768', styles: { width: '768px', height: '800px' } } },
 };
 
-const meta: Meta<AdminShellPreview> = {
+const meta = {
   title: 'Components/AdminShell',
-  component: AdminShellPreview,
+  component: AdminShell,
   parameters: { layout: 'fullscreen' },
-  args: sharedArgs,
-};
+  args: {
+    navGroups: adminNavGroups,
+    title: 'Overview',
+    lede: 'Review queue, settlement volume, and failed jobs.',
+    projectContext: 'Acting on Grove. Refunds and restrictions stay on this project.',
+  },
+} satisfies Meta<typeof AdminShell>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: sharedArgs,
+export const Default: Story = {};
+
+export const Compact: Story = {
+  parameters: {
+    viewport: {
+      defaultViewport: 'compact',
+      viewports: { compact: { name: 'Compact 320', styles: { width: '320px', height: '800px' } } },
+    },
+  },
+};
+
+export const Tablet: Story = {
+  parameters: { viewport: tabletViewport },
+};
+
+export const CompactOpen: Story = {
+  args: { initialMenuOpen: true },
+  parameters: {
+    viewport: {
+      defaultViewport: 'compact',
+      viewports: { compact: { name: 'Compact 320', styles: { width: '320px', height: '800px' } } },
+    },
+  },
 };
 
 export const Dark: Story = {
-  args: sharedArgs,
   globals: { theme: 'dark' },
+};
+
+export const RTLLayoutSmoke: Story = {
+  globals: { locale: 'de', direction: 'rtl' },
 };
 
 export const NoProject: Story = {
   args: {
-    ...sharedArgs,
     projectContext: 'No project selected. Refunds and restrictions need one picked first.',
     lede: 'Nothing here changes money until a project is in context.',
+  },
+};
+
+export const DarkCompactOpen: Story = {
+  args: { initialMenuOpen: true },
+  globals: { theme: 'dark' },
+  parameters: {
+    viewport: {
+      defaultViewport: 'compact',
+      viewports: { compact: { name: 'Compact 320', styles: { width: '320px', height: '800px' } } },
+    },
   },
 };

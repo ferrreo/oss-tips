@@ -9,7 +9,6 @@
     "preview": "vite preview",
     "start": "node build",
     "typecheck": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "lint": "echo ok",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
@@ -18,13 +17,20 @@
     "@oss-tips/db": "workspace:*",
     "@oss-tips/design-tokens": "workspace:*",
     "@oss-tips/domain": "workspace:*",
+    "@oss-tips/email": "workspace:*",
+    "@oss-tips/observability": "workspace:*",
     "@oss-tips/payments": "workspace:*",
+    "@oss-tips/storage": "workspace:*",
     "@oss-tips/ui": "workspace:*",
+    "@better-auth/passkey": "^1.7.2",
+    "@stylexjs/stylex": "0.19.0",
     "@sveltejs/adapter-node": "^5.5.7",
     "@sveltejs/kit": "^2.70.3",
+    "better-auth": "^1.7.2",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
+    "@stylexjs/unplugin": "0.19.0",
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@types/node": "^22.20.1",
     "svelte": "^5.57.0",

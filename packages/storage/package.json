@@ -14,15 +14,17 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "bootstrap-buckets": "pnpm build && node --env-file-if-exists=../../.env dist/bootstrap-buckets.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
-    "lint": "echo ok"
+    "test": "vitest run"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1121.0",
-    "@aws-sdk/s3-request-presigner": "^3.1121.0"
+    "@aws-sdk/s3-request-presigner": "^3.1121.0",
+    "sharp": "^0.35.4"
   },
   "devDependencies": {
+    "@types/node": "^22.20.1",
     "typescript": "^5.8.2",
     "vitest": "^4.1.11"
   }

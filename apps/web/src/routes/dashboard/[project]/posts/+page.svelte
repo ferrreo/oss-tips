@@ -1,7 +1,8 @@
 <script lang="ts">
-  import PostsPage from '@oss-tips/ui/pages/dashboard/PostsPage.svelte';
+  import ProjectPostsPage from '@oss-tips/ui/pages/project/ProjectPostsPage.svelte';
+  import { goto } from '$app/navigation';
 
   let { data } = $props();
 </script>
 
-<PostsPage {...data} />
+<ProjectPostsPage {...data} onNewPost={() => void goto(`/dashboard/${data.project.slug}/posts/new`)} />
