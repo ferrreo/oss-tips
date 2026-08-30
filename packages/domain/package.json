@@ -9,11 +9,13 @@
       "default": "./dist/index.js"
     },
     "./content": {
-      "types": "./dist/content/markdown.d.ts",
+      "types": "./src/content/markdown.ts",
+      "svelte": "./src/content/markdown.ts",
       "default": "./dist/content/markdown.js"
     },
     "./money": {
-      "types": "./dist/money/index.d.ts",
+      "types": "./src/money/index.ts",
+      "svelte": "./src/money/index.ts",
       "default": "./dist/money/index.js"
     },
     "./cloudflare": {
